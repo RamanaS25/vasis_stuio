@@ -34,4 +34,48 @@
 
 /* @import "@ionic/angular/css/palettes/dark.always.css"; */
 /* @import "@ionic/angular/css/palettes/dark.class.css"; */
-@import '@ionic/angular/css/palettes/dark.system.css';
+// @import '@ionic/angular/css/palettes/dark.system.css';
+
+
+ion-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    
+    background: rgba(255, 255, 255, 0.2); /* Adjust color and opacity as needed */
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px); /* For Safari */
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    z-index: 1000;
+  }
+  
+  /* Optional: Style for the content inside the header */
+  ion-header ion-toolbar {
+    --background: transparent;
+    --border-color: transparent;
+  }
+  
+  /* Ensure content below the header is not overlapped */
+  ion-content {
+    --padding-top: 60px; /* Should match the header height */
+  }
+  
+  /* For older browsers that don't support backdrop-filter */
+  @supports not (backdrop-filter: blur(10px)) {
+    ion-header {
+      background: rgba(255, 255, 255, 0.7);
+    }
+  }
+
+  ion-menu {
+    --background: white;
+  }
+
+  
+ion-content{
+    /* From Pink to Blue */
+  --background: linear-gradient(135deg, #FF6EC7 0%, #5B8DEF 100%);
+  
+  }
+  
