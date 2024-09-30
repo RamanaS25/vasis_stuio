@@ -1,0 +1,7 @@
+{
+  "name": "vasis_stuio",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular-standalone"
+}
