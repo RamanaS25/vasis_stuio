@@ -1,0 +1,96 @@
+/* Styling the card itself */
+.special-card {
+    background: linear-gradient(145deg, #f0f4f8, #ffffff);
+    border-radius: 15px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+    margin: 20px;
+    margin-right: 50px;
+    margin-left: 50px;
+    padding: 20px;
+  }
+
+  .course-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 16px;
+    padding: 16px;
+  }
+  
+  @media (min-width: 600px) {
+    .course-grid {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  
+  /* Hover effect to lift the card slightly */
+  .special-card:hover {
+    cursor: pointer;
+    transform: translateY(-5px);
+    box-shadow: 0 15px 25px rgba(0, 0, 0, 0.15);
+  }
+  
+  /* Styling the card content */
+  ion-card-content {
+    padding: 20px;
+    text-align: center;
+  }
+  
+  /* Styling the text */
+  ion-text {
+    font-family: 'Montserrat', sans-serif; /* Use a clean, modern font */
+    font-weight: 600;
+    font-size: 1.5rem;
+    color: #333;
+    letter-spacing: 0.5px;
+  }
+  
+  /* Adjustments for responsiveness */
+  @media (max-width: 768px) {
+    ion-card {
+      margin: 10px;
+      padding: 15px;
+    }
+  
+    ion-text {
+      font-size: 1.25rem;
+    }
+  }
+
+  .coming-soon {
+    background: rgba(255, 255, 255, 0.548);
+    border-radius: 15px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+    margin: 20px;
+    margin-right: 50px;
+    margin-left: 50px;
+    padding: 20px;
+  }
+  
+  .modules {
+
+    background: rgba(255, 255, 255, 0.555);
+    border-radius: 16px;
+  }
+
+  .modules:hover{
+    --background: rgb(255, 255, 255);
+    
+  }
+
+  .items-card{
+    background: linear-gradient(145deg, #f0f4f8, #ffffff);
+    border-radius: 15px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+   
+    padding: 20px;
+  }
+
+  .items-card:hover{
+    cursor: pointer;
+    transform: translateY(-5px);
+    box-shadow: 0 15px 25px rgba(0, 0, 0, 0.15);
+  }
+

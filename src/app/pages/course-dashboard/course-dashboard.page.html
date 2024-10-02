@@ -1,0 +1,80 @@
+<ion-header [translucent]="true" class="ion-no-border">
+  <ion-toolbar>
+    @if(course_selected) {
+      <ion-buttons slot="start">
+        <ion-button (click)="course_selected = false">
+           <ion-icon name="arrow-back-outline" size="large" ></ion-icon>
+          
+        </ion-button>
+      </ion-buttons>
+    }@else {
+      <ion-buttons slot="start">
+        <ion-menu-button></ion-menu-button>
+     </ion-buttons>
+    }
+ 
+
+    <ion-title style="color: white;">Course Dashboard</ion-title>
+
+    <ion-buttons slot="end">
+       <ion-chip style="--background:white;">
+         User
+       </ion-chip>
+    </ion-buttons>
+
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+
+  <ion-grid fixed="true">
+     <ion-row>
+       <ion-col>
+
+        @if (!course_selected) {
+        <div class="course-grid">
+          <ion-card (click)="course_selected = true" class="special-card">
+            <ion-card-content class="ion-text-center">
+              <ion-text>Harmonium Course</ion-text>
+            </ion-card-content>
+          </ion-card>
+
+          <ion-card class="coming-soon">
+            <ion-card-content class="ion-text-center">
+              <ion-text>Coming Soon</ion-text>
+            </ion-card-content>
+          </ion-card>
+        </div>
+        
+         }@else {
+          <ion-segment  [(ngModel)]="selectedModule" mode="ios">
+            @for (item of modules; track $index) {
+              <ion-segment-button [value]="item">  
+                <ion-label   >{{item.title}}</ion-label>
+              </ion-segment-button>
+            }
+          </ion-segment>
+
+          <ion-card style="border-radius: 10px;">
+            <ion-card-header>
+              <ion-card-title>{{selectedModule.title}}</ion-card-title>
+            </ion-card-header>
+            <ion-card-content>
+        
+                @for (item of selectedModule.components; track $index) {
+                  <ion-item detail="false" lines="none" style="border-radius: 10px; margin-bottom: 10px; --background:rgb(237, 213, 253);" (click)="navigateTo(selectedModule.link)" detail="true" button>
+                    <ion-label>{{item}}</ion-label>
+                  </ion-item>
+                }
+          
+            </ion-card-content>
+          </ion-card>
+          
+         }
+        
+
+       </ion-col>
+     </ion-row>
+  </ion-grid>
+
+</ion-content>
