@@ -1,20 +1,20 @@
 /* Wrapper to horizontally center the logo */
 .centered-logo-container {
-    display: flex;
-    justify-content: center; /* Horizontally centers the content */
-    padding: 20px 0; /* Optional: space around the logo */
-
+  display: flex;
+  justify-content: center; /* Horizontally centers the content */
+  padding: 20px 0; /* Optional: space around the logo */
 }
 
 /* Styling the logo */
 .centered-logo {
-    width: 250px; /* Adjust the width as needed */
-    height: auto;
-    padding: 10px;
+  width: 250px; /* Adjust the width as needed */
+  height: auto;
+  padding: 10px;
 }
 
 .image-card-background1 {
-  --background: url('../../../assets/img//banner0802.jpg') no-repeat center center / cover;
+  --background: url("../../../assets/img//banner0802.jpg") no-repeat center
+    center / cover;
   height: auto;
   width: 100%;
   max-width: 100%;
@@ -33,9 +33,10 @@
   }
 }
 
-.image-card-background{
-    --background: url('../../../assets/img//banner0802.jpg') no-repeat center center / cover;
-    height: 400px;
+.image-card-background {
+  --background: url("../../../assets/img//banner0802.jpg") no-repeat center
+    center / cover;
+  height: 400px;
 }
 
 swiper-container {
@@ -52,21 +53,20 @@ swiper-container {
 }
 @media (max-width: 768px) {
   swiper-container {
-      --swiper-navigation-size: 30px;
+    --swiper-navigation-size: 30px;
   }
   .image-card-background {
-      height: 200px;
+    height: 200px;
   }
 }
-  
-.messages{
+
+.messages {
   --background: rgba(255, 255, 255, 0.76);
   border-radius: 16px;
   transition: all 0.3s ease-in-out;
 }
 
-.messages:hover{
+.messages:hover {
   --background: rgba(255, 255, 255, 0.9);
-   box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.3);
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.3);
 }
-

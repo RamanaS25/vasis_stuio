@@ -1,0 +1,12 @@
+.modal {
+  --background-image: linear-gradient(to bottom, #7c9fff, #e89cff);
+  backdrop-filter: blur(5px);
+  --box-shadow: none;
+  --border-radius: 20px;
+}
+.itemSelect {
+  --background: rgba(233, 230, 255, 0.411);
+  margin-left: 10px;
+  margin-right: 10px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.836);
+}
