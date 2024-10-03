@@ -85,10 +85,7 @@
         <label> Language type: </label>
 
         <div (click)="user.lang_type = 'English'">
-          <ion-chip
-            (click)="user.lang_type = 'English'"
-            [disabled]="user.lang_type != 'English'"
-          >
+          <ion-chip [disabled]="user.lang_type != 'English'">
             English
           </ion-chip>
         </div>

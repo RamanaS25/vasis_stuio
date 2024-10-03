@@ -78,15 +78,15 @@ export class LoginComponent implements OnInit {
   isloading = false;
 
   @Input() login_open = false;
-  @Input() signup_open = false;
-  @Input() user = {
-    username: '',
-    intiated_name: '',
-    password: '',
-    _password: '',
-    email: '',
-    phone: '',
-    lang_type: '',
+  signup_open = false;
+  user = {
+    username: 'Ramana',
+    intiated_name: 'Ramana',
+    password: 'Point123',
+    _password: 'Point123',
+    email: 'ramana@gmail.com',
+    phone: '+91 9876543210',
+    lang_type: 'English',
   };
 
   loginOutput = output<boolean>();
@@ -94,7 +94,6 @@ export class LoginComponent implements OnInit {
 
   closeModal(x: boolean) {
     this.loginOutput.emit(x);
-    console.log('компонент метод');
   }
   login() {}
   signUp() {

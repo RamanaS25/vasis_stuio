@@ -75,17 +75,9 @@ export class HomePage implements OnInit {
       icon: '',
     },
   ];
-  user = {
-    username: 'Ramana',
-    intiated_name: 'Ramana',
-    password: 'Point123',
-    _password: 'Point123',
-    email: 'ramana@gmail.com',
-    phone: '+91 9876543210',
-    lang_type: 'English',
-  };
+
   login_open: boolean = false;
-  signup_open: boolean = false;
+
   profile_open: boolean = false;
 
   constructor() {
