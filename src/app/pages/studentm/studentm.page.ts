@@ -22,6 +22,7 @@ import {
   IonButton,
   IonToggle,
   IonSkeletonText,
+  IonToast,
 } from '@ionic/angular/standalone';
 import { StudentManagementService } from 'src/app/services/student/student-management.service';
 
@@ -31,6 +32,7 @@ import { StudentManagementService } from 'src/app/services/student/student-manag
   styleUrls: ['./studentm.page.scss'],
   standalone: true,
   imports: [
+    IonToast,
     IonSkeletonText,
     IonToggle,
     IonButton,
@@ -81,6 +83,9 @@ export class StudentmPage implements OnInit {
   onlyRegistered = false;
   selectedGroup: string = '';
   searchInput: string = '';
+
+  isToastOpen = false;
+  message: string = '';
 
   constructor() {
     this.getAllStudents();
@@ -138,8 +143,8 @@ export class StudentmPage implements OnInit {
     );
   }
 
-  editUser(user: any) {
-    let x = this.studentApi.editUser(
+  async editUser(user: any) {
+    let x = await this.studentApi.editUser(
       user.id,
       user.email,
       user.phone,
@@ -149,27 +154,38 @@ export class StudentmPage implements OnInit {
       user.group_name,
       user.is_registered
     );
+    if (x.success) {
+      this.toast('User updated successfully');
+    }
   }
   async deleteUser(user: any) {
     let x = await this.studentApi.deleteUser(user.id);
-    this.getAllStudents();
-    this.user = {
-      banned_payment: null,
-      created_at: '',
-      currency: null,
-      email: '',
-      grade: '',
-      group_name: '',
-      id: 269,
-      initiated_name: ' ',
-      is_admin: false,
-      is_registered: false,
-      language: '',
-      legal_name: '',
-      password: '!',
-      phone: '',
-      user_name: '',
-      voice_scale: '',
-    };
+    if (x.success) {
+      this.getAllStudents();
+      this.user = {
+        banned_payment: null,
+        created_at: '',
+        currency: null,
+        email: '',
+        grade: '',
+        group_name: '',
+        id: 269,
+        initiated_name: ' ',
+        is_admin: false,
+        is_registered: false,
+        language: '',
+        legal_name: '',
+        password: '!',
+        phone: '',
+        user_name: '',
+        voice_scale: '',
+      };
+      this.toast('User deleted successfully');
+    }
+  }
+
+  toast(message: string) {
+    this.isToastOpen = true;
+    this.message = message;
   }
 }

@@ -7,6 +7,13 @@
   </ion-toolbar>
 </ion-header>
 
+<ion-toast
+  [isOpen]="isToastOpen"
+  [message]="message"
+  [duration]="5000"
+  (didDismiss)="isToastOpen = false"
+></ion-toast>
+
 <ion-content [fullscreen]="true">
   <ion-grid fixed="true">
     <ion-row>
