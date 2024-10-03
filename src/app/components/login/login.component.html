@@ -1,3 +1,132 @@
-<p>
-  login works!
-</p>
+<ion-toolbar
+  style="--border-shadow: none; --background: rgba(211, 167, 253, 0)"
+>
+  <div style="margin: 10px; color: black">Login</div>
+
+  <ion-buttons slot="end">
+    <ion-button (click)="closeModal(login_open)" style="color: black">
+      close
+    </ion-button>
+  </ion-buttons>
+</ion-toolbar>
+<div>
+  <ion-list style="background-color: rgba(240, 248, 255, 0)">
+    <ion-item class="itemSelect" lines="none">
+      <ion-input
+        label="Username"
+        [(ngModel)]="user.username"
+        labelPlacement="floating"
+      ></ion-input>
+    </ion-item>
+    <ion-item class="itemSelect" lines="none">
+      <ion-input
+        label="Password"
+        [(ngModel)]="user.password"
+        labelPlacement="floating"
+        type="password"
+      ></ion-input>
+    </ion-item>
+    @if(!isloading && !signup_open){
+
+    <ion-item style="--background: transparent" lines="none">
+      <ion-label
+        (click)="signup_open = true"
+        style="cursor: pointer; text-decoration: underline"
+      >
+        Create an account
+      </ion-label>
+      <ion-button
+        (click)="login(); isloading = true"
+        style="--background: rgb(210, 187, 252); color: black"
+      >
+        Sign in</ion-button
+      >
+    </ion-item>
+
+    } @else if (signup_open) {
+
+    <ion-item class="itemSelect" lines="none">
+      <ion-input
+        label="Confirm Password"
+        [(ngModel)]="user._password"
+        labelPlacement="floating"
+        type="password"
+      ></ion-input>
+    </ion-item>
+    <ion-item class="itemSelect" lines="none">
+      <ion-input
+        label="Initiated Name"
+        [(ngModel)]="user.intiated_name"
+        labelPlacement="floating"
+        type="email"
+      >
+      </ion-input>
+    </ion-item>
+    <ion-item class="itemSelect" lines="none">
+      <ion-input
+        label="Email"
+        [(ngModel)]="user.email"
+        labelPlacement="floating"
+        type="email"
+      >
+      </ion-input>
+    </ion-item>
+    <ion-item class="itemSelect" lines="none">
+      <ion-input
+        label="Phone Number"
+        [(ngModel)]="user.phone"
+        labelPlacement="floating"
+        type="tel"
+      >
+      </ion-input>
+    </ion-item>
+    <ion-item class="itemSelect" lines="none">
+      <div style="align-items: center; display: flex">
+        <label> Language type: </label>
+
+        <div (click)="user.lang_type = 'English'">
+          <ion-chip
+            (click)="user.lang_type = 'English'"
+            [disabled]="user.lang_type != 'English'"
+          >
+            English
+          </ion-chip>
+        </div>
+
+        <div (click)="user.lang_type = 'Sapnish'">
+          <ion-chip [disabled]="user.lang_type !== 'Sapnish'">
+            Spanish
+          </ion-chip>
+        </div>
+        <div (click)="user.lang_type = 'Portuguese'">
+          <ion-chip [disabled]="user.lang_type !== 'Portuguese'">
+            Spanish
+          </ion-chip>
+        </div>
+      </div>
+    </ion-item>
+    <ion-item style="--background: rgba(240, 248, 255, 0)" lines="none">
+      <ion-label
+        (click)="signup_open = false"
+        style="cursor: pointer; text-decoration: underline"
+      >
+        Back
+      </ion-label>
+      <ion-button
+        (click)="signUp()"
+        style="--background: rgba(227, 200, 252, 0.849); color: black"
+      >
+        Sign Up</ion-button
+      >
+    </ion-item>
+
+    } @else {
+    <ion-progress-bar type="indeterminate"></ion-progress-bar>
+    }
+  </ion-list>
+</div>
+<ion-toast
+  [isOpen]="open_toast"
+  [message]="message"
+  [duration]="5000"
+></ion-toast>
