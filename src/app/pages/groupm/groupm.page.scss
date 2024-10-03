@@ -1,0 +1,54 @@
+.scrollable-content {
+    height: 85vh; /* 70% of the viewport height */
+    overflow-y: auto; /* Scrollable overflow for vertical scrolling */
+    padding: 1rem; /* Optional padding for inner content */
+    box-sizing: border-box; /* Ensures padding is included in height */
+  }
+  
+  /* Minimal custom scrollbar */
+  .scrollable-content::-webkit-scrollbar {
+    width: 6px; /* Adjust the width for the scrollbar */
+  }
+  
+  .scrollable-content::-webkit-scrollbar-track {
+    background: #f1f1f1; /* Track color */
+    border-radius: 10px;
+  }
+  
+  .scrollable-content::-webkit-scrollbar-thumb {
+    background-color: #888; /* Scrollbar thumb color */
+    border-radius: 10px; /* Rounded corners */
+    border: 2px solid #f1f1f1; /* Optional border around thumb */
+  }
+  
+  .scrollable-content::-webkit-scrollbar-thumb:hover {
+    background-color: #555; /* Darker on hover */
+  }
+  .groupItem{
+    border-radius: 10px; margin-bottom: 10px; 
+    --background:rgb(237, 213, 253);
+  }
+  .selected{
+    border-radius: 10px; margin-bottom: 10px; 
+    --background: rgb(213, 163, 247);
+    font-weight: bold;
+    
+  }
+
+  .future{
+    --background:rgb(187, 155, 218);
+     margin-top: 10px;
+      border-radius: 10px;
+  }
+
+  .past{
+    --background:rgba(89, 54, 124, 0.308);
+     margin-top: 10px;
+      border-radius: 10px;
+  }
+
+  .next{
+    --background:rgb(155, 190, 218);
+    margin-top: 10px;
+     border-radius: 10px;
+  }

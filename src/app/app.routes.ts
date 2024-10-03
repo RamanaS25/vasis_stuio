@@ -38,4 +38,8 @@ export const routes: Routes = [
     path: 'management-dashboard',
     loadComponent: () => import('./pages/management-dashboard/management-dashboard.page').then( m => m.ManagementDashboardPage)
   },
+  {
+    path: 'student-sessions',
+    loadComponent: () => import('./pages/student-sessions/student-sessions.page').then( m => m.StudentSessionsPage)
+  },
 ];
