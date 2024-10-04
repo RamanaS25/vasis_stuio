@@ -78,8 +78,6 @@ export class HomePage implements OnInit {
 
   login_open: boolean = false;
 
-  profile_open: boolean = false;
-
   constructor() {
     addIcons({ logoInstagram, logoFacebook, logoGoogle, logoWhatsapp });
   }

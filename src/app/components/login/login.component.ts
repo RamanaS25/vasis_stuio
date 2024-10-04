@@ -113,6 +113,14 @@ export class LoginComponent implements OnInit {
       this.message = 'Invalid Email';
       return;
     }
+    const userValue = Object.values(this.user);
+    userValue.forEach((value, index) => {
+      if (value === '') {
+        this.open_toast = true;
+        this.message = 'Please fill all the fields';
+        return;
+      }
+    });
   }
 
   ngOnInit() {}

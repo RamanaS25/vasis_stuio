@@ -128,9 +128,10 @@ export class StudentmPage implements OnInit {
       );
     });
 
-    if (this.onlyRegistered) {
-      x = x.filter((user: { is_registered: boolean }) => user.is_registered);
-    }
+    x = x?.filter(
+      (user: { is_registered: boolean }) =>
+        user?.is_registered === this.onlyRegistered
+    );
 
     // If no group is selected, return the filtered users without group filtering
     if (this.selectedGroup === '') {
