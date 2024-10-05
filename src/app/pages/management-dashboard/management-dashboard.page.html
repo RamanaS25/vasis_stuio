@@ -1,41 +1,49 @@
 <ion-header [translucent]="true" class="ion-no-border">
   <ion-toolbar>
-
     <ion-buttons slot="start">
-       <ion-menu-button></ion-menu-button>
+      <ion-menu-button></ion-menu-button>
     </ion-buttons>
     <ion-title>management-dashboard</ion-title>
 
     <ion-buttons slot="end">
-       <ion-chip style="--background:white;">
-         User     
-       </ion-chip>
-       
+      <ion-chip style="--background: white" (click)="profile_open=true">
+        User
+      </ion-chip>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
- <ion-grid fixed="true">
+<ion-modal
+  [isOpen]="profile_open"
+  (didDismiss)="profile_open = false"
+  style="
+    --border-radius: 10px;
+    backdrop-filter: blur(10px);
+    --background: linear-gradient(to bottom, #9290ff, #ff93fa);
+  "
+>
+  <ng-template>
+    <app-profile
+      (profileOutput)="open($event)"
+      [profile_open]="profile_open"
+    ></app-profile>
+  </ng-template>
+</ion-modal>
 
-  <ion-row>
-    <ion-col>
-      <div class="course-grid">
-        @for (item of sections; track $index) {
-          <ion-card  class="special-card" (click)="navigateTo(item.link)">
+<ion-content [fullscreen]="true">
+  <ion-grid fixed="true">
+    <ion-row>
+      <ion-col>
+        <div class="course-grid">
+          @for (item of sections; track $index) {
+          <ion-card class="special-card" (click)="navigateTo(item.link)">
             <ion-card-content class="ion-text-center">
               <ion-text>{{item.title}}</ion-text>
             </ion-card-content>
           </ion-card>
-        }
-      
-    
-       
-      </div>
-    </ion-col>
-  </ion-row>
- 
- </ion-grid>
- 
-
+          }
+        </div>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
 </ion-content>

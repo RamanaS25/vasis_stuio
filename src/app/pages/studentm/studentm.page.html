@@ -55,10 +55,10 @@
                   (click)="user = item"
                 >
                   <ul class="custom-list">
-                    <li>{{item.legal_name}}</li>
+                    <li>{{item?.legal_name}}</li>
                     <small>
-                      {{item.initiated_name === "undefined" ? "" :
-                      item.initiated_name}}
+                      {{item?.initiated_name === "undefined" ? "" :
+                      item?.initiated_name}}
                     </small>
                   </ul>
                 </ion-item>
