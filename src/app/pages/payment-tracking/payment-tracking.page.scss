@@ -1,0 +1,59 @@
+.listStudent {
+    border-radius: 15px;
+    background-color: rgba(253, 253, 253, 0);
+  }
+  
+  .itemStudent {
+    --background: rgba(233, 230, 255, 0.158);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.432);
+  }
+
+  .itemStudentSelected {
+    --background: rgba(95, 81, 202, 0.158);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.432);
+  }
+  
+  .itemSelect {
+    --background: rgba(233, 230, 255, 0.411);
+    margin: 10px;
+    border-radius: 15px;
+  }
+  .scrollable {
+    height: 80vh;
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+  
+
+  /* Sleek and modern scrollbar styles */
+.scrollable::-webkit-scrollbar {
+  width: 4px;
+}
+
+.scrollable::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.scrollable::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.521);
+  border-radius: 2px;
+  transition: background 0.3s ease;
+}
+
+.scrollable::-webkit-scrollbar-thumb:hover {
+  background: rgba(248, 248, 248, 0.699);
+}
+
+.payment-item-past{
+  border-radius: 10px;
+  margin-bottom:10px;
+  --background: rgba(193, 146, 255, 0.521);
+  
+}
+
+.payment-item-future{
+  border-radius: 10px;
+  margin-bottom:10px;
+  --background: rgba(193, 146, 255, 0.521);
+  --background: rgba(245, 188, 221, 0.904);
+}

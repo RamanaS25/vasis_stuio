@@ -66,11 +66,11 @@
                      {{ item._date | date: 'medium' : 'Asia/Kolkata' }} IST
                    </ion-chip>
                     @if(item.recorded_class === null) {
-                      <ion-icon name="play-outline" slot="end" (click)="isOpenGroup = true; selectedSession = item; edit_type='recorded_class'"  [color]="(item.recorded_class != null) ? 'success' : 'dark'" ></ion-icon>
+                      <ion-icon name="play-outline" slot="end" (click)="isOpenGroup = true; selectedSession = item; edit_type='recorded_class'"  [color]="(item.recorded_class !== null) ? 'success' : 'dark'" ></ion-icon>
                       
                     } @else {
                       
-                     <ion-icon name="play-outline" slot="end" (click)="watchVideo = true; selectedSession = item;"  [color]="(item.recorded_class != null) ? 'success' : 'dark'" ></ion-icon>
+                     <ion-icon name="play-outline" slot="end" (click)="watchVideo = true; selectedSession = item;"  [color]="(item.recorded_class !== null) ? 'success' : 'dark'" ></ion-icon>
                      <ion-icon name="play-outline" slot="end" (click)="isOpenGroup = true; selectedSession = item; edit_type='recorded_class'"  [color]="'dark'" ></ion-icon>
                       
                     }
