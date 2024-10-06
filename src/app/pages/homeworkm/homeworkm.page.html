@@ -1,0 +1,96 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start" style="color: white">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title style="color: white">Homework Management</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" mode="ios">
+  <ion-grid fixed="true">
+    <ion-row>
+      <ion-col>
+        <ion-select
+          mode="md"
+          interface="popover"
+          placeholder="Grade"
+          [(ngModel)]="selectedGrade"
+        >
+          @for (grade of payment_dates; track $index) {
+          <ion-select-option [value]="grade.grade"
+            >{{grade.grade}}</ion-select-option
+          >
+          }
+        </ion-select>
+      </ion-col>
+      <ion-col>
+        <ion-select
+          mode="md"
+          interface="popover"
+          placeholder="Level"
+          [(ngModel)]="selectedLevel"
+        >
+          @for (item of filteredLevel; track $index) {
+          <ion-select-option [value]="item.name"
+            >{{item.name}}</ion-select-option
+          >
+          }
+        </ion-select>
+      </ion-col>
+      <ion-col>
+        <ion-select
+          mode="md"
+          interface="popover"
+          placeholder="Class"
+          [(ngModel)]="selectedClass"
+        >
+          @for (item of filteredClass; track $index) {
+          <ion-select-option [value]="item.name"
+            >{{item.name}}</ion-select-option
+          >
+          }
+        </ion-select>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        @if(selectedClass===''){
+        <ion-card>
+          <ion-item lines="none" class="ion-text-center">
+            <ion-label>{{selectSmt}}</ion-label>
+          </ion-item></ion-card
+        >
+
+        } @for (item of filteredHomework; track $index) {
+        <ion-card>
+          <ion-item lines="none"> {{item?.description}}</ion-item>
+          <ion-item lines="none"
+            >Simple Description: {{item?.descriptionS}}</ion-item
+          >
+          <ion-item lines="none"
+            >Detailed Description: {{item?.descriptionP}}</ion-item
+          >
+          <ion-item lines="none"> Melody:{{item?.is_melody}}</ion-item>
+          <ion-fab vertical="top" horizontal="end">
+            <ion-fab-button size="small">
+              <ion-icon name="chevron-back-outline"></ion-icon>
+            </ion-fab-button>
+            <ion-fab-list side="start">
+              <ion-fab-button>
+                <ion-icon name="add-outline"></ion-icon>
+              </ion-fab-button>
+              <ion-fab-button>
+                <ion-icon name="pencil-outline"></ion-icon>
+              </ion-fab-button>
+              <ion-fab-button>
+                <ion-icon name="trash-bin-outline"></ion-icon>
+              </ion-fab-button>
+            </ion-fab-list>
+          </ion-fab>
+        </ion-card>
+        }
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

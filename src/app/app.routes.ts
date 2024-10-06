@@ -37,5 +37,9 @@ export const routes: Routes = [
   {
     path: 'management-dashboard',
     loadComponent: () => import('./pages/management-dashboard/management-dashboard.page').then( m => m.ManagementDashboardPage)
+  },  {
+    path: 'homeworkm',
+    loadComponent: () => import('./pages/homeworkm/homeworkm.page').then( m => m.HomeworkmPage)
   },
+
 ];
