@@ -69,7 +69,7 @@ export class ManagementDashboardPage implements OnInit {
 
     {
       title: 'Homework Management',
-      link: '/homework-management',
+      link: '/homeworkm',
     },
     {
       title: 'Attendance',
