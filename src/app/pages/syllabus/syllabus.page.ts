@@ -6,6 +6,9 @@ import { VimeoPlayerComponent } from 'src/app/components/vimeo-player/vimeo-play
 import { lockClosed, ellipseOutline, addOutline, closeOutline, createOutline } from 'ionicons/icons';
 import { addIcons } from 'ionicons';
 import { ShortVideosService } from 'src/app/services/short-videos/short-videos.service';
+import { LoginService } from 'src/app/services/auth/login.service';
+import { ProfileComponent } from 'src/app/components/profile/profile.component';
+
 addIcons({lockClosed, ellipseOutline, addOutline, closeOutline, createOutline})
 
 @Component({
@@ -13,13 +16,17 @@ addIcons({lockClosed, ellipseOutline, addOutline, closeOutline, createOutline})
   templateUrl: './syllabus.page.html',
   styleUrls: ['./syllabus.page.scss'],
   standalone: true,
-  imports: [IonToast, IonButton, IonModal, IonCheckbox, IonInput, IonIcon, IonRow, IonGrid, IonChip, IonCardContent, IonItem, IonCardHeader,IonMenuButton, IonLabel, IonCard, IonCol, IonAccordion, IonAccordionGroup, IonButtons, IonButtons, IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule, VimeoPlayerComponent, IonSkeletonText],
+  imports: [ProfileComponent,IonToast, IonButton, IonModal, IonCheckbox, IonInput, IonIcon, IonRow, IonGrid, IonChip, IonCardContent, IonItem, IonCardHeader,IonMenuButton, IonLabel, IonCard, IonCol, IonAccordion, IonAccordionGroup, IonButtons, IonButtons, IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule, VimeoPlayerComponent, IonSkeletonText],
 })
 export class SyllabusPage implements OnInit {
+  auth = inject(LoginService)
+  profile_open = false
   videoId = '1011746589?h=f3d1ddc97e'
   selectedVideo:any
   api = inject(ShortVideosService);
-  videos:any
+  videos:any = []
+
+
   video_to_delete:any = {
     video_id: '',
     title: '',
@@ -59,7 +66,7 @@ export class SyllabusPage implements OnInit {
 
   
   constructor() {
-      addIcons({ellipseOutline,lockClosed});
+      addIcons({ellipseOutline,addOutline,createOutline,closeOutline,lockClosed});
        this.getVideos()
     }
    handleToast(message: string, color: string, duration: number) {
@@ -109,7 +116,7 @@ export class SyllabusPage implements OnInit {
   
 
    async getVideos(){
-    const result = await this.api.getGradeOneData(1);
+    const result = await this.api.getGradeOneData(this.auth._user.grade);
     if (result.success) {
       // Use result.data
       this.videos = result.data;

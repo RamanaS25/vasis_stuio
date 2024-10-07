@@ -17,9 +17,12 @@
     <ion-title style="color: white;">Course Dashboard</ion-title>
 
     <ion-buttons slot="end">
-       <ion-chip style="--background:white;">
-         User
-       </ion-chip>
+      @if(auth._logged_in){
+        <ion-chip style="--background:white;" (click)="profile_open = true">
+          {{auth._user.user_name}}
+         </ion-chip>
+       }
+       
     </ion-buttons>
 
   </ion-toolbar>
@@ -27,6 +30,23 @@
 
 <ion-content [fullscreen]="true">
 
+ <ion-modal
+  [isOpen]="profile_open"
+  (didDismiss)="profile_open = false"
+  style="
+    --border-radius: 10px;
+    backdrop-filter: blur(10px);
+    --background: linear-gradient(to bottom, #9290ff, #ff93fa);
+  "
+>
+  <ng-template>
+    <app-profile
+      (profileOutput)="profile_open = !profile_open"
+      [profile_open]="profile_open"
+    ></app-profile>
+  </ng-template>
+</ion-modal>
+   
   <ion-grid fixed="true">
      <ion-row>
        <ion-col>

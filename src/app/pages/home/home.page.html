@@ -6,13 +6,39 @@
 
     <ion-title>Vasis Studio</ion-title>
     <ion-buttons slot="end">
-      <ion-chip style="--background: white" (click)="login_open=true">
-        Log In
-      </ion-chip>
+      @if(!auth._logged_in) {
+        <ion-chip style="--background: white" (click)="login_open=true">
+          Log In
+        </ion-chip>
+      }@else {
+        <ion-chip style="--background: white" (click)="user_profile=true">
+          {{auth._user.user_name}}
+        </ion-chip>
+      }
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
+<ion-toast [message]="message" [color]="color" [duration]="3000" [isOpen]="toastBool" (didDismiss)="toastBool = false" position="top"></ion-toast>
+
+
+<ion-modal
+  [isOpen]="user_profile"
+  (didDismiss)="user_profile = false"
+  style="
+    --border-radius: 10px;
+    backdrop-filter: blur(10px);
+    --background: linear-gradient(to bottom, #9290ff, #ff93fa);
+  "
+>
+  <ng-template>
+    <app-profile
+      (profileOutput)="user_profile = false"
+      [profile_open]="user_profile"
+    ></app-profile>
+  </ng-template>
+</ion-modal>
+  
 <ion-modal
   [isOpen]="login_open"
   (didDismiss)="login_open = false"
@@ -24,8 +50,10 @@
 >
   <ng-template>
     <app-login
+    (_message)="handleNotification( $event)"
       (loginOutput)="open($event)"
       [login_open]="login_open"
+     
     ></app-login>
   </ng-template>
   

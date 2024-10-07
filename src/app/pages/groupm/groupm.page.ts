@@ -235,6 +235,7 @@ export class GroupmPage implements OnInit {
      this.start_edit.zoom_link = group.zoom_link
      this.start_edit.student_sessions = group.student_sessions
      this.start_edit.end_date = group.end_date
+     this.start_edit.weeks = 24
      console.log(this.start_edit)
 
 
@@ -242,7 +243,7 @@ export class GroupmPage implements OnInit {
      
      if(x.success) {
       console.log(x.data)
-      this.insertSessionsIntoGroup(group);
+      this.insertSessionsIntoGroup(this.start_edit);
       
      }else{
       this.toast('Error In Operation', 'danger', 3000)

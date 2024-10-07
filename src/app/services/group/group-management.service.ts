@@ -48,14 +48,16 @@ export class GroupManagementService {
     const { name, start_date, end_date, weeks } = group;
    
     // Convert startDate and endDate to Date objects
+    console.log(start_date, end_date)
     let currentDate = new Date(start_date);
     const finalDate = new Date(end_date);
     console.log('hi', currentDate, finalDate)
     // Array to hold session data for batch insert
     const sessionData: { _date: string, week_num: number, group_name: string }[] = [];
-  
+    console.log('weeks', weeks)
     for (let weekNum = 1; weekNum <= weeks; weekNum++) {
       // Ensure that the current session date does not exceed the final date
+      console.log(currentDate, finalDate)
       if (currentDate > finalDate) {
         break;
       }
