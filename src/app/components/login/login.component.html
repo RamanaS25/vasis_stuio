@@ -39,7 +39,7 @@
         (click)="login(); isloading = true"
         style="--background: rgb(210, 187, 252); color: black"
       >
-        Sign in</ion-button
+        Log in</ion-button
       >
     </ion-item>
 
@@ -56,7 +56,7 @@
     <ion-item class="itemSelect" lines="none">
       <ion-input
         label="Initiated Name"
-        [(ngModel)]="user.intiated_name"
+        [(ngModel)]="user.initiated_name"
         labelPlacement="floating"
         type="email"
       >
@@ -122,8 +122,11 @@
     }
   </ion-list>
 </div>
+
 <ion-toast
   [isOpen]="open_toast"
   [message]="message"
   [duration]="5000"
+  (didDismiss)="open_toast = false"
+  position="top"
 ></ion-toast>

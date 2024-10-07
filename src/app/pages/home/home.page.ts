@@ -1,4 +1,4 @@
-import { Component, CUSTOM_ELEMENTS_SCHEMA, OnInit } from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {
@@ -24,6 +24,8 @@ import {
   logoFacebook,
   logoGoogle,
 } from 'ionicons/icons';
+import { LoginService } from 'src/app/services/auth/login.service';
+import { ProfileComponent } from 'src/app/components/profile/profile.component';
 
 // register Swiper custom elements
 register();
@@ -33,6 +35,7 @@ register();
   styleUrls: ['./home.page.scss'],
   standalone: true,
   imports: [
+    ProfileComponent,
     IonButtons,
     IonChip,
     IonButton,
@@ -51,7 +54,9 @@ register();
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
+
 export class HomePage implements OnInit {
+  auth = inject(LoginService)
   messages: any[] = [
     {
       title: 'New batches start every month for Module 1 and Module 2.',
@@ -75,11 +80,29 @@ export class HomePage implements OnInit {
       icon: '',
     },
   ];
+    toastBool = false;
+    message: string = '';
+    color: string = 'danger';
 
   login_open: boolean = false;
-
+  user_profile: boolean = false;
   constructor() {
     addIcons({ logoInstagram, logoFacebook, logoGoogle, logoWhatsapp });
+  }
+
+  handleNotification(message: string) {
+    if (message === 'Logged in successfully') {
+      this.toast('Logged in successfully', 'success');
+    } else if (message === 'Please Complete your Payment for this level') {
+      alert('Please Complete your Payment for this level');
+    }
+  }
+
+  toast(message: string, color: string) {
+    console.log(message)
+    this.message = message;
+    this.color = color;
+    this.toastBool = true;
   }
 
   open(x: any) {

@@ -1,25 +1,26 @@
 <ion-card>
-  <ion-list>
-    <ion-item lines="none">
-      <ion-label>Name: </ion-label>
-    </ion-item>
-    <ion-item lines="none">
-      <ion-label>Email:</ion-label>
-    </ion-item>
-    <ion-item lines="none">
-      <ion-label>Phone Number:</ion-label>
-    </ion-item>
-    <ion-item lines="none">
-      <ion-label>Group:</ion-label>
-    </ion-item>
-    <ion-item lines="none">
-      <ion-label>Grade:</ion-label>
-    </ion-item>
-    <ion-item lines="none">
-      <ion-label>Voice Scale:</ion-label>
-    </ion-item>
-  </ion-list></ion-card
->
+    <ion-list>
+      <ion-item lines="none">
+        <ion-label>Name: {{auth._user.legal_name}}</ion-label>
+      </ion-item>
+      <ion-item lines="none">
+        <ion-label>Email: {{auth._user.email}}</ion-label>
+      </ion-item>
+      <ion-item lines="none">
+        <ion-label>Phone Number: {{auth._user.phone}}</ion-label>
+      </ion-item>
+      <ion-item lines="none">
+        <ion-label>Group: {{auth._user.student_groups.name}}</ion-label>
+      </ion-item>
+      <ion-item lines="none">
+        <ion-label>Grade: {{auth._user.grade}}</ion-label>
+      </ion-item>
+      <ion-item lines="none">
+        <ion-label>Voice Scale: {{auth._user.voice_scale}}</ion-label>
+      </ion-item>
+    </ion-list>
+  </ion-card>
+
 <ion-buttons
   style="position: fixed; bottom: 0; right: 0; padding: 10px; color: white"
 >
