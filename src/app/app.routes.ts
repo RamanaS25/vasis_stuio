@@ -53,5 +53,10 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/student-sessions/student-sessions.page').then( m => m.StudentSessionsPage),
     canActivate: [authGuard]
   },
+  {
+    path: 'homeworkm',
+    loadComponent: () => import('./pages/homeworkm/homeworkm.page').then( m => m.HomeworkmPage),
+    canActivate: [authGuard]
+  },
 ];
 

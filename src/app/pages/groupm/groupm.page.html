@@ -7,10 +7,27 @@
     </ion-buttons>
 
     <ion-title style="color: aliceblue;">Group Management</ion-title>
+
+    <ion-buttons slot="end">
+      <ion-chip style="--background:white; color:black;" (click)="is_profile_open = true">
+        {{auth._user?.user_name}}
+      </ion-chip>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
+
+  <ion-modal [isOpen]="is_profile_open" (didDismiss)="is_profile_open = false"   style="
+  --border-radius: 10px;
+  backdrop-filter: blur(10px);
+  --background: linear-gradient(to bottom, #9290ff, #ff93fa);
+">
+    <ng-template>
+      <app-profile (profileOutput)="is_profile_open = false"></app-profile>
+    </ng-template>
+  </ion-modal>
+
  <ion-toast [message]="message" [color]="color" [duration]="duration" [isOpen]="toastBool" (onDidDismiss)="toastBool = false" position="top"></ion-toast>
   <ion-grid fixed="true">
      <ion-row>

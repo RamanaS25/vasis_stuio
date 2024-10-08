@@ -34,7 +34,10 @@ export class ShortVideosService {
               voice_scale,
               is_melody,
               title_s,
-              title_p
+              title_p,
+              student_video_progress (
+                id
+              )
             )
           )
         `)
@@ -65,7 +68,8 @@ export class ShortVideosService {
             voice_scale: video.voice_scale,
             is_melody: video.is_melody,
             title_s: video.title_s,
-            title_p: video.title_p
+            title_p: video.title_p,
+            student_video_progress: (video.student_video_progress.length > 0) ? true : false
           }))
         }))
       }));

@@ -24,7 +24,7 @@ export class LoginService {
      try {
        const { data, error } = await this.supabase
        .from('user_table')
-       .select('user_name, legal_name, initiated_name, grade, id, email, phone, voice_scale , is_banned, language, is_registered, is_admin, student_payment_history(session_id), student_groups(name, student_sessions(*)) ')
+       .select('user_name, legal_name, initiated_name, grade, id, email, phone, voice_scale , is_banned, language, is_registered, is_admin, student_payment_history(session_id), student_groups(name, zoom_link, student_sessions(*)) ')
        .eq('user_name', user.username).eq('password', user.password);
 
       //  console.log(data)

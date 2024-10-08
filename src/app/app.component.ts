@@ -16,6 +16,7 @@ export class AppComponent {
   appPages = [
     { title: 'Home', url: '/home', icon: 'home',access:'public' },
     { title: 'Management', url: '/management-dashboard', icon: 'home',access:'admin' },
+    { title: 'Sessions', url: '/student-sessions', icon: 'home',access:'student' },
     { title: 'Courses', url: '/course-dashboard', icon: 'home',access:'student' },
     { title: 'Tutorial', url: '/about', icon: 'information-circle',access:'public' },
     { title: 'Contact', url: '/contact', icon: 'mail',access:'public' }

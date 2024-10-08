@@ -3,13 +3,13 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonContent, IonHeader, IonTitle, IonMenuButton, IonToolbar, IonButtons, IonSkeletonText, IonAccordionGroup, IonAccordion, IonCol, IonCard, IonLabel, IonCardHeader, IonItem, IonCardContent, IonChip, IonGrid, IonRow, IonIcon, IonInput, IonCheckbox, IonModal, IonButton, IonToast } from '@ionic/angular/standalone';
 import { VimeoPlayerComponent } from 'src/app/components/vimeo-player/vimeo-player.component';
-import { lockClosed, ellipseOutline, addOutline, closeOutline, createOutline } from 'ionicons/icons';
+import { lockClosed, ellipseOutline, addOutline, closeOutline, createOutline, ellipse } from 'ionicons/icons';
 import { addIcons } from 'ionicons';
 import { ShortVideosService } from 'src/app/services/short-videos/short-videos.service';
 import { LoginService } from 'src/app/services/auth/login.service';
 import { ProfileComponent } from 'src/app/components/profile/profile.component';
 
-addIcons({lockClosed, ellipseOutline, addOutline, closeOutline, createOutline})
+addIcons({lockClosed, ellipseOutline, addOutline, closeOutline, createOutline, ellipse})
 
 @Component({
   selector: 'app-syllabus',
@@ -66,7 +66,7 @@ export class SyllabusPage implements OnInit {
 
   
   constructor() {
-      addIcons({ellipseOutline,addOutline,createOutline,closeOutline,lockClosed});
+      addIcons({ellipseOutline,addOutline,createOutline,closeOutline,ellipse,lockClosed});
        this.getVideos()
     }
    handleToast(message: string, color: string, duration: number) {

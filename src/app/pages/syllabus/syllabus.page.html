@@ -72,11 +72,28 @@
                              }@else {
                               <ion-icon name="ellipse-outline" slot="end"></ion-icon>
                              } -->
-                            @if(!auth._user.is_admin) {
+                            @if(auth._user.is_admin) {
                              <ion-icon name="add-outline" style="margin-right:10px;" (click)=" editModal = true; is_edit = false; "></ion-icon>
                              <ion-icon name="create-outline" style="margin-right:10px;" (click)="video_to_update = video; editModal = true; is_edit = true"></ion-icon>
                              <ion-icon name="close-outline" style="margin-right:10px;" (click)="video_to_delete = video; editModal = true; is_delete = true"></ion-icon>
                             }
+                            
+                               @if(video.locked) {
+
+                                <ion-icon name="lock-closed" style="margin-right:10px;" color="success" slot="end"></ion-icon>
+
+                               }@else {
+
+                                @if(video.student_video_progress) {
+
+                                   <ion-icon name="ellipse" style="margin-right:10px;" color="danger" slot="end"></ion-icon>
+                                   
+                                }@else {
+                                  <ion-icon name="ellipse-outline" style="margin-right:10px;"  slot="end"></ion-icon>
+                                }
+                               }
+
+                              
                              
                            </ion-item>
                         } @empty {

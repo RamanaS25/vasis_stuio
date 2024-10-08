@@ -8,6 +8,8 @@ import { Group, StudentSession } from './types';
 import { addIcons } from 'ionicons';
 import { ellipse, playOutline, createOutline, close } from 'ionicons/icons';
 import { YoutubePlayerComponent } from 'src/app/components/youtube-player/youtube-player.component';
+import { ProfileComponent } from 'src/app/components/profile/profile.component';
+import { LoginService } from 'src/app/services/auth/login.service';
 
 
 addIcons({ellipse, playOutline, createOutline, close});
@@ -17,12 +19,13 @@ addIcons({ellipse, playOutline, createOutline, close});
   templateUrl: './groupm.page.html',
   styleUrls: ['./groupm.page.scss'],
   standalone: true,
-  imports: [IonInput, YoutubePlayerComponent, IonSearchbar, IonToast, IonDatetimeButton, IonDatetime, IonModal, IonSegment, IonSegmentButton, IonChip, IonBadge, IonButton, IonIcon, IonLabel, IonItem, IonCardHeader, IonCardContent, IonText, IonCard, IonGrid, IonRow, IonCol, IonButtons, IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, IonMenuButton, FormsModule],
+  imports: [IonInput,ProfileComponent, YoutubePlayerComponent, IonSearchbar, IonToast, IonDatetimeButton, IonDatetime, IonModal, IonSegment, IonSegmentButton, IonChip, IonBadge, IonButton, IonIcon, IonLabel, IonItem, IonCardHeader, IonCardContent, IonText, IonCard, IonGrid, IonRow, IonCol, IonButtons, IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, IonMenuButton, FormsModule],
   providers: [DatePipe] 
 })
 export class GroupmPage implements OnInit {
   api = inject(GroupManagementService);
   datePipe = inject(DatePipe)
+  auth = inject(LoginService)
   selectedItem!:Group
   groups:Group[] = []
   selectedView:string = 'Live Sessions'
@@ -32,6 +35,7 @@ export class GroupmPage implements OnInit {
 
   isOpenGroup = false;
   watchVideo = false
+  is_profile_open = false
   edit_type:string = 'start_date'
 
   message: string = '';
@@ -48,8 +52,13 @@ export class GroupmPage implements OnInit {
     course_id: 0,
     status: false,
     zoom_link: '',
+    syllabus_grades: {
+      grade: 0
+    },
     student_sessions: []
   }
+
+  classes:any[] = []
 
   selectedSession:StudentSession = {
     id: 0,
@@ -67,9 +76,20 @@ export class GroupmPage implements OnInit {
 
   constructor() { 
      this.getGroups()
-     
-    
+     this.getClasses()
   }
+
+
+ async getClasses(){
+  let x = await this.api.getClasses()
+  if(x.success){
+    console.log(x.data)
+    this.classes = x.data
+  }else{
+    this.toast('Error In getting Classes', 'danger', 3000)
+    console.error(x.error)
+  }
+ }
 
   async editLiveSessions(){
   
@@ -112,8 +132,14 @@ export class GroupmPage implements OnInit {
       return group?.name?.toLowerCase().includes(this.searchTerm.toLowerCase());
     });
   }
+
+  getClassesForInsert(grade:number){
+    return this.classes.filter((c) => {
+      return c.syllabus_levels.syllabus_grades.grade === grade
+    })  
+  }
   
-   toast(message: string, color: string, duration: number) {
+  toast(message: string, color: string, duration: number) {
     this.message = message;
     this.color = color;
     this.duration = duration;
@@ -182,12 +208,29 @@ export class GroupmPage implements OnInit {
   }
 
  async insertSessionsIntoGroup(group:any) {
+  console.log('jii',group)
+      let class_list = this.getClassesForInsert(group.syllabus_grades.grade)
     console.log(group)
-   let x =  await this.api.insertGroupSessions(group);
+   let x =  await this.api.insertGroupSessions(group, class_list);
 
    if(x){
     this.toast('Start Date Updated', 'success', 3000)
     this.isOpenGroup = false;
+    this.groups = []
+    this.selectedItem = {
+      name: '',
+      syllabus_grades: {
+        grade: 0
+      },
+      start_date: '',
+      end_date: '',
+      weeks: 0,
+      id: 0,
+      course_id: 0,
+      status: false,
+      zoom_link: '',
+      student_sessions: []
+    }
     this.getGroups()
    }
   }
@@ -236,20 +279,35 @@ export class GroupmPage implements OnInit {
      this.start_edit.student_sessions = group.student_sessions
      this.start_edit.end_date = group.end_date
      this.start_edit.weeks = 24
+     this.start_edit.syllabus_grades = group.syllabus_grades
      console.log(this.start_edit)
 
-
-     let x =  await this.api.removeSessionsForGroup(group.name);
-     
-     if(x.success) {
-      console.log(x.data)
-      this.insertSessionsIntoGroup(this.start_edit);
+      let class_list = this.getClassesForInsert(group.syllabus_grades.grade)
+      let x = await this.api.updateGroupSessions(this.start_edit, class_list);
       
-     }else{
+     if(x.success){
+      this.toast('Start Date Updated', 'success', 3000)
+      this.isOpenGroup = false;
+      this.groups = []
+      this.selectedItem = {
+        name: '',
+        syllabus_grades: {
+          grade: 0
+        },
+        start_date: '',
+        end_date: '',
+        weeks: 0,
+        id: 0,
+        course_id: 0,
+        status: false,
+        zoom_link: '',
+        student_sessions: []
+     } 
+     this.getGroups()
+    }else{
       this.toast('Error In Operation', 'danger', 3000)
       console.error(x.error)
-      this.isOpenGroup = false;
-     }
+    }
   }
 
   }

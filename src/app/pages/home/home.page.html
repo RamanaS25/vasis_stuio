@@ -59,7 +59,25 @@
   
 </ion-modal>
 
+<ion-modal [isOpen]="payment_notification" (didDismiss)="payment_notification = false">
+  <ng-template>
+    <ion-item>
+       <ion-icon name="close" (click)="payment_notification = false" slot="end" style="cursor: pointer;"></ion-icon>
+    </ion-item>
+    <ion-content> 
+           
+      <img class="responsive-image" src="../../../assets/notifications/eng.jpeg" alt="My responsive image" *ngIf="auth._user.language === 'English'">
+
+      <img class="responsive-image" src="../../../assets/notifications/sp.jpeg" alt="My responsive image" *ngIf="auth._user.language === 'Spanish'">
+
+      <img class="responsive-image" src="../../../assets/notifications/por.jpeg" alt="My responsive image" *ngIf="auth._user.language === 'Portuguese'">
+
+    </ion-content>
+  </ng-template>
+</ion-modal>
+
 <ion-content [fullscreen]="true">
+  
   <ion-grid fixed="true">
     <ion-row>
       <ion-col>
@@ -178,4 +196,6 @@
       </ion-col>
     </ion-row>
   </ion-grid>
+
+
 </ion-content>

@@ -1,6 +1,9 @@
 export interface Group {
     id: number;           // int8
     name: string;         // text
+    syllabus_grades: {
+      grade: number;
+    };
     course_id: number;    // int8
     start_date: string;   // timestamp (ISO string)
     end_date: string;     // timestamp (ISO string)

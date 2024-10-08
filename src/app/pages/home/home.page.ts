@@ -22,8 +22,7 @@ import {
   logoInstagram,
   logoWhatsapp,
   logoFacebook,
-  logoGoogle,
-} from 'ionicons/icons';
+  logoGoogle, close } from 'ionicons/icons';
 import { LoginService } from 'src/app/services/auth/login.service';
 import { ProfileComponent } from 'src/app/components/profile/profile.component';
 
@@ -86,15 +85,18 @@ export class HomePage implements OnInit {
 
   login_open: boolean = false;
   user_profile: boolean = false;
+  payment_notification: boolean = false;
+
   constructor() {
-    addIcons({ logoInstagram, logoFacebook, logoGoogle, logoWhatsapp });
+    addIcons({close,logoInstagram,logoFacebook,logoGoogle,logoWhatsapp});
   }
 
   handleNotification(message: string) {
     if (message === 'Logged in successfully') {
+      
       this.toast('Logged in successfully', 'success');
     } else if (message === 'Please Complete your Payment for this level') {
-      alert('Please Complete your Payment for this level');
+      this.payment_notification = true;
     }
   }
 
