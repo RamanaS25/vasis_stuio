@@ -17,7 +17,7 @@
           placeholder="Grade"
           [(ngModel)]="selectedGrade"
         >
-          @for (grade of payment_dates; track $index) {
+          @for (grade of homework_array; track $index) {
           <ion-select-option [value]="grade.grade"
             >{{grade.grade}}</ion-select-option
           >
@@ -64,14 +64,18 @@
 
         } @for (item of filteredHomework; track $index) {
         <ion-card>
-          <ion-item lines="none"> {{item?.description}}</ion-item>
+          <ion-item lines="none"> English Title:  {{item?.title}}</ion-item>
           <ion-item lines="none"
-            >Simple Description: {{item?.descriptionS}}</ion-item
+            >Spanish Title: {{item?.title_s}}</ion-item
           >
           <ion-item lines="none"
-            >Detailed Description: {{item?.descriptionP}}</ion-item
+            >Portuguese Title: {{item?.title_p}}</ion-item
           >
-          <ion-item lines="none"> Melody:{{item?.is_melody}}</ion-item>
+          <ion-item lines="none"> 
+            <ion-chip>
+              {{(item?.is_exercise) ? 'Melody' : 'Excercise'}}
+            </ion-chip>
+          </ion-item>
           <ion-fab vertical="top" horizontal="end">
             <ion-fab-button size="small">
               <ion-icon name="chevron-back-outline"></ion-icon>

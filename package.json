@@ -28,10 +28,13 @@
     "@capacitor/keyboard": "6.0.2",
     "@capacitor/status-bar": "6.0.1",
     "@ionic/angular": "^8.0.0",
+    "@mux/mux-player": "1.11.4",
     "@supabase/supabase-js": "^2.45.4",
     "@vimeo/player": "^2.24.0",
+    "ffmpeg": "^0.0.4",
     "ionicons": "^7.2.1",
     "rxjs": "~7.8.0",
+    "supabase": "^1.204.3",
     "swiper": "^11.1.14",
     "tslib": "^2.3.0",
     "zone.js": "~0.14.2"

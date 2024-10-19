@@ -8,6 +8,7 @@ import { addIcons } from 'ionicons';
 import { ShortVideosService } from 'src/app/services/short-videos/short-videos.service';
 import { LoginService } from 'src/app/services/auth/login.service';
 import { ProfileComponent } from 'src/app/components/profile/profile.component';
+import { ActivatedRoute } from '@angular/router';
 
 addIcons({lockClosed, ellipseOutline, addOutline, closeOutline, createOutline, ellipse})
 
@@ -19,6 +20,7 @@ addIcons({lockClosed, ellipseOutline, addOutline, closeOutline, createOutline, e
   imports: [IonCardSubtitle, ProfileComponent,IonToast, IonButton, IonSelect, IonSelectOption, IonModal, IonCheckbox, IonInput, IonIcon, IonRow, IonGrid, IonChip, IonCardContent, IonItem, IonCardHeader,IonMenuButton, IonLabel, IonCard, IonCol, IonAccordion, IonAccordionGroup, IonButtons, IonButtons, IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule, VimeoPlayerComponent, IonSkeletonText],
 })
 export class SyllabusPage implements OnInit {
+  route = inject(ActivatedRoute)
   auth = inject(LoginService)
   profile_open = false
   videoId = '1011746589?h=f3d1ddc97e'
@@ -74,11 +76,23 @@ export class SyllabusPage implements OnInit {
   is_placeholder_video = false
   _class_id_for_placeholder_video:number = 0
 
+  private grade = 0
   
   constructor() {
       addIcons({ellipseOutline,addOutline,createOutline,closeOutline,ellipse,lockClosed});
-       this.getVideos()
+     
     }
+
+    ngOnInit() {
+    
+      this.route.queryParams.subscribe(params => {
+       this.grade = params['paramName']; // Retrieve the passed parameter
+        console.log(this.grade);
+      });
+
+      this.getVideos(this.grade)
+    }
+
    handleToast(message: string, color: string, duration: number) {
     this.toastBool = true;
     this.message = message;
@@ -89,7 +103,7 @@ export class SyllabusPage implements OnInit {
   voiceScaleChange(event: any) {
     this.auth._user.voice_scale = event.detail.value;
     this.videos = [];
-    this.getVideos()
+    this.getVideos(this.grade)
   }
 
   changeVideoProgressStatus(video_id: number) {
@@ -194,8 +208,9 @@ export class SyllabusPage implements OnInit {
   }
 
 
-   async getVideos(){
-    const result = await this.api.getGradeOneData(this.auth._user.grade);
+   async getVideos(grade:number){
+    const result = await this.api.getGradeData(grade);
+
     if (result.success) {
       // Use result.data
       this.videos = result.data;
@@ -204,6 +219,7 @@ export class SyllabusPage implements OnInit {
 
        
     } else {
+
       // Handle the error
       console.error(result.error);
     }
@@ -225,7 +241,7 @@ export class SyllabusPage implements OnInit {
       if (result.success) {
         // Use result.data
         this.handleToast('Video added successfully', 'success', 3000)
-        this.getVideos()
+        this.getVideos(this.grade)
         
         this.newVid = {
           video_id: '',
@@ -261,7 +277,7 @@ export class SyllabusPage implements OnInit {
       console.warn(result)
       if (result.success) {
         // Use result.data
-        this.getVideos()
+        this.getVideos(this.grade)
         this.handleToast('Video updated successfully', 'success', 3000)
         this.video_to_update = {
           video_id: '',
@@ -285,7 +301,7 @@ export class SyllabusPage implements OnInit {
       const result = await this.api.deleteVideo(video);
       if (result.success) {
         // Use result.data
-        this.getVideos()
+        this.getVideos(this.grade)
 
         this.video_to_delete = {
           video_id: '',
@@ -305,8 +321,6 @@ export class SyllabusPage implements OnInit {
       }
     }
 
-  ngOnInit() {
-    console.log('syllabus')
-  }
+
 
 }

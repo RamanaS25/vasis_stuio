@@ -29,7 +29,7 @@
 </ion-header>
 
 <ion-content [fullscreen]="true">
-
+<ion-toast [color]="color" [isOpen]="toastBool" [message]="message" position="top" duration="5000" (didDismiss)="toastBool = false"></ion-toast>
  <ion-modal
   [isOpen]="profile_open"
   (didDismiss)="profile_open = false"
@@ -82,8 +82,13 @@
             <ion-card-content>
         
                 @for (item of selectedModule.components; track $index) {
-                  <ion-item detail="false" lines="none" style="border-radius: 10px; margin-bottom: 10px; --background:rgb(237, 213, 253);" (click)="navigateTo(selectedModule.link)" detail="true" button>
+                  <ion-item detail="false" lines="none" style="border-radius: 10px; margin-bottom: 10px; --background:rgb(237, 213, 253);" (click)="navigateTo(selectedModule.link, item)" detail="true" button>
                     <ion-label>{{item}}</ion-label>
+
+                    @if (auth._user.grade < this.getNavigationParam(item)) {  
+                    <ion-icon slot="end" name="lock-closed" color="danger" ></ion-icon>
+                    }
+
                   </ion-item>
                 }
           

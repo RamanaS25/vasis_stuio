@@ -30,9 +30,12 @@ export class VimeoPlayerComponent implements OnChanges, AfterViewInit {
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes['video'] && !changes['video'].firstChange) {
-      console.log(changes['video'], 'video changes detected');
+      // console.log(changes['video'], 'video changes detected');
       this.updateVideoUrl();
-      this.loadVideo();
+      if(this.video?.video_id){
+        this.loadVideo();
+      }
+
     }
   }
 
@@ -45,11 +48,13 @@ export class VimeoPlayerComponent implements OnChanges, AfterViewInit {
   private initializePlayer() {
     this.player = new Player(this.playerContainer.nativeElement);
     this.setupEventListeners();
-    this.loadVideo(); // Load the initial video when the player is initialized
+    if(this.video?.video_id) {
+      this.loadVideo(); // Load the initial video when the player is initialized
+    }
   }
 
   private setupEventListeners() {
-    console.log('Setting up event listeners');
+    // console.log('Setting up event listeners');
     this.player.on('play', () => console.log('Video played'));
     this.player.on('pause', () => console.log('Video paused'));
     this.player.on('ended', () => {
@@ -69,7 +74,7 @@ export class VimeoPlayerComponent implements OnChanges, AfterViewInit {
       // Load the video using the full video ID with the h hash (e.g., '815343158?h=98f8e24de4')
       this.player.loadVideo(url).then(function(url) {
         // the video successfully loaded
-            console.log("sup1")
+            // console.log("sup1")
 
              self.setupEventListeners();
           }).catch(function(error) {

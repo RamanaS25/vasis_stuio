@@ -1,6 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { SupabaseService } from '../api/supabase.service';
 import { Group, StudentSession } from '../../pages/groupm/types';
+import { from, Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -8,7 +9,9 @@ import { Group, StudentSession } from '../../pages/groupm/types';
 export class GroupManagementService {
  private api = inject(SupabaseService)
  private supabase = this.api.getClient()
-  constructor() { }
+  constructor() { 
+   
+  }
 
   async getGroups(): Promise<{ success: boolean; data?: Group[]; error?: string }> {
     try {
@@ -42,6 +45,8 @@ export class GroupManagementService {
       };
     }
   }
+  
+
 
   async getClasses(): Promise<{ success: boolean; data?: any; error?: string }> {
     try {

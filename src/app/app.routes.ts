@@ -58,5 +58,15 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/homeworkm/homeworkm.page').then( m => m.HomeworkmPage),
     canActivate: [authGuard]
   },
+  {
+    path: 'homework-submission',
+    loadComponent: () => import('./pages/homework-submission/homework-submission.page').then( m => m.HomeworkSubmissionPage)
+  },
+  {
+    path: 'notation',
+    loadComponent: () => import('./pages/notations/notation.page').then( m => m.NotationPage),
+    canActivate: [authGuard]
+  },
+
 ];
 

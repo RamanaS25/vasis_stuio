@@ -162,38 +162,38 @@ toastBool = false;
       this.toastBool = true;
     }
 
-  handlecheckbox(event: any,session:any) {
-    if(event.detail.checked){
-      this.addPayment(this.selected_user,session.week_num)
-    } else{
-      this.deletePayment(session.id)
+    handlecheckbox(event: any,session:any) {
+      if(event.detail.checked){
+        this.addPayment(this.selected_user,session.week_num)
+      } else{
+        this.deletePayment(session.id)
+      }
+      console.log(event)
     }
-    console.log(event)
-  }
 
-  handleBannedToggle(event: any,student:any) {
-    if(event.detail.checked){
-      this.setStudentIsBanned(student.id, true)
-    } else{
-      this.setStudentIsBanned(student.id, false)
+    handleBannedToggle(event: any,student:any) {
+      if(event.detail.checked){
+        this.setStudentIsBanned(student.id, true)
+      } else{
+        this.setStudentIsBanned(student.id, false)
+      }
+      console.log(event)
     }
-    console.log(event)
-  }
 
-  async setStudentIsBanned(student_id:number, is_banned:boolean) {
-    console.log(student_id, is_banned)
-    const result = await this.api.setStudentIsBanned(student_id, is_banned);
-    if (result.success) {
-      // Use result.data
-      this.getAllStudents()
-      this.handleToast('Student banned successfully', 'success')
-      
-    } else {
-      // Handle the error
-      this.handleToast('Student not banned', 'danger')
-      console.error(result.error);
+    async setStudentIsBanned(student_id:number, is_banned:boolean) {
+      console.log(student_id, is_banned)
+      const result = await this.api.setStudentIsBanned(student_id, is_banned);
+      if (result.success) {
+        // Use result.data
+        this.getAllStudents()
+        this.handleToast('Student banned successfully', 'success')
+        
+      } else {
+        // Handle the error
+        this.handleToast('Student not banned', 'danger')
+        console.error(result.error);
+      }
     }
-  }
 
    async addPayment(student: any, week_num: number) {
       console.log(student, week_num)
@@ -252,6 +252,7 @@ toastBool = false;
     
 
   ngOnInit() {
+     console.log('hello payment tracking')
   }
 
 }

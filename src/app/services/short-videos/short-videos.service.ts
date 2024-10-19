@@ -12,45 +12,19 @@ export class ShortVideosService {
  
   constructor() { }
 
-  async getGradeOneData(grade:number) {
+
+
+  async getGradeData(grade:number) {
+
+    console.warn(grade)
     try {
       // Fetch all levels, classes, and videos for grade one
-      let { data: levels, error } = await this.supabase
-        .from('syllabus_levels')
-        .select(`
-          id,
-          name,
-          syllabus_grades!inner (
-            grade
-          ),
-          syllabus_classes (
-            id,
-            name,
-            student_sessions (*),
-            syllabus_videos (
-            id,
-            class_id,
-              title,
-              duration,
-              video_id,
-              auto_play_id,
-              voice_scale,
-              is_melody,
-              title_s,
-              title_p,
-              student_video_progress (
-                id
-              )
-            )
-          )
-        `)
-        .eq('syllabus_grades.grade', grade)
-        .eq('syllabus_classes.syllabus_videos.voice_scale', this.auth._user.voice_scale)
+      let {data: levels, error} = await this.supabase.from('syllabus_levels').select('name, syllabus_grades!inner(grade), syllabus_classes(name, id, pdf_link, student_sessions(_date), syllabus_videos(*, student_video_progress(*)))')
+      .eq('syllabus_grades.grade', grade)
+      .eq('syllabus_classes.syllabus_videos.voice_scale', this.auth._user.voice_scale)
        
       // Handle any errors from the query
       if (error) throw error;
-
-
   
       // Check if levels data exists
       if (!levels || levels.length === 0) {
@@ -72,19 +46,19 @@ export class ShortVideosService {
         classes: level.syllabus_classes.map(classItem => ({
           class_id: classItem.id,
           class_name: classItem.name,
-          locked: this.isDateInFuture(classItem.student_sessions[0]._date),
-          session_date: classItem.student_sessions[0]._date,
+          locked: ((classItem.student_sessions) ? this.isDateInFuture(classItem.student_sessions[0]?._date) : false),
+          session_date: classItem.student_sessions[0]?._date,
           videos: classItem.syllabus_videos.map(video => ({
-            id: video.id,
-            class_id: video.class_id,
-            title: video.title,
-            duration: video.duration,
-            video_id: video.video_id,
-            auto_play_id: video.auto_play_id,
-            voice_scale: video.voice_scale,
-            is_melody: video.is_melody,
-            title_s: video.title_s,
-            title_p: video.title_p,
+            id: video?.id,
+            class_id: video?.class_id,
+            title: video?.title,
+            duration: video?.duration,
+            video_id: video?.video_id,
+            auto_play_id: video?.auto_play_id,
+            voice_scale: video?.voice_scale,
+            is_melody: video?.is_melody,
+            title_s: video?.title_s,
+            title_p: video?.title_p,
             
             student_video_progress: (video.student_video_progress.length > 0) ? true : false
           }))

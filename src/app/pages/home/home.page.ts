@@ -14,20 +14,26 @@ import {
   IonButtons,
   IonModal,
 } from '@ionic/angular/standalone';
+
+
 import { register } from 'swiper/element/bundle';
 import { YoutubePlayerComponent } from 'src/app/components/youtube-player/youtube-player.component';
 import { addIcons } from 'ionicons';
+
 import { LoginComponent } from 'src/app/components/login/login.component';
 import {
   logoInstagram,
   logoWhatsapp,
   logoFacebook,
-  logoGoogle, close } from 'ionicons/icons';
+  logoGoogle, close, 
+  pencil} from 'ionicons/icons';
 import { LoginService } from 'src/app/services/auth/login.service';
 import { ProfileComponent } from 'src/app/components/profile/profile.component';
 
+
 // register Swiper custom elements
 register();
+
 @Component({
   selector: 'app-home',
   templateUrl: './home.page.html',
@@ -54,7 +60,10 @@ register();
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 
+
+
 export class HomePage implements OnInit {
+
   auth = inject(LoginService)
   messages: any[] = [
     {
@@ -87,9 +96,15 @@ export class HomePage implements OnInit {
   user_profile: boolean = false;
   payment_notification: boolean = false;
 
+
+
   constructor() {
-    addIcons({close,logoInstagram,logoFacebook,logoGoogle,logoWhatsapp});
+    addIcons({close,logoInstagram,logoFacebook,logoGoogle,logoWhatsapp,pencil});
+
+
   }
+
+
 
   handleNotification(message: string) {
     if (message === 'Logged in successfully') {
@@ -111,5 +126,7 @@ export class HomePage implements OnInit {
     this.login_open = false;
   }
 
-  ngOnInit() {}
+  ngOnInit() {
+    console.log("home")
+  }
 }
