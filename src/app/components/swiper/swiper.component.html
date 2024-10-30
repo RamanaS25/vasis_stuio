@@ -1,52 +1,14 @@
-<ion-modal
-  [isOpen]="edit_open"
-  (didDismiss)="edit_open = false"
-  style="
-    --border-radius: 10px;
-    backdrop-filter: blur(10px);
-    --background: linear-gradient(to bottom, #9290ff, #ff93fa);
-  "
->
-  <ng-template>
-    <ion-card>
-      <ion-input type="file" (change)="onFileSelected($event)">
-        choose file
-      </ion-input>
-      <ion-button (click)="uploadImage(select_img)">Upload file</ion-button>
-    </ion-card>
-  </ng-template>
-</ion-modal>
-
 <swiper-container
   slides-per-view="auto"
   speed="500"
   navigation="true"
   pagination="true"
 >
+  @for(x of _images; track $index) {
   <swiper-slide>
-    <ion-card
-      class="image-card-background"
-      (click)="select_img = 1; edit_open = true"
-    >
-      <img src="{{ images[0] }}" alt="{{ images[0] }}" />
+    <ion-card class="image-card-background" (click)="select_img = 1; selectImage(x)">
+      <img src="{{ x.link }}" alt="{{ x.link }}" />
     </ion-card>
   </swiper-slide>
-
-  <swiper-slide>
-    <ion-card
-      class="image-card-background"
-      (click)="select_img = 2; edit_open = true"
-    >
-      <img src="{{ images[1] }}" alt="{{ images[1] }}" />
-    </ion-card>
-  </swiper-slide>
-
-  <swiper-slide>
-    <ion-card
-      class="image-card-background"
-      (click)="select_img = 3; edit_open = true"
-    >
-      <img src="{{ images[2] }}" alt="{{ images[2] }}" />
-    </ion-card>
-  </swiper-slide>
+  }
 </swiper-container>

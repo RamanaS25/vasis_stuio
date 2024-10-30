@@ -142,38 +142,52 @@ export class HomeService {
     return data.publicUrl;
   }
 
-  async uploadImage(file: any, id: number) {
+  async uploadImage(
+    file: any,
+    id: number
+  ): Promise<{
+    success: boolean;
+    data?: string;
+    error?: string;
+  }> {
     try {
       const { data, error } = await this.supabase.storage
         .from('images')
         .upload(`home_page/${file.name}`, file);
 
       if (error) {
-        console.error('Ошибка загрузки изображения:', error);
-        return null;
+        return {
+          success: false,
+          error: `Image upload error: ${error.message}`,
+        };
       }
 
-      // Получаем публичный URL для загруженного изображения
       const { data: publicUrlData } = this.supabase.storage
         .from('images')
         .getPublicUrl(`home_page/${file.name}`);
 
       if (publicUrlData?.publicUrl) {
-        this.editImg(publicUrlData.publicUrl, id);
-        console.log(
-          'Успешная загрузка и получение URL:',
-          publicUrlData.publicUrl
-        );
-        return publicUrlData.publicUrl;
+        await this.editImg(publicUrlData.publicUrl, id);
+        return {
+          success: true,
+          data: publicUrlData.publicUrl,
+        };
       } else {
-        console.error('Ошибка получения публичного URL');
-        return null;
+        return {
+          success: false,
+          error: 'Failed to get public URL',
+        };
       }
     } catch (error) {
-      console.error('Произошла ошибка:', error);
-      return null;
+      return {
+        success: false,
+        error: `Unexpected error: ${
+          error instanceof Error ? error.message : String(error)
+        }`,
+      };
     }
   }
+
   async editImg(name: string, id: number) {
     try {
       const { data, error } = await this.supabase
