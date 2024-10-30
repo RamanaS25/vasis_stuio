@@ -12,18 +12,80 @@
 
 <ion-grid>
    <ion-row>
-     <ion-col>
-       <app-pdf [previewId]="id"></app-pdf>
-     </ion-col>
+    @if(!isMobile()){   
+     <ion-col size="9" >
+      @if (id) {
+      <iframe [src]="id | safeUrl" width="100%" height="600" allow="autoplay"></iframe>
 
-     <ion-col>
+      }
+ 
+     </ion-col>
+    }
+     <ion-col > 
        @for (item of notations; track $index) {
-        <ion-item>
+        <ion-item button detail="false">
            {{item.name}}
+           @if (!auth._user.is_admin) {
+             <ion-icon name="link-outline" slot="end" color="primary" style="cursor: pointer;" (click)="modalBool = true;linkToPdf(id)"></ion-icon>
+               
+           }
+
+           @if(auth._user.is_admin) {
+            <ion-icon name="create-outline" slot="end" color="primary" style="cursor: pointer;" (click)="selectedClass = item; editBool = true; type = 'edit'; "></ion-icon>
+            <ion-icon name="close-outline" slot="end" color="primary" style="cursor: pointer;" (click)="selectedClass = item; editBool = true; type = 'delete'; "></ion-icon>
+           }  
         </ion-item>
        }
      </ion-col>
    </ion-row>
 </ion-grid>
+
+<ion-modal [isOpen]="modalBool" (didDismiss)="modalBool = false">
+  <ng-template>
+    <ion-item> 
+      <ion-icon name="close" (click)="modalBool = false" slot="end"></ion-icon>
+    </ion-item>
+     <ion-content fullscreen="true">
+        @if (id) {
+        <iframe [src]="id | safeUrl" width="100%" height="100%" allow="autoplay"></iframe>
+  
+        }
+     </ion-content>
+  </ng-template>
+
+  <ion-modal [isOpen]="editBool" (didDismiss)="editBool = false">
+    <ng-template>
+      <ion-item> 
+        <ion-icon name="close" (click)="editBool = false" slot="end"></ion-icon>
+      </ion-item>
+       <ion-content fullscreen="true">
+         @if (type === 'edit') { 
+          <ion-card>
+             <ion-card-content>
+               <ion-input label="Name" type="text" [(ngModel)]="selectedClass.name"></ion-input>
+               <ion-input label="Link" type="text" [(ngModel)]="selectedClass.pdf_link"></ion-input>
+             </ion-card-content>
+
+             <ion-item>
+               <ion-button slot="end">Save</ion-button>
+             </ion-item>
+
+          </ion-card>
+         }
+
+         @if (type === 'delete') {
+
+          <ion-item>
+            <ion-label slot="start">This cannot be undone!</ion-label>
+            <ion-button slot="end" (click)="editBool = false">Delete</ion-button>
+          </ion-item>
+          }
+
+       </ion-content>
+    </ng-template>
+  
+  </ion-modal>
+
+</ion-modal>
 
 </ion-content>
