@@ -1,13 +1,417 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-title>tutorial</ion-title>
+    <ion-buttons slot="start" style="color: white">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title style="color: white">Tutorial</ion-title>
+
+    <div slot="end">
+      <ion-select
+        aria-label="Favorite Fruit"
+        value="ENG"
+        [(ngModel)]="selectLang"
+        (ionChange)="group_name(); names()"
+      >
+        <ion-select-option value="ENG">ENG</ion-select-option>
+        <ion-select-option value="SPN">SPN</ion-select-option>
+        <ion-select-option value="POR">POR</ion-select-option>
+      </ion-select>
+    </div>
+    <ion-chip
+      slot="end"
+      style="
+        background-color: rgba(233, 210, 255, 0.267);
+        color: rgb(255, 255, 255);
+      "
+    >
+      {{selectLang === 'ENG' ? 'Learn about our teacher!' : selectLang === 'POR'
+      ? 'Aprenda sobre nosso professor!' : '¡Aprenda sobre nuestro maestro!'
+      }}</ion-chip
+    >
+    <ion-chip slot="end" class="buttons" (click)="text(); modal_open = true"
+      >EDIT</ion-chip
+    >
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">tutorial</ion-title>
-    </ion-toolbar>
-  </ion-header>
+  <ion-grid fixed="true">
+    <ion-row>
+      <ion-col size="12" sizeSm="8">
+        <app-youtube-player [videoUrl]="videoUrl"></app-youtube-player>
+      </ion-col>
+      <ion-col size="12" sizeSm="4">
+        <ion-accordion-group expand="inset">
+          @for (item of group_names; track $index) {
+          <ion-accordion [value]="item">
+            <ion-item slot="header" color="light">
+              <ion-label>{{ item }}</ion-label>
+            </ion-item>
+            <div slot="content">
+              @for (name of _names; track $index) { @if (item ===
+              name.group_title) {
+              <ion-item
+                lines="none"
+                (click)="videoUrl = 'https://www.youtube.com/watch?v=' + name.video_id"
+              >
+                <ion-label>{{ name.title}}</ion-label>
+
+                <ion-icon
+                  style="margin-right: 10px"
+                  name="add-outline"
+                  (click)="_update = false; open_video = true; newVideo = name; selectFOrAdd(name.id) "
+                ></ion-icon>
+                <ion-icon
+                  style="margin-right: 10px"
+                  name="create-outline"
+                  (click)="selectVideo(name.id)"
+                ></ion-icon>
+                <ion-icon name="close-outline" (click)="selectVideo(name.id)">
+                </ion-icon>
+              </ion-item>
+
+              } }
+            </div>
+          </ion-accordion>
+          }
+        </ion-accordion-group>
+      </ion-col>
+    </ion-row>
+    <br />
+    <ion-row>
+      <ion-col size="12" sizeSm="9">
+        <div>
+          <a
+            href="https://vasismusicstore.com/"
+            target="_blank"
+            style="text-decoration: none"
+          >
+            <ion-item button style="border-radius: 10px">
+              <div style="display: flex; flex-direction: column">
+                <small>
+                  {{selectLang === 'ENG' ? 'Need a new Harmonium?' : selectLang
+                  === 'POR' ? 'Precisa de um novo harmônio?' :
+                  '¿Necesita_un_nuevoarmonio?' }}</small
+                >
+                <ion-label style="font-size: 22px">
+                  {{ selectLang === 'ENG' ? 'Visit our store!' : selectLang ===
+                  'POR' ? 'Visite nossa loja' : 'Visita nuestra tienda!'
+                  }}</ion-label
+                >
+              </div>
+              <ion-icon
+                name="storefront-outline"
+                slot="end"
+                style="color: rgb(165, 96, 255)"
+              ></ion-icon>
+            </ion-item>
+          </a>
+        </div>
+      </ion-col>
+      <ion-col size="12" sizeSm="3">
+        <div style="display: flex; justify-content: center">
+          <ion-item lines="none" style="border-radius: 10px">
+            <a href="https://www.youtube.com/@TheMayapurVasis" target="_blank">
+              <ion-icon
+                name="logo-youtube"
+                size="large"
+                style="margin-right: 20px; color: rgb(238, 84, 217)"
+              ></ion-icon>
+            </a>
+            <a href="https://www.instagram.com/vasis_kirtan/" target="_blank">
+              <ion-icon
+                name="logo-instagram"
+                size="large"
+                style="margin-right: 20px; color: rgb(238, 84, 217)"
+              ></ion-icon>
+            </a>
+            <a href="https://www.facebook.com/vasiskirtan" target="_blank">
+              <ion-icon
+                name="logo-facebook"
+                size="large"
+                style="margin-right: 20px; color: rgb(238, 84, 217)"
+              ></ion-icon>
+            </a>
+            <a
+              href="https://www.google.com/maps/place/Vasis+Studio+Music+Concepts/@23.4280569,88.4075265,17z/data=!3m1!4b1!4m6!3m5!1s0x39f91d8b801d697b:0xba3d93155ff5fa82!8m2!3d23.4280569!4d88.4075265!16s%2Fg%2F11pv0d_w_d?entry=ttu&g_ep=EgoyMDI0MTAyMC4wIKXMDSoASAFQAw%3D%3D"
+              target="_blank"
+            >
+              <ion-icon
+                name="logo-google"
+                size="large"
+                style="margin-right: 20px; color: rgb(238, 84, 217)"
+              ></ion-icon>
+            </a>
+            <a
+              href="https://api.whatsapp.com/message/PQSM4K257PWZP1?autoload=1&app_absent=0"
+              target="_blank"
+            >
+              <ion-icon
+                name="logo-whatsapp"
+                size="large"
+                style="color: rgb(238, 84, 217)"
+              ></ion-icon>
+            </a>
+          </ion-item>
+        </div>
+      </ion-col>
+    </ion-row>
+    <br />
+    <ion-row>
+      <ion-col size="12" sizeSm="6">
+        <ion-accordion-group expand="inset">
+          <div style="margin-bottom: 15px; color: aliceblue; font-size: 22px">
+            <ion-label>
+              {{ selectLang === 'ENG' ? 'Frequent Questions' : selectLang ===
+              'POR' ? 'Perguntas Frequentes' : 'Consejos para practicar'
+              }}</ion-label
+            >
+          </div>
+
+          @for (item of tutorials_text; track $index) {
+          <ion-accordion [value]="item.question_e">
+            <ion-item slot="header" color="light">
+              <ion-label>
+                {{ selectLang === 'ENG' ? item.question_e : selectLang === 'POR'
+                ? item.question_p : item.question_s }}
+              </ion-label>
+            </ion-item>
+            <div class="ion-padding" slot="content" style="padding-bottom: 5px">
+              {{ selectLang === 'ENG' ? item.answer_e : selectLang === 'POR' ?
+              item.answer_p : item.answer_s }}
+            </div>
+          </ion-accordion>
+          }
+        </ion-accordion-group>
+      </ion-col>
+      <ion-col size="12" sizeSm="6">
+        <ion-card style="border-radius: 15px">
+          <app-youtube-player
+            [videoUrl]="'https://www.youtube.com/watch?v=' + video?.video_id"
+          ></app-youtube-player>
+          <ion-item>
+            {{ selectLang === 'ENG' ? video?.video_title_e : selectLang ===
+            'POR' ? video?.video_title_p : video?.video_title_s }}</ion-item
+          >
+        </ion-card>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col
+        style="display: flex; justify-content: center; align-items: center"
+      >
+        <ion-card style="border-radius: 15px">
+          <ion-item lines="none">
+            <ion-label>
+              {{ selectLang === 'ENG' ? 'Tips To Practise' : selectLang ===
+              'POR' ? 'Dicas para praticar' : 'Consejos para practicar' }}
+            </ion-label>
+          </ion-item>
+          <div style="display: flex; align-items: center">
+            <ion-list style="width: 650px; height: auto">
+              @for (item of tutorials_text; track $index) {
+              <ion-item>
+                <ion-icon
+                  name="checkmark-outline"
+                  size="large"
+                  style="margin-right: 10px"
+                ></ion-icon>
+                {{ selectLang === 'ENG' ? item.tips_e : selectLang === 'POR' ?
+                item.tips_p : item.tips_s }}
+              </ion-item>
+              }
+              <ion-item lines="none">
+                {{ selectLang === 'ENG' ? 'Get The Vasis Beats App!' :
+                selectLang === 'POR' ? 'Obtenha o aplicativo Vasis Beats!' :
+                '¡Obtén la aplicación Vasis Beats! ' }}
+                <a
+                  href="https://play.google.com/store/apps/details?id=dev.suragch.flutter_audio_service_demo&pcampaignid=web_share"
+                  target="_blank"
+                  style="text-decoration: none"
+                  slot="end"
+                >
+                  <ion-icon
+                    size="large"
+                    name="logo-google-playstore"
+                    style="color: rgb(238, 84, 217); cursor: pointer"
+                  ></ion-icon>
+                </a>
+                <a
+                  href="https://apps.apple.com/in/app/vasisbeats/id1624246378"
+                  target="_blank"
+                  style="text-decoration: none"
+                  slot="end"
+                >
+                  <ion-icon
+                    size="large"
+                    href="https://apps.apple.com/in/app/vasisbeats/id1624246378"
+                    target="_blank"
+                    name="logo-apple-appstore"
+                    style="color: rgb(238, 84, 217); cursor: pointer"
+                  ></ion-icon>
+                </a>
+              </ion-item>
+            </ion-list>
+            @if (!isMobile()) {
+            <div style="padding: 10px">
+              <img
+                src="../../../assets/img/img_tips.png"
+                alt="tips"
+                style="max-width: 450px; height: auto; border-radius: 15px"
+              />
+            </div>
+            }
+          </div>
+        </ion-card>
+      </ion-col>
+      @if (isMobile()) {
+      <ion-col>
+        <div style="padding: 10px">
+          <img
+            src="../../../assets/img/img_tips.png"
+            alt="tips"
+            style="max-width: auto; height: auto; border-radius: 15px"
+          />
+        </div>
+      </ion-col>
+      }
+    </ion-row>
+  </ion-grid>
 </ion-content>
+
+<ion-modal
+  [isOpen]="modal_open"
+  (didDismiss)="modal_open = false"
+  class="custom-modal"
+>
+  <ng-template [isOpen]="modal_open" (didDismiss)="modal_open = false">
+    <ion-content>
+      <ion-header>
+        <ion-toolbar>
+          <ion-segment [(ngModel)]="selectLang" (ionChange)="text()" mode="ios">
+            <ion-segment-button value="ENG">
+              <ion-label>English</ion-label>
+            </ion-segment-button>
+            <ion-segment-button value="SPN">
+              <ion-label>Spanish</ion-label>
+            </ion-segment-button>
+            <ion-segment-button value="POR">
+              <ion-label>Portuguese</ion-label>
+            </ion-segment-button>
+          </ion-segment>
+          <ion-buttons slot="end">
+            <ion-button (click)="modal_open = false"> close </ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+      <ion-card class="cardModal">
+        <ion-card-content>
+          <ion-label class="labelModal"> Questions</ion-label>
+          <ion-list class="listModal">
+            @for (item of page_text; track $index) {
+
+            <ion-item class="itemModal">
+              <ion-input [(ngModel)]="item.question"> </ion-input>
+            </ion-item>
+            }
+          </ion-list>
+          <ion-label class="labelModal"> Answers</ion-label>
+          <ion-list class="listModal">
+            @for (item of page_text; track $index) {
+
+            <ion-item class="itemModal">
+              <ion-input [(ngModel)]="item.answer"> </ion-input>
+            </ion-item>
+            }</ion-list
+          >
+          <ion-label class="labelModal"> Tips</ion-label>
+          <ion-list class="listModal">
+            @for (item of page_text; track $index) {
+
+            <ion-item class="itemModal">
+              <ion-input [(ngModel)]="item.tips"> </ion-input>
+            </ion-item>
+
+            }</ion-list
+          >
+          <ion-label class="labelModal"> Video title </ion-label>
+          <ion-item class="itemModal">
+            <ion-input [(ngModel)]="page_text[0].video_title"> </ion-input>
+          </ion-item>
+          <ion-label class="labelModal"> Video link </ion-label>
+          <ion-item class="itemModal">
+            <ion-input [(ngModel)]="page_text[0].video_id"></ion-input>
+          </ion-item>
+        </ion-card-content>
+        <ion-button (click)="edit(page_text)" style="float: right">
+          save
+        </ion-button>
+      </ion-card>
+    </ion-content>
+  </ng-template>
+</ion-modal>
+
+<ion-modal
+  [isOpen]="open_video"
+  (didDismiss)="open_video = false; _update = false"
+  class="custom-modal"
+>
+  <ng-template>
+    <ion-content>
+      <ion-header>
+        <ion-toolbar>
+          <ion-title style="color: white">
+            {{_update? 'Edit Video' : 'Add Video'}}</ion-title
+          >
+          <ion-buttons slot="end">
+            <ion-button (click)="open_video = false"> close </ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+      <ion-card class="cardModal">
+        <ion-card-content>
+          <ion-list class="listModal">
+            <ion-label class="labelModal">Video Link</ion-label>
+
+            <ion-item class="itemModal">
+              <ion-input [(ngModel)]="newVideo.video_id"></ion-input>
+            </ion-item>
+            <ion-label class="labelModal">Title English</ion-label>
+            <ion-item class="itemModal">
+              <ion-input [(ngModel)]="newVideo.title_e"></ion-input>
+            </ion-item>
+            <ion-label class="labelModal">Title Spanish</ion-label>
+            <ion-item class="itemModal">
+              <ion-input [(ngModel)]="newVideo.title_s"></ion-input>
+            </ion-item>
+            <ion-label class="labelModal">Title Portuguese</ion-label>
+            <ion-item class="itemModal">
+              <ion-input [(ngModel)]="newVideo.title_p"></ion-input>
+            </ion-item>
+            <ion-label class="labelModal"> Group English </ion-label>
+            <ion-item class="itemModal">
+              <ion-input [(ngModel)]="newVideo.group_title_e"> </ion-input>
+            </ion-item>
+            <ion-label class="labelModal"> Group Spanish </ion-label>
+            <ion-item class="itemModal">
+              <ion-input [(ngModel)]="newVideo.group_title_s"> </ion-input>
+            </ion-item>
+            <ion-label class="labelModal"> Group Portuguese </ion-label>
+            <ion-item class="itemModal">
+              <ion-input [(ngModel)]="newVideo.group_title_p"> </ion-input>
+            </ion-item>
+          </ion-list>
+        </ion-card-content>
+        <ion-button
+          (click)=" _update? editVideo() : addNewVideo()"
+          style="float: right"
+        >
+          save
+        </ion-button>
+        @if(_update){
+        <ion-button (click)=" deleteVideo()"> delete </ion-button>
+        }
+      </ion-card>
+    </ion-content>
+  </ng-template>
+</ion-modal>

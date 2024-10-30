@@ -13,8 +13,8 @@
 }
 
 .image-card-background1 {
-  --background: url("../../../assets/img//banner0802.jpg") no-repeat center
-    center / cover;
+  // --background: url("../../../assets/img//banner0802.jpg") no-repeat center
+  //   center / cover;
   height: auto;
   width: 100%;
   max-width: 100%;
@@ -71,12 +71,39 @@ swiper-container {
   box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.3);
 }
 
+.custom-modal {
+  --width: 90vw;
+  --height: 70vh;
+
+  --border-radius: 10px; /* Радиус границы */
+}
+@media only screen and (max-width: 600px) {
+  .custom-modal {
+    --width: 100%;
+    --height: 100%;
+  }
+}
+
+.cardModal {
+  background-color: rgba(255, 255, 255, 0.548);
+  color: rgb(3, 3, 3);
+}
+
+.itemModal {
+  --background: rgba(255, 255, 255, 0.411);
+  border-radius: 10px;
+  border-bottom: 1px solid white;
+  margin-bottom: 10px;
+}
+
+
 .responsive-image {
   max-width: 100%;
   height: auto;
   display: block;
   margin: auto;
 }
+
 
 
 
