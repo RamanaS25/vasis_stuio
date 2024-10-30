@@ -1,4 +1,4 @@
-import { Component, Input, input, OnInit, output } from '@angular/core';
+import { Component, inject, Input, input, OnInit, output } from '@angular/core';
 import {
   IonCard,
   IonList,
@@ -7,6 +7,7 @@ import {
   IonButton,
   IonButtons,
 } from '@ionic/angular/standalone';
+import { LoginService } from 'src/app/services/auth/login.service';
 
 @Component({
   selector: 'app-profile',
@@ -16,6 +17,7 @@ import {
   imports: [IonButtons, IonButton, IonLabel, IonItem, IonCard, IonList],
 })
 export class ProfileComponent implements OnInit {
+  auth = inject(LoginService)
   @Input() profile_open = false;
   profileOutput = output<boolean>();
   constructor() {}

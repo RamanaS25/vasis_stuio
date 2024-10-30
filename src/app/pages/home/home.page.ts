@@ -1,6 +1,8 @@
+
 import { Component, inject, OnInit } from '@angular/core';
 
 import { HomeService } from 'src/app/services/home/home.service';
+
 import { FormsModule } from '@angular/forms';
 
 import { CommonModule } from '@angular/common';
@@ -31,26 +33,38 @@ import {
   IonList,
   IonInput,
 } from '@ionic/angular/standalone';
+
+
 import { register } from 'swiper/element/bundle';
 import { YoutubePlayerComponent } from 'src/app/components/youtube-player/youtube-player.component';
 import { addIcons } from 'ionicons';
+
 import { LoginComponent } from 'src/app/components/login/login.component';
 import {
   logoInstagram,
   logoWhatsapp,
   logoFacebook,
+  close,
+  pencil,
   logoGoogle,
 } from 'ionicons/icons';
+
 import Swiper from 'swiper';
+import { LoginService } from 'src/app/services/auth/login.service';
+import { ProfileComponent } from 'src/app/components/profile/profile.component';
+
+
 
 // register Swiper custom elements
 register();
+
 @Component({
   selector: 'app-home',
   templateUrl: './home.page.html',
   styleUrls: ['./home.page.scss'],
   standalone: true,
   imports: [
+
     IonInput,
     IonList,
     IonSegmentButton,
@@ -66,6 +80,9 @@ register();
     IonItem,
     CommonModule,
     FormsModule,
+
+    ProfileComponent,
+
     IonButtons,
     IonChip,
     IonButton,
@@ -82,7 +99,11 @@ register();
     SwiperComponent,
   ],
 })
+
+
+
 export class HomePage implements OnInit {
+
   api = inject(HomeService);
   img: string = 'banner0802.jpg';
   text: any;
@@ -91,6 +112,10 @@ export class HomePage implements OnInit {
   video_id: string = 'https://www.youtube.com/watch?v=QCO9VSj4h18';
   link: string = 'https://vasisstudio.com/kirtan-school';
   selectLang = 'ENG';
+
+
+  auth = inject(LoginService)
+
   messages: any[] = [
     {
       title: 'New batches start every month for Module 1 and Module 2.',
@@ -114,14 +139,47 @@ export class HomePage implements OnInit {
       icon: '',
     },
   ];
+    toastBool = false;
+    message: string = '';
+    color: string = 'danger';
 
   login_open: boolean = false;
+
   edit_open: boolean = false;
   edit_img_open: boolean = false;
   selectedFile: File | null = null;
   constructor() {
     addIcons({ logoInstagram, logoFacebook, logoGoogle, logoWhatsapp });
     this.getText();
+
+  user_profile: boolean = false;
+  payment_notification: boolean = false;
+
+
+
+  constructor() {
+    addIcons({close,logoInstagram,logoFacebook,logoGoogle,logoWhatsapp,pencil});
+
+
+  }
+
+
+
+  handleNotification(message: string) {
+    if (message === 'Logged in successfully') {
+      
+      this.toast('Logged in successfully', 'success');
+    } else if (message === 'Please Complete your Payment for this level') {
+      this.payment_notification = true;
+    }
+  }
+
+  toast(message: string, color: string) {
+    console.log(message)
+    this.message = message;
+    this.color = color;
+    this.toastBool = true;
+
   }
 
   open(x: any) {
@@ -226,15 +284,6 @@ export class HomePage implements OnInit {
     }
   }
 
-  // async getImage() {
-  //   let x = await this.api.getImage(this.img);
-
-  //   if (x !== null) {
-  //     this.img = x;
-  //   }
-  //   console.log('image', this.img);
-  // }
-
   onFileSelected(event: any) {
     const file: File = event.target.files[0];
     if (file) {
@@ -250,5 +299,8 @@ export class HomePage implements OnInit {
     }
   }
 
-  ngOnInit() {}
+  ngOnInit() {
+    console.log("home")
+  }
+
 }

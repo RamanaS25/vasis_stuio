@@ -6,6 +6,7 @@
 
     <ion-title>Vasis Studio</ion-title>
     <ion-buttons slot="end">
+
       <ion-chip style="--background: rgba(255, 255, 255, 0)">
         <ion-select
           aria-label="Favorite Fruit"
@@ -26,10 +27,41 @@
         (click)="edit_text(); edit_open=true"
         >Edit</ion-chip
       >
+
+      @if(!auth._logged_in) {
+        <ion-chip style="--background: white" (click)="login_open=true">
+          Log In
+        </ion-chip>
+      }@else {
+        <ion-chip style="--background: white" (click)="user_profile=true">
+          {{auth._user.user_name}}
+        </ion-chip>
+      }
+
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
+<ion-toast [message]="message" [color]="color" [duration]="3000" [isOpen]="toastBool" (didDismiss)="toastBool = false" position="top"></ion-toast>
+
+
+<ion-modal
+  [isOpen]="user_profile"
+  (didDismiss)="user_profile = false"
+  style="
+    --border-radius: 10px;
+    backdrop-filter: blur(10px);
+    --background: linear-gradient(to bottom, #9290ff, #ff93fa);
+  "
+>
+  <ng-template>
+    <app-profile
+      (profileOutput)="user_profile = false"
+      [profile_open]="user_profile"
+    ></app-profile>
+  </ng-template>
+</ion-modal>
+  
 <ion-modal
   [isOpen]="login_open"
   (didDismiss)="login_open = false"
@@ -41,9 +73,29 @@
 >
   <ng-template>
     <app-login
+    (_message)="handleNotification( $event)"
       (loginOutput)="open($event)"
       [login_open]="login_open"
+     
     ></app-login>
+  </ng-template>
+  
+</ion-modal>
+
+<ion-modal [isOpen]="payment_notification" (didDismiss)="payment_notification = false">
+  <ng-template>
+    <ion-item>
+       <ion-icon name="close" (click)="payment_notification = false" slot="end" style="cursor: pointer;"></ion-icon>
+    </ion-item>
+    <ion-content> 
+           
+      <img class="responsive-image" src="../../../assets/notifications/eng.jpeg" alt="My responsive image" *ngIf="auth._user.language === 'English'">
+
+      <img class="responsive-image" src="../../../assets/notifications/sp.jpeg" alt="My responsive image" *ngIf="auth._user.language === 'Spanish'">
+
+      <img class="responsive-image" src="../../../assets/notifications/por.jpeg" alt="My responsive image" *ngIf="auth._user.language === 'Portuguese'">
+
+    </ion-content>
   </ng-template>
 </ion-modal>
 
@@ -136,6 +188,10 @@
 </ion-modal>
 
 <ion-content [fullscreen]="true">
+
+
+
+  
   <ion-grid fixed="true">
     <ion-row>
       <ion-col>
@@ -238,4 +294,6 @@
       }
     </ion-row>
   </ion-grid>
+
+
 </ion-content>

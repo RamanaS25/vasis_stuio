@@ -70,6 +70,7 @@ swiper-container {
   --background: rgba(255, 255, 255, 0.9);
   box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.3);
 }
+
 .custom-modal {
   --width: 90vw;
   --height: 70vh;
@@ -94,3 +95,15 @@ swiper-container {
   border-bottom: 1px solid white;
   margin-bottom: 10px;
 }
+
+
+.responsive-image {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: auto;
+}
+
+
+
+

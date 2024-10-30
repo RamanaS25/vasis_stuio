@@ -1,0 +1,29 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start"> 
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-title>Notations</ion-title>
+
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+
+<ion-grid>
+   <ion-row>
+     <ion-col>
+       <app-pdf [previewId]="id"></app-pdf>
+     </ion-col>
+
+     <ion-col>
+       @for (item of notations; track $index) {
+        <ion-item>
+           {{item.name}}
+        </ion-item>
+       }
+     </ion-col>
+   </ion-row>
+</ion-grid>
+
+</ion-content>

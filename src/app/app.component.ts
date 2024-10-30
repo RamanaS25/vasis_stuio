@@ -1,21 +1,10 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
-import {
-  IonApp,
-  IonSplitPane,
-  IonMenu,
-  IonContent,
-  IonList,
-  IonListHeader,
-  IonNote,
-  IonMenuToggle,
-  IonItem,
-  IonIcon,
-  IonLabel,
-  IonRouterOutlet,
-  IonRouterLink,
-} from '@ionic/angular/standalone';
+
+import { IonApp, IonSplitPane, IonMenu, IonContent, IonList, IonListHeader, IonNote, IonMenuToggle, IonItem, IonIcon, IonLabel, IonRouterOutlet, IonRouterLink } from '@ionic/angular/standalone';
+import { LoginService } from './services/auth/login.service';
+
 
 @Component({
   selector: 'app-root',
@@ -42,12 +31,17 @@ import {
   ],
 })
 export class AppComponent {
+
+  auth = inject(LoginService);
   appPages = [
-    { title: 'Home', url: '/home', icon: 'home' },
-    { title: 'Management', url: '/management-dashboard', icon: 'home' },
-    { title: 'Courses', url: '/course-dashboard', icon: 'home' },
-    { title: 'Tutorial', url: '/tutorial', icon: 'information-circle' },
-    { title: 'Contact', url: '/contact', icon: 'mail' },
+    { title: 'Home', url: '/home', icon: 'home',access:'public' },
+    { title: 'Management', url: '/management-dashboard', icon: 'home',access:'admin' },
+    { title: 'Sessions', url: '/student-sessions', icon: 'home',access:'student' },
+    { title: 'Courses', url: '/course-dashboard', icon: 'home',access:'student' },
+    { title: 'Tutorial', url: '/about', icon: 'information-circle',access:'public' },
+    { title: 'Homework Submission', url: '/homework-submission', icon: 'home',access:'public' },
+    { title: 'Contact', url: '/contact', icon: 'mail',access:'public' }
+
   ];
   constructor() {}
 }

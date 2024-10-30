@@ -1,0 +1,39 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>homework-submission</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <div>
+    <h2>Upload Video</h2>
+  
+    <!-- File input for selecting a video -->
+    <ion-input type="file" accept="video/*" (change)="onFileSelected($event)" />
+  
+    <!-- Button to upload the video -->
+    <ion-button (click)="uploadVideo()" [disabled]="!selectedFile">Upload Video</ion-button>
+  
+    <!-- Displaying the URL of the uploaded video -->
+    <div *ngIf="uploadedUrl">
+      <h3>Video Uploaded Successfully!</h3>
+      <p><strong>URL:</strong> <a [href]="uploadedUrl" target="_blank">{{ uploadedUrl }}</a></p>
+    </div>
+  </div>
+
+  <ion-button (click)="video_api.uploadVideo('hi')">click</ion-button>
+
+  <div class="video-container">
+
+    <mux-player
+    stream-type="on-demand"
+    attr.playback-id="{{playbackId}}"
+    metadata-video-title="Tea and Cookies"
+    metadata-user-id="user-24601"
+  ></mux-player>
+  
+  </div>
+
+
+  
+</ion-content>

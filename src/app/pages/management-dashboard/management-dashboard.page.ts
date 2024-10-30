@@ -19,6 +19,7 @@ import {
 } from '@ionic/angular/standalone';
 import { Router } from '@angular/router';
 import { ProfileComponent } from 'src/app/components/profile/profile.component';
+import { LoginService } from 'src/app/services/auth/login.service';
 @Component({
   selector: 'app-management-dashboard',
   templateUrl: './management-dashboard.page.html',
@@ -45,6 +46,7 @@ import { ProfileComponent } from 'src/app/components/profile/profile.component';
   ],
 })
 export class ManagementDashboardPage implements OnInit {
+  auth = inject(LoginService);
   profile_open = false;
 
   sections = [

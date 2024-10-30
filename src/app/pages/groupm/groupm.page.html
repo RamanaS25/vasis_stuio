@@ -1,5 +1,5 @@
 
-<ion-header [translucent]="true">
+<ion-header [translucent]="true" class="ion-no-border">
   <ion-toolbar>
     <ion-buttons slot="start">
       <ion-menu-button></ion-menu-button>
@@ -7,19 +7,265 @@
     </ion-buttons>
 
     <ion-title style="color: aliceblue;">Group Management</ion-title>
+
+    <ion-buttons slot="end">
+      <ion-chip style="--background:white; color:black;" (click)="is_profile_open = true">
+        {{auth._user?.user_name}}
+      </ion-chip>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
- 
+
+  <ion-modal [isOpen]="is_profile_open" (didDismiss)="is_profile_open = false"   style="
+  --border-radius: 10px;
+  backdrop-filter: blur(10px);
+  --background: linear-gradient(to bottom, #9290ff, #ff93fa);
+">
+    <ng-template>
+      <app-profile (profileOutput)="is_profile_open = false"></app-profile>
+    </ng-template>
+  </ion-modal>
+
+ <ion-toast [message]="message" [color]="color" [duration]="duration" [isOpen]="toastBool" (onDidDismiss)="toastBool = false" position="top"></ion-toast>
   <ion-grid fixed="true">
      <ion-row>
-       <ion-col>
-
-         
+       <ion-col size="4">
+        <div class="scrollable-content">
+          <ion-card >
+            <ion-card-header>
+              <ion-searchbar placeholder="Search For Groups" mode="ios" [(ngModel)]="searchTerm" animated></ion-searchbar>
+            </ion-card-header>
+             <ion-card-content>
+  
+              @for (item of _groups; track $index) {
+                <ion-item detail="true" lines="none" (click)="selectedItem = item" [ngClass]="(item === selectedItem)? 'selected' : 'groupItem'" button>
+                  <ion-label>
+                     {{item.name}}
+                  </ion-label>
+                  @if (item.status) {
+                    <ion-icon name="ellipse" slot="end" color="success"></ion-icon>
+                   
+                  }@else {
+                    <ion-icon name="ellipse" slot="end" color="danger"></ion-icon>
+                  }
+                  
+                  
+                </ion-item>
+              }
+  
+             </ion-card-content>
+           </ion-card>
+        </div>
+       
 
        </ion-col>
+
+       <ion-col size="8">
+
+        <ion-segment  [(ngModel)]="selectedView" mode="ios">
+          <ion-segment-button value="Live Sessions"> Live Sessions </ion-segment-button>
+          <ion-segment-button value="Group Info">Group Info</ion-segment-button>
+          
+        </ion-segment>
+
+         <ion-card style="background: rgba(255, 255, 255, 0.61);">
+           <ion-card-content>
+            <div class="scrollable-content">
+              @if(selectedView === 'Live Sessions') {
+                @for (item of selectedItem?.student_sessions; track $index) {
+                  <ion-item lines="none"  [ngClass]="checkDateStatus(item._date)">
+                    <ion-text slot="start">
+                       {{item.week_num}}
+                    </ion-text>
+                   <ion-chip style="--background:white;">
+                     {{ item._date | date: 'medium' : 'Asia/Kolkata' }} IST
+                   </ion-chip>
+                    @if(item.recorded_class === null) {
+                      <ion-icon name="play-outline" slot="end" (click)="isOpenGroup = true; selectedSession = item; edit_type='recorded_class'"  [color]="(item.recorded_class !== null) ? 'success' : 'dark'" ></ion-icon>
+                      
+                    } @else {
+                      
+                     <ion-icon name="play-outline" slot="end" (click)="watchVideo = true; selectedSession = item;"  [color]="(item.recorded_class !== null) ? 'success' : 'dark'" ></ion-icon>
+                     <ion-icon name="play-outline" slot="end" (click)="isOpenGroup = true; selectedSession = item; edit_type='recorded_class'"  [color]="'dark'" ></ion-icon>
+                      
+                    }
+  
+                   <ion-icon name="create-outline" slot="end" (click)="selectedSession = item; isOpenGroup = true; edit_type='session_date'" ></ion-icon>
+  
+                  </ion-item>
+                  
+                } 
+              } @else {
+                  <ion-item class="future">
+                     <ion-label>
+                       Start Date: {{selectedItem?.start_date | date: 'medium' : 'Asia/Kolkata' }} IST
+                    
+                     </ion-label>
+                  </ion-item>
+
+                  <ion-item class="future">
+                    <ion-label>
+                      End Date: {{selectedItem?.end_date | date: 'medium' : 'Asia/Kolkata' }} IST
+                   
+                    </ion-label>
+                 </ion-item>
+
+                 <ion-item class="future">
+                  <ion-label slot="start">
+                  Edit start date
+                 
+                  </ion-label>
+
+                  <ion-button slot="end" (click)=" isOpenGroup = true; edit_type = 'start_date'" >
+                    click
+                  </ion-button>
+               </ion-item>
+              }
+             
+            </div>
+          
+           
+
+           
+
+           </ion-card-content>
+         </ion-card>
+        </ion-col>
      </ion-row>
   </ion-grid>
+
+  <ion-modal [isOpen]="isOpenGroup" (didDismiss)="isOpenGroup = false">
+    <ng-template> 
+      <ion-item>
+        <ion-icon name="close" (click)="isOpenGroup = false" slot="end" style="cursor: pointer;"></ion-icon>
+      </ion-item>
+
+      <ion-content>
+        @if (edit_type === 'start_date') {
+
+          <ion-card>
+            <ion-item>
+              <ion-label slot="start">
+                 Current Start Date: 
+              </ion-label>
+
+              <ion-chip slot="end">  {{selectedItem.start_date | date: 'medium' : 'Asia/Kolkata' }} IST</ion-chip>
+             
+            </ion-item>
+          </ion-card>
+            
+
+          <ion-card>
+            <ion-item>
+              <ion-label slot="start">
+                 Start Date:
+              </ion-label>
+              <ion-datetime-button  datetime="datetime" slot="end"></ion-datetime-button>
+            </ion-item>
+          </ion-card>
+          <ion-card (click)="editStartDate(selectedItem)" class="ion-text-center" style="border-radius: 16px; cursor: pointer; color: white; --background:rgb(143, 186, 206);" button> 
+            <ion-card-content>
+             Save
+                  
+            </ion-card-content>
+          </ion-card>
+        }
+
+        @if (edit_type === 'session_date') {
+
+          <ion-card>
+            <ion-item>
+              <ion-label slot="start">
+                 Current Session Date: 
+              </ion-label>
+
+              <ion-chip slot="end">  {{selectedSession._date | date: 'medium' : 'Asia/Kolkata' }} IST</ion-chip>
+             
+            </ion-item>
+          </ion-card>
+
+          <ion-card>
+            <ion-item>
+              <ion-label slot="start">
+                 Edit Date:
+              </ion-label>
+              <ion-datetime-button datetime="datetime" slot="end"></ion-datetime-button>
+            </ion-item>
+          </ion-card>
+
+          <ion-card (click)="editLiveSessions()" class="ion-text-center" style="border-radius: 16px; cursor: pointer; color: white; --background:rgb(143, 186, 206);" button> 
+            <ion-card-content>
+             Save
+                  
+            </ion-card-content>
+          </ion-card>
+        }
+        
+        @if (edit_type === 'recorded_class') {
+          <ion-card>
+            <ion-item>
+              <ion-label slot="start">
+                 Current Recorded Class: 
+              </ion-label>
+
+              <ion-chip slot="end">  {{selectedSession.recorded_class}}</ion-chip>
+             
+            </ion-item>
+          </ion-card>
+
+          <ion-card>
+            <ion-item>
+             
+              <ion-input [(ngModel)]="updated_session.recorded_class" placeholder="Enter Recorded Class" lines="full"></ion-input>
+            </ion-item>
+          </ion-card>
+
+          <ion-card (click)="insertRecordedClass()" class="ion-text-center" style="border-radius: 16px; cursor: pointer; color: white; --background:rgb(143, 186, 206);" button> 
+            <ion-card-content>
+             Save
+                  
+            </ion-card-content>
+          </ion-card>
+        }
+       
+      </ion-content>
+    </ng-template>
+  </ion-modal>
+
+  <ion-modal [keepContentsMounted]="true">
+    <ng-template>
+      <ion-datetime id="datetime" (ionChange)="setDate($event)" ></ion-datetime>
+    </ng-template>
+  </ion-modal>
+
+  <ion-modal [isOpen]="watchVideo" (didDismiss)="watchVideo = false" style="--width:100%; --height:100%;">
+
+    <ng-template>
+       <ion-item>
+         <ion-icon name="close" (click)="watchVideo = false" slot="end" style="cursor: pointer;"></ion-icon>
+       </ion-item>
+
+       <ion-content>
+         <ion-grid fixed="true">
+           <ion-row>
+             <ion-col>
+                <app-youtube-player 
+                  [videoUrl]="selectedSession.recorded_class">
+                </app-youtube-player>
+                <ion-item>
+                  <ion-label>
+                     Recorded Video for Class {{selectedSession.week_num}}
+                  </ion-label>
+                </ion-item>
+             </ion-col>
+           </ion-row>
+         </ion-grid>
+       
+
+       </ion-content>
+    </ng-template>
+  </ion-modal>
 
 </ion-content>

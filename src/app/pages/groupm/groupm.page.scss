@@ -1,0 +1,29 @@
+
+  .groupItem{
+    border-radius: 10px; margin-bottom: 10px; 
+    --background:rgb(237, 213, 253);
+  }
+  .selected{
+    border-radius: 10px; margin-bottom: 10px; 
+    --background: rgb(213, 163, 247);
+    font-weight: bold;
+    
+  }
+
+  .future{
+    --background:rgb(187, 155, 218);
+     margin-top: 10px;
+      border-radius: 10px;
+  }
+
+  .past{
+    --background:rgba(89, 54, 124, 0.308);
+     margin-top: 10px;
+      border-radius: 10px;
+  }
+
+  .next{
+    --background:rgb(155, 190, 218);
+    margin-top: 10px;
+     border-radius: 10px;
+  }
