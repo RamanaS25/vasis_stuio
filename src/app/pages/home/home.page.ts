@@ -1,6 +1,12 @@
-import { Component, CUSTOM_ELEMENTS_SCHEMA, inject, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
+import { Component, inject, OnInit } from '@angular/core';
+
+import { HomeService } from 'src/app/services/home/home.service';
+
 import { FormsModule } from '@angular/forms';
+
+import { CommonModule } from '@angular/common';
+import { SwiperComponent } from 'src/app/components/swiper/swiper.component';
 import {
   IonContent,
   IonHeader,
@@ -13,6 +19,19 @@ import {
   IonChip,
   IonButtons,
   IonModal,
+  IonItem,
+  IonIcon,
+  IonCard,
+  IonCardHeader,
+  IonCardContent,
+  IonLabel,
+  IonMenuButton,
+  IonSelect,
+  IonSelectOption,
+  IonSegmentButton,
+  IonSegment,
+  IonList,
+  IonInput,
 } from '@ionic/angular/standalone';
 
 
@@ -25,10 +44,15 @@ import {
   logoInstagram,
   logoWhatsapp,
   logoFacebook,
-  logoGoogle, close, 
-  pencil} from 'ionicons/icons';
+  close,
+  pencil,
+  logoGoogle,
+} from 'ionicons/icons';
+
+import Swiper from 'swiper';
 import { LoginService } from 'src/app/services/auth/login.service';
 import { ProfileComponent } from 'src/app/components/profile/profile.component';
+
 
 
 // register Swiper custom elements
@@ -40,7 +64,25 @@ register();
   styleUrls: ['./home.page.scss'],
   standalone: true,
   imports: [
+
+    IonInput,
+    IonList,
+    IonSegmentButton,
+    IonSegment,
+    IonMenuButton,
+    IonSelect,
+    IonSelectOption,
+    IonLabel,
+    IonCardContent,
+    IonCardHeader,
+    IonCard,
+    IonIcon,
+    IonItem,
+    CommonModule,
+    FormsModule,
+
     ProfileComponent,
+
     IonButtons,
     IonChip,
     IonButton,
@@ -51,20 +93,29 @@ register();
     IonHeader,
     IonTitle,
     IonToolbar,
-    CommonModule,
-    FormsModule,
     YoutubePlayerComponent,
     LoginComponent,
     IonModal,
+    SwiperComponent,
   ],
-  schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 
 
 
 export class HomePage implements OnInit {
 
+  api = inject(HomeService);
+  img: string = 'banner0802.jpg';
+  text: any;
+  textForEdit: any;
+  displayedMessages: any;
+  video_id: string = 'https://www.youtube.com/watch?v=QCO9VSj4h18';
+  link: string = 'https://vasisstudio.com/kirtan-school';
+  selectLang = 'ENG';
+
+
   auth = inject(LoginService)
+
   messages: any[] = [
     {
       title: 'New batches start every month for Module 1 and Module 2.',
@@ -93,6 +144,14 @@ export class HomePage implements OnInit {
     color: string = 'danger';
 
   login_open: boolean = false;
+
+  edit_open: boolean = false;
+  edit_img_open: boolean = false;
+  selectedFile: File | null = null;
+  constructor() {
+    addIcons({ logoInstagram, logoFacebook, logoGoogle, logoWhatsapp });
+    this.getText();
+
   user_profile: boolean = false;
   payment_notification: boolean = false;
 
@@ -120,13 +179,128 @@ export class HomePage implements OnInit {
     this.message = message;
     this.color = color;
     this.toastBool = true;
+
   }
 
   open(x: any) {
     this.login_open = false;
   }
 
+  async getText() {
+    let x = await this.api.getHome();
+    this.text = x.data;
+    this.video_id = 'https://www.youtube.com/watch?v=' + this.text[0].video_id;
+    this.img = this.text[3].img;
+    this.link = this.text[0].link;
+  }
+  _lang() {
+    console.log(this.selectLang);
+  }
+
+  edit_text() {
+    let array: any = [];
+    switch (this.selectLang) {
+      case 'ENG':
+        array = this.text?.map(
+          (element: {
+            id: number;
+            message_e: any;
+            video_title_e: any;
+            video_id: any;
+            link: any;
+          }) => {
+            return {
+              id: element.id,
+              message: element.message_e,
+              video_title: element.video_title_e,
+              video_id: element.video_id,
+              link: element.link,
+            };
+          }
+        );
+        break;
+      case 'SPN':
+        array = this.text?.map(
+          (element: {
+            id: number;
+            message_s: any;
+            video_title_s: any;
+            video_id: any;
+            link: any;
+          }) => {
+            return {
+              id: element.id,
+              message: element.message_s,
+              video_title: element.video_title_s,
+              video_id: element.video_id,
+              link: element.link,
+            };
+          }
+        );
+        break;
+      case 'POR':
+        array = this.text?.map(
+          (element: {
+            id: number;
+            message_p: any;
+            video_title_p: any;
+            video_id: any;
+            link: any;
+          }) => {
+            return {
+              id: element.id,
+              message: element.message_p,
+              video_title: element.video_title_p,
+              video_id: element.video_id,
+              link: element.link,
+            };
+          }
+        );
+    }
+    this.textForEdit = array;
+    console.log(this.textForEdit);
+  }
+
+  saveEdit(
+    page_text: {
+      id: number;
+      message: string;
+      video_title: string;
+      video_id: string;
+      link: string;
+    }[]
+  ) {
+    console.log(page_text);
+    switch (this.selectLang) {
+      case 'ENG':
+        this.api.editTextEng(page_text);
+        break;
+      case 'SPN':
+        this.api.editTextSp(page_text);
+        break;
+      case 'POR':
+        this.api.editTextPor(page_text);
+        break;
+    }
+  }
+
+  onFileSelected(event: any) {
+    const file: File = event.target.files[0];
+    if (file) {
+      this.selectedFile = file;
+      console.log('Файл выбран:', file);
+    }
+  }
+
+  async uploadImage() {
+    let x = await this.api.uploadImage(this.selectedFile, 4);
+    if (x !== null) {
+      this.img = x;
+    }
+  }
+
   ngOnInit() {
     console.log("home")
   }
+
 }
