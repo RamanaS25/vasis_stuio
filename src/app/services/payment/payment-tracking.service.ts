@@ -195,4 +195,37 @@ export class PaymentTrackingService {
       };
     }
   }
+
+
+  async  _deletePayment(payment_history_id: number): Promise<{success: boolean; data?: any; error?: string}> {
+ 
+    try {
+      const { data, error } = await this.supabase
+        .from('student_payment_history')
+        .delete()
+        .eq('id', payment_history_id)
+        .single();
+  
+      if (error) {
+        return {
+          success: false,
+          error: error.message || 'Failed to delete payment history'
+        };
+      }
+  
+      return {
+        success: true,
+        data
+      };
+    } catch (error) {
+      const errorMessage = error instanceof Error 
+        ? error.message 
+        : 'An unexpected error occurred while deleting payment';
+  
+      return {
+        success: false,
+        error: errorMessage
+      };
+    }
+}
 }
