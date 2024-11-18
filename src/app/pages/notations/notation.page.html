@@ -1,4 +1,4 @@
-<ion-header [translucent]="true">
+<ion-header [translucent]="true" class="ion-no-border">
   <ion-toolbar>
     <ion-buttons slot="start"> 
       <ion-back-button></ion-back-button>
@@ -9,13 +9,13 @@
 </ion-header>
 
 <ion-content [fullscreen]="true">
-
+<ion-toast [isOpen]="toastBool" [message]="message" [color]="color" position="top" duration="3000"></ion-toast>
 <ion-grid>
    <ion-row>
     @if(!isMobile()){   
      <ion-col size="9" >
       @if (id) {
-      <iframe [src]="id | safeUrl" width="100%" height="600" allow="autoplay"></iframe>
+      <iframe [src]="id | safeUrl" width="100%" height="800" allow="autoplay"></iframe>
 
       }
  
@@ -23,7 +23,8 @@
     }
      <ion-col > 
        @for (item of notations; track $index) {
-        <ion-item button detail="false">
+
+        <ion-item>
            {{item.name}}
            @if (!auth._user.is_admin) {
              <ion-icon name="link-outline" slot="end" color="primary" style="cursor: pointer;" (click)="modalBool = true;linkToPdf(id)"></ion-icon>
@@ -31,8 +32,8 @@
            }
 
            @if(auth._user.is_admin) {
-            <ion-icon name="create-outline" slot="end" color="primary" style="cursor: pointer;" (click)="selectedClass = item; editBool = true; type = 'edit'; "></ion-icon>
-            <ion-icon name="close-outline" slot="end" color="primary" style="cursor: pointer;" (click)="selectedClass = item; editBool = true; type = 'delete'; "></ion-icon>
+            <ion-icon name="create-outline" slot="end" color="primary" style="cursor: pointer;" (click)="selectedClass = item; editBool = true; "></ion-icon>
+         
            }  
         </ion-item>
        }
@@ -43,7 +44,7 @@
 <ion-modal [isOpen]="modalBool" (didDismiss)="modalBool = false">
   <ng-template>
     <ion-item> 
-      <ion-icon name="close" (click)="modalBool = false" slot="end"></ion-icon>
+      <ion-icon name="close-outline" (click)="modalBool = false" slot="end"></ion-icon>
     </ion-item>
      <ion-content fullscreen="true">
         @if (id) {
@@ -56,7 +57,7 @@
   <ion-modal [isOpen]="editBool" (didDismiss)="editBool = false">
     <ng-template>
       <ion-item> 
-        <ion-icon name="close" (click)="editBool = false" slot="end"></ion-icon>
+        <ion-icon name="close-outline" (click)="editBool = false" slot="end"></ion-icon>
       </ion-item>
        <ion-content fullscreen="true">
          @if (type === 'edit') { 
@@ -87,5 +88,32 @@
   </ion-modal>
 
 </ion-modal>
+
+<ion-modal [isOpen]="editBool" (didDismiss)="editBool = false">
+  <ng-template>
+    <ion-item> 
+      <ion-icon name="close-outline" (click)="editBool = false" slot="end"></ion-icon>
+    </ion-item>
+     <ion-content fullscreen="true">
+
+        <ion-card>
+           <ion-card-content>
+             <ion-input label="Name" type="text" [(ngModel)]="selectedClass.name" disabled></ion-input>
+             <ion-input label="Link" type="text" [(ngModel)]="newPdfLink"></ion-input>
+           </ion-card-content>
+
+           <ion-item>
+             <ion-button slot="end" (click)="updateLink(selectedClass.id,newPdfLink)">Save</ion-button>
+           </ion-item>
+
+        </ion-card>
+       
+
+
+
+     </ion-content>
+  </ng-template>
+</ion-modal>
+
 
 </ion-content>

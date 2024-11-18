@@ -41,6 +41,7 @@ export class LoginService {
            error: 'Invalid Credentials'
          };
        } else {
+
           if(data[0].is_banned) {
             return {
               success: false,
@@ -51,6 +52,14 @@ export class LoginService {
             };
           }
           this.user = data[0]
+          if(data[0].is_admin) {
+            this.logged_in = true
+            return {
+              success: true,
+              message: 'Logged in successfully'
+            };
+          }
+        
           console.log( 'data', data[0])
           
           console.log('user',this.user.student_groups.student_sessions)

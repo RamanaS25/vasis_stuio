@@ -5,6 +5,7 @@
 </ion-header>
 
 <ion-content [fullscreen]="true">
+  <ion-toast [isOpen]="toastBool" [message]="message" [color]="color" position="top" duration="3000"></ion-toast>
   <div>
     <h2>Upload Video</h2>
   
@@ -21,8 +22,8 @@
     </div>
   </div>
 
-  <ion-button (click)="video_api.uploadVideo('hi')">click</ion-button>
-
+  <ion-button (click)="video_api.uploadVideo('hi', auth._user.id)">click</ion-button>
+  
   <div class="video-container">
 
     <mux-player
@@ -33,6 +34,39 @@
   ></mux-player>
   
   </div>
+
+
+  <ion-grid fixed="true">
+    <ion-row>
+      <ion-col>
+        
+      <ion-card>
+        
+        <ion-item>
+          <ion-select [(ngModel)]="selectedClass">
+            <ion-select-option *ngFor="let item of numbers" [value]="'Class '+item"> Class {{item}}</ion-select-option>
+          </ion-select>
+        </ion-item>
+    
+      </ion-card>
+    
+
+        <ion-card>
+  
+          @for (item of filteredHomework(); track $index) {
+             
+              
+                <ion-item>
+                  {{item.title}}
+                </ion-item>
+          
+             
+        
+          }
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
 
 
   

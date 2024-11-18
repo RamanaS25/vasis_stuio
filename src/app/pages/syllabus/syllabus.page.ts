@@ -1,7 +1,7 @@
 import { Component, CUSTOM_ELEMENTS_SCHEMA, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IonContent, IonHeader, IonSelect, IonSelectOption, IonTitle, IonMenuButton, IonToolbar, IonButtons, IonSkeletonText, IonAccordionGroup, IonAccordion, IonCol, IonCard, IonLabel, IonCardHeader, IonItem, IonCardContent, IonChip, IonGrid, IonRow, IonIcon, IonInput, IonCheckbox, IonModal, IonButton, IonToast, IonCardSubtitle } from '@ionic/angular/standalone';
+import { IonContent, IonHeader, IonSelect, IonSelectOption, IonTitle, IonMenuButton, IonToolbar, IonButtons, IonSkeletonText, IonAccordionGroup, IonAccordion, IonCol, IonCard, IonLabel, IonCardHeader, IonItem, IonCardContent, IonChip, IonGrid, IonRow, IonIcon, IonInput, IonCheckbox, IonModal, IonButton, IonToast, IonCardSubtitle, IonBackButton } from '@ionic/angular/standalone';
 import { VimeoPlayerComponent } from 'src/app/components/vimeo-player/vimeo-player.component';
 import { lockClosed, ellipseOutline, addOutline, closeOutline, createOutline, ellipse } from 'ionicons/icons';
 import { addIcons } from 'ionicons';
@@ -17,7 +17,7 @@ addIcons({lockClosed, ellipseOutline, addOutline, closeOutline, createOutline, e
   templateUrl: './syllabus.page.html',
   styleUrls: ['./syllabus.page.scss'],
   standalone: true,
-  imports: [IonCardSubtitle, ProfileComponent,IonToast, IonButton, IonSelect, IonSelectOption, IonModal, IonCheckbox, IonInput, IonIcon, IonRow, IonGrid, IonChip, IonCardContent, IonItem, IonCardHeader,IonMenuButton, IonLabel, IonCard, IonCol, IonAccordion, IonAccordionGroup, IonButtons, IonButtons, IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule, VimeoPlayerComponent, IonSkeletonText],
+  imports: [IonBackButton, IonCardSubtitle, ProfileComponent,IonToast, IonButton, IonSelect, IonSelectOption, IonModal, IonCheckbox, IonInput, IonIcon, IonRow, IonGrid, IonChip, IonCardContent, IonItem, IonCardHeader,IonMenuButton, IonLabel, IonCard, IonCol, IonAccordion, IonAccordionGroup, IonButtons, IonButtons, IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule, VimeoPlayerComponent, IonSkeletonText],
 })
 export class SyllabusPage implements OnInit {
   route = inject(ActivatedRoute)

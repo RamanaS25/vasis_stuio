@@ -85,7 +85,7 @@
                   <ion-item detail="false" lines="none" style="border-radius: 10px; margin-bottom: 10px; --background:rgb(237, 213, 253);" (click)="navigateTo(selectedModule.link, item)" detail="true" button>
                     <ion-label>{{item}}</ion-label>
 
-                    @if (auth._user.grade < this.getNavigationParam(item)) {  
+                    @if (auth._user.grade < this.getNavigationParam(item) && !auth._user.is_admin) {  
                     <ion-icon slot="end" name="lock-closed" color="danger" ></ion-icon>
                     }
 

@@ -44,13 +44,13 @@ export class MuxVideoService {
   }
   
 
-  async uploadVideo(videoUrl: string): Promise<{ success: boolean; data?: string; error?: string }> {
+  async uploadVideo(videoUrl: string, user_id: string): Promise<{ success: boolean; data?: string; error?: string }> {
     try {
       console.log('Initiating video upload...');
   
       // Call the edge function and await the result
       const response = await this.api.getClient().functions.invoke('upload-video', {
-        body: { videoUrl: videoUrl }
+        body: { videoUrl: videoUrl, user_id: user_id }
       });
   
       // Log the full response to the console
@@ -96,6 +96,38 @@ export class MuxVideoService {
     } catch (error) {
       console.error('Error during upload:', error);
       return { success: false, error: 'error during saving the video' }; // Return the error message
+    }
+  }
+
+  async getHomeworkByGrade(grade: string): Promise<{ success: boolean; data?: any[]; error?: string }> {
+    try {
+      // Query the syllabus_homework table filtered by grade
+      const { data, error } = await this.api.getClient()
+        .from('syllabus_homework')
+        .select(`
+          *,
+          class_id (
+            *,
+            level_id (
+              *,
+              grade_id (
+                grade
+              )
+            )
+          )
+        `)
+        .eq('class_id.level_id.grade_id.grade', grade);
+
+      if (error) {
+        console.error('Error fetching homework:', error.message);
+        return { success: false, error: error.message };
+      }
+
+      return { success: true, data: data };
+
+    } catch (error) {
+      console.error('Error fetching homework:', error);
+      return { success: false, error: 'Error fetching homework data' };
     }
   }
   

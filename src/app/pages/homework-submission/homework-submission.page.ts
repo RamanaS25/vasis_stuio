@@ -1,28 +1,47 @@
-import { Component, CUSTOM_ELEMENTS_SCHEMA, inject, OnInit } from '@angular/core';
+import { Component, computed, CUSTOM_ELEMENTS_SCHEMA, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IonContent, IonHeader, IonTitle, IonToolbar, IonButton, IonInput } from '@ionic/angular/standalone';
+import { IonContent, IonHeader, IonTitle, IonToolbar, IonButton, IonInput, IonGrid, IonRow, IonCol, IonCard, IonToast, IonItem, IonSelect, IonSelectOption } from '@ionic/angular/standalone';
 import { MuxVideoService } from 'src/app/services/mux/mux-video.service';
+import { LoginService } from '../../services/auth/login.service';
 import "@mux/mux-player"
 @Component({
   selector: 'app-homework-submission',
   templateUrl: './homework-submission.page.html',
   styleUrls: ['./homework-submission.page.scss'],
   standalone: true,
-  imports: [IonInput, IonButton, IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule],
+  imports: [IonItem, IonToast, IonCard, IonCol, IonRow, IonGrid, IonInput, IonButton, IonContent, IonHeader, IonTitle, IonToolbar, IonSelect, IonSelectOption, CommonModule, FormsModule],
   schemas:[CUSTOM_ELEMENTS_SCHEMA]
 })
 export class HomeworkSubmissionPage implements OnInit {
   video_api = inject(MuxVideoService);
-
+  auth = inject(LoginService);
   selectedFile: File | null = null;  // The selected video file
   uploadedUrl: string | null = null;  // The public URL of the uploaded video
+  homework: any[] = [];
 
-  
-  playbackId = "YguAMmPcBgeQXkQaXnR9Aup8JZiEsKThYg94Lt1RuAw";
+  homework_ = signal<any>(null);
+
+  filteredHomework = computed(() => {
+    console.log(this.selectedClass())
+    return this.homework_()?.filter((item:any) => item.class_id.name === this.selectedClass());
+  });
+
+  homework_length = computed(() => {
+
+    return this.filteredHomework().length;
+  });
+
+  selectedClass = signal<string>('Class 1')
+  toastBool = false;
+  message = "";
+  color = "";
+
+  playbackId = "j721S8OG02S01s02SSGf9900cJvgTChzyxDdvdQ01101RNELg";
+
+  numbers: number[] = Array.from({length: 24}, (_, i) => i + 1);
 
   constructor() { }
-
 
   onFileSelected(event: any): void {
     const file: File = event.target.files[0];
@@ -41,8 +60,11 @@ export class HomeworkSubmissionPage implements OnInit {
         this.uploadedUrl = res.data!;  // Set the public URL once uploaded
 
         if(res.success){
-          let mux_playback_id = await this.video_api.uploadVideo(res.data!);
-          console.log(mux_playback_id)
+          let response = await this.video_api.uploadVideo(res.data!, this.auth._user.id);
+          console.log(response)
+          if(response.success){
+            this.playbackId = response.data!
+          }
          }
 
     
@@ -52,8 +74,28 @@ export class HomeworkSubmissionPage implements OnInit {
     }
   }
 
+  toast(message: string, color: string){
+    this.toastBool = true;
+    this.message = message;
+    this.color = color;
+  }
+
+  async getHomework(){
+    let res = await this.video_api.getHomeworkByGrade(this.auth._user.grade);
+
+    if(res.success){
+
+      this.homework_.set(res.data!)
+      console.log(this.filteredHomework())
+   
+    }else{
+      this.toast('Error fetching Homework', 'danger');
+    }
+  }
+
   ngOnInit() {
     console.log('Hello HomeworkSubmissionPage Page');
+    this.getHomework();
   }
 
 }

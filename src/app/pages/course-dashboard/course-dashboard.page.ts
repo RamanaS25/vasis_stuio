@@ -85,12 +85,12 @@ export class CourseDashboardPage implements OnInit {
   navigateTo(x:string, component:string){
     let grade = this.getNavigationParam(component)
 
-    if(this.auth._user.grade >= grade){
+    if(this.auth._user.is_admin || this.auth._user.grade >= grade){
       this.router.navigate([x], {queryParams:{paramName: grade}})
       return
     }
 
-   this.handleToast('You are not allowed to access this module', 'danger')
+    this.handleToast('You are not allowed to access this module', 'danger')
   }
 
 }

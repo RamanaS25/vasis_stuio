@@ -20,7 +20,7 @@ export const routes: Routes = [
   {
     path: 'tutorial',
     loadComponent: () => import('./pages/tutorial/tutorial.page').then( m => m.TutorialPage),
-    canActivate: [authGuard]
+
     
   },
   {
