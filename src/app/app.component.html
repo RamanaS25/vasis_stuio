@@ -1,20 +1,20 @@
 <ion-app>
  
     <ion-menu contentId="main-content" type="overlay">
-      <ion-content>
-        <ion-list id="inbox-list">
+      <ion-content >
+        <ion-list id="inbox-list" style="background-color: rgba(226, 121, 203, 0);">
           <ion-list-header>Vasis Studio</ion-list-header>
           <ion-note>{{'vasis@gmail.com'}}</ion-note>
 
           <ion-menu-toggle auto-hide="false" *ngFor="let p of appPages; let i = index">
            @if(p.access === 'public' && !auth._logged_in){
-            <ion-item routerDirection="root" [routerLink]="[p.url]" lines="none" detail="false" routerLinkActive="selected">
+            <ion-item routerDirection="root" style="--background: rgba(226, 121, 203, 0);" [routerLink]="[p.url]" lines="none" detail="false" routerLinkActive="selected">
              
               <ion-label>{{ p.title }}</ion-label>
             </ion-item>
            } 
            @if( auth._logged_in){
-            <ion-item routerDirection="root" [routerLink]="[p.url]" lines="none" detail="false" routerLinkActive="selected">
+            <ion-item routerDirection="root" style="--background: rgba(226, 121, 203, 0);" [routerLink]="[p.url]" lines="none" detail="false" routerLinkActive="selected">
              
               <ion-label>{{ p.title }}</ion-label>
             </ion-item>
@@ -24,14 +24,7 @@
           </ion-menu-toggle>
         </ion-list>
 
-        <ion-list id="labels-list">
 
-          <ion-list-header>Labels</ion-list-header>
-          
-          <ion-item button> 
-             Contact
-          </ion-item>
-        </ion-list>
 
       </ion-content>
     </ion-menu>

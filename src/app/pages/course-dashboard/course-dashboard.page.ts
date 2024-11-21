@@ -33,7 +33,8 @@ export class CourseDashboardPage implements OnInit {
     },
     {
       title: 'Homework',
-      components: ["Module 1", 'Module 2', 'Module 3']
+      components: ["Module 1", 'Module 2', 'Module 3'],
+      link:'/homework-submission'
     },
     {
       title: 'Notations',

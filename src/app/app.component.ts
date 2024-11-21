@@ -39,7 +39,6 @@ export class AppComponent {
     { title: 'Sessions', url: '/student-sessions', icon: 'home',access:'student' },
     { title: 'Courses', url: '/course-dashboard', icon: 'home',access:'student' },
     { title: 'Tutorial', url: '/tutorial', icon: 'information-circle',access:'public' },
-    { title: 'Homework Submission', url: '/homework-submission', icon: 'home',access:'public' },
     { title: 'Contact', url: '/contact', icon: 'mail',access:'public' }
 
   ];

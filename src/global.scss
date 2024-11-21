@@ -49,6 +49,10 @@ ion-header {
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     z-index: 1000;
   }
+
+  ion-menu {
+  --background: rgb(226, 121, 203);
+  }
   
   /* Optional: Style for the content inside the header */
   ion-header ion-toolbar {
@@ -68,9 +72,7 @@ ion-header {
     }
   }
 
-  ion-menu {
-    --background: white;
-  }
+
 
   
 ion-content{

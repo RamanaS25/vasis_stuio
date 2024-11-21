@@ -1,73 +1,153 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>homework-submission</ion-title>
-  </ion-toolbar>
-</ion-header>
+  <ion-header [translucent]="true" class="ion-no-border">
+    <ion-toolbar>
+      <ion-buttons slot="start">
+        <ion-back-button></ion-back-button>
+      </ion-buttons>
+      <ion-title>Homework Submissions</ion-title>
+    </ion-toolbar>
+  </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-toast [isOpen]="toastBool" [message]="message" [color]="color" position="top" duration="3000"></ion-toast>
-  <div>
-    <h2>Upload Video</h2>
-  
-    <!-- File input for selecting a video -->
-    <ion-input type="file" accept="video/*" (change)="onFileSelected($event)" />
-  
-    <!-- Button to upload the video -->
-    <ion-button (click)="uploadVideo()" [disabled]="!selectedFile">Upload Video</ion-button>
-  
-    <!-- Displaying the URL of the uploaded video -->
-    <div *ngIf="uploadedUrl">
-      <h3>Video Uploaded Successfully!</h3>
-      <p><strong>URL:</strong> <a [href]="uploadedUrl" target="_blank">{{ uploadedUrl }}</a></p>
-    </div>
-  </div>
-
-  <ion-button (click)="video_api.uploadVideo('hi', auth._user.id)">click</ion-button>
-  
-  <div class="video-container">
-
-    <mux-player
-    stream-type="on-demand"
-    attr.playback-id="{{playbackId}}"
-    metadata-video-title="Tea and Cookies"
-    metadata-user-id="user-24601"
-  ></mux-player>
-  
-  </div>
-
-
-  <ion-grid fixed="true">
-    <ion-row>
-      <ion-col>
-        
-      <ion-card>
-        
-        <ion-item>
-          <ion-select [(ngModel)]="selectedClass">
-            <ion-select-option *ngFor="let item of numbers" [value]="'Class '+item"> Class {{item}}</ion-select-option>
-          </ion-select>
-        </ion-item>
+  <ion-content [fullscreen]="true">
+    <ion-toast [isOpen]="toastBool" [message]="message" [color]="color" position="top" duration="3000"></ion-toast>
+   
     
-      </ion-card>
-    
+ 
 
-        <ion-card>
-  
-          @for (item of filteredHomework(); track $index) {
-             
-              
-                <ion-item>
-                  {{item.title}}
-                </ion-item>
+
+    <ion-grid fixed="true">
+      <ion-row>
+        <ion-col>
           
-             
-        
-          }
+        <ion-card>
+          
+          <ion-item>
+            <ion-select [(ngModel)]="selectedClass">
+              <ion-select-option *ngFor="let item of numbers" [value]="'Class '+item"> Class {{item}}</ion-select-option>
+            </ion-select>
+          </ion-item> 
+      
         </ion-card>
-      </ion-col>
-    </ion-row>
-  </ion-grid>
+      
 
+          <ion-card>
+    
+            @for (item of filteredHomework(); track $index) {
+              
+                  <ion-item>
+                    <ion-label>
+                      {{item.title}}
+                    </ion-label>
+                    
+                    <ion-icon *ngIf="item.student_homework.length > 0" (click)="selectedHomework = item; modalBool = true; type = 'albums'"  name="albums" size="large" slot="end" color="primary" style="cursor: pointer" ></ion-icon>
+                    <ion-icon  name="cloud-upload" size="large" slot="end" (click)="selectedHomework = item; modalBool = true; type = 'cloud-upload'" [color]="item.student_homework.length > 0 ? 'success' : 'warning'" style="cursor: pointer"></ion-icon>
+                  </ion-item>
 
-  
-</ion-content>
+            }
+          </ion-card>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+
+    <ion-modal [isOpen]="modalBool"  (didDismiss)="modalBool = false"> 
+      <ng-template>
+        <ion-item> 
+            <ion-label>
+              {{selectedHomework?.title}}
+            </ion-label>
+            
+            <ion-icon name="close-outline" slot="end" (click)="modalBool = false" style="cursor: pointer"></ion-icon>
+        </ion-item>
+        <ion-loading [isOpen]="video_upload_loading" message="Uploading Video..."></ion-loading>
+
+        <ion-content> 
+
+          @if(type !== 'upload-selected'){
+            <ion-card>
+                <ion-card-header>
+                    <ion-item lines="none">
+                      <ion-label>{{type === 'albums' ? 'Submissions' : 'Upload Video'}}</ion-label>
+                    </ion-item>
+                </ion-card-header>
+
+                <ion-card-content>
+                      @if(type === 'albums') {
+                        @for (item of selectedHomework?.student_homework; track $index) {
+                          <ion-item button (click)="selectedHomework_upload = item; type = 'upload-selected'">
+                            <ion-label>{{item.created_at | date:'medium'}}</ion-label>
+
+                            <ion-chip slot="end" [color]="item.graded ? 'primary' : 'warning'">
+                              {{item.graded ? item.avg : 'Not Graded'}}
+                            </ion-chip>
+                            <ion-icon name="chevron-forward" slot="end"></ion-icon>
+                          </ion-item>
+                        } @empty {
+
+                          <ion-item>
+                            <ion-label>No submissions yet</ion-label>
+                          </ion-item>
+
+                        }
+                      } @else if (type === 'cloud-upload') {
+                        <div class="upload-form">
+                          <ion-input type="file" accept="video/*" (change)="onFileSelected($event)" />
+                          <ion-button expand="block" (click)="uploadVideo()" [disabled]="!selectedFile">
+                            <ion-icon name="cloud-upload" slot="start"></ion-icon>
+                            Upload Video
+                          </ion-button>
+                        </div>
+                      } 
+                </ion-card-content>
+            </ion-card>
+          }
+
+           @if (type === 'upload-selected') {
+            <ion-card>
+              <ion-card-header>
+                <ion-item lines="none">
+                  <ion-button fill="clear" slot="start" (click)="type = 'albums'">
+                    <ion-icon name="arrow-back" slot="icon-only"></ion-icon>
+                  </ion-button>
+                  <ion-label>Homework Details</ion-label>
+                </ion-item>
+              </ion-card-header>
+
+              <ion-card-content>
+                <ion-list>
+                  <ion-item>
+                    <ion-label>Submission Date</ion-label>
+                    <ion-note slot="end">{{selectedHomework_upload?.created_at | date:'medium'}}</ion-note>
+                  </ion-item>
+
+                  <ion-item>
+                    <ion-label>Svaras Score</ion-label>
+                    <ion-badge slot="end" color="primary">{{selectedHomework_upload?.val_1}}</ion-badge>
+                  </ion-item>
+
+                  <ion-item>
+                    <ion-label>Timing Score</ion-label>
+                    <ion-badge slot="end" color="primary">{{selectedHomework_upload?.val_2}}</ion-badge>
+                  </ion-item>
+
+                  <ion-item>
+                    <ion-label>Voice Score</ion-label>
+                    <ion-badge slot="end" color="primary">{{selectedHomework_upload?.val_3}}</ion-badge>
+                  </ion-item>
+
+                  <ion-item>
+                    <ion-label>Pronunciation Score</ion-label>
+                    <ion-badge slot="end" color="primary">{{selectedHomework_upload?.val_4}}</ion-badge>
+                  </ion-item>
+                </ion-list>
+              </ion-card-content>
+            </ion-card>
+
+            <app-mux-video-player [video_link]="selectedHomework_upload?.video_link"></app-mux-video-player>
+          }
+          
+            
+        </ion-content>
+
+      </ng-template>
+    </ion-modal>
+
+  </ion-content>

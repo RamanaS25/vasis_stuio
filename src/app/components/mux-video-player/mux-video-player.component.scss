@@ -1,0 +1,16 @@
+.video-container {
+    width: 100%;          /* Make the container full width */
+    max-width: 800px;    /* Set a maximum width */
+    height: 450px;       /* Set a height for the video player */
+    margin: 0 auto;      /* Center the container */
+    position: relative;   /* Position relative for absolute positioning */
+  }
+  
+  mux-player {
+    width: 100%;         /* Make the player fill the container */
+    height: 100%;        /* Make the player fill the container */
+    position: absolute;   /* Use absolute positioning to cover the container */
+    top: 0;              /* Align to the top */
+    left: 0;             /* Align to the left */
+  }
+  

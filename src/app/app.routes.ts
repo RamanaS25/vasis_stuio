@@ -66,7 +66,11 @@ export const routes: Routes = [
     path: 'notation',
     loadComponent: () => import('./pages/notations/notation.page').then( m => m.NotationPage),
     canActivate: [authGuard]
+  },  {
+    path: 'homework-grading',
+    loadComponent: () => import('./pages/homework-grading/homework-grading.page').then( m => m.HomeworkGradingPage)
   },
+
 
 ];
 

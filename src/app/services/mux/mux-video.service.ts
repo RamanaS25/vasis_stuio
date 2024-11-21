@@ -1,6 +1,15 @@
 import { inject, Injectable } from '@angular/core';
 import { SupabaseService } from '../api/supabase.service';
 
+export interface Homework {
+  id: string;
+  title: string;
+  title_s: string;
+  title_p: string;
+  is_exercise: boolean;
+  student_homework: any[];
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -44,7 +53,7 @@ export class MuxVideoService {
   }
   
 
-  async uploadVideo(videoUrl: string, user_id: string): Promise<{ success: boolean; data?: string; error?: string }> {
+  async uploadVideo(videoUrl: string, user_id: string, homework: Homework): Promise<{ success: boolean; data?: string; error?: string }> {
     try {
       console.log('Initiating video upload...');
   
@@ -62,6 +71,18 @@ export class MuxVideoService {
       } else {
         console.log('Upload successful, playbackId:', response.data.uploadUrl.data.playback_ids[0].id);
       }
+
+      // Save the homework to the database
+      const { data: homeworkData, error: homeworkError } = await this.api.getClient().from('student_homework').insert({
+        homework_id: homework.id, 
+        student_id: user_id,
+        video_link: response.data.uploadUrl.data.playback_ids[0].id
+      });
+
+      if (homeworkError) {
+        console.error('Error from function:', homeworkError.message);
+        return { success: false, error: homeworkError.message }; // Return the error message
+      }
   
       // Return the playback ID if the upload is successful
       return { success: true, data: response.data.uploadUrl.data.playback_ids[0].id };
@@ -73,33 +94,7 @@ export class MuxVideoService {
   }
 
 
-  async uploadPlaybackId(playbackId: string): Promise<{ success: boolean; data?: string; error?: string }> {
-    try {
-      console.log('Initiating video upload...');
-  
-      // Call the edge function and await the result
-      const response = await this.api.getClient().from('videos').insert({
-        url: playbackId
-      });
-  
-      // Log the full response to the console
-      console.log('Upload response:', response);
-  
-      if (response.error) {
-        console.error('Error from function:', response.error.message);
-        return { success: false, error: response.error.message }; // Return the error message
-      } 
-  
-      // Return the playback ID if the upload is successful
-      return { success: true, data: 'worked' };
-  
-    } catch (error) {
-      console.error('Error during upload:', error);
-      return { success: false, error: 'error during saving the video' }; // Return the error message
-    }
-  }
-
-  async getHomeworkByGrade(grade: string): Promise<{ success: boolean; data?: any[]; error?: string }> {
+  async getHomeworkByGrade(grade: string, user_id: number): Promise<{ success: boolean; data?: Homework[]; error?: string }> {
     try {
       // Query the syllabus_homework table filtered by grade
       const { data, error } = await this.api.getClient()
@@ -107,17 +102,24 @@ export class MuxVideoService {
         .select(`
           *,
           class_id (
-            *,
+            name,
+             id,
             level_id (
-              *,
+              id,
               grade_id (
                 grade
               )
             )
+          ),
+          student_homework!homework_id (
+            *,
+            student_id
           )
         `)
-        .eq('class_id.level_id.grade_id.grade', grade);
-
+        .eq('class_id.level_id.grade_id.grade', grade)
+        .eq('student_homework.student_id', user_id);
+      
+        console.warn(data)
       if (error) {
         console.error('Error fetching homework:', error.message);
         return { success: false, error: error.message };
