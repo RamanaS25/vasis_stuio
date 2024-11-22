@@ -3,36 +3,199 @@
     <ion-buttons slot="start">
       <ion-back-button></ion-back-button>
     </ion-buttons>
-    <ion-title>homework-grading</ion-title>
+    <ion-title>Homework Grading</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
-
-  <ion-grid>
+  <ion-toast [isOpen]="toast.isOpen" [message]="toast.message" [color]="toast.color" (didDismiss)="toast.isOpen = false" duration="1000"></ion-toast>
+  
+  <ion-grid class="ion-padding">
     <ion-row>
-      <ion-col>
-        <ion-card>
+      <!-- Groups Column -->
+      <ion-col size="12" size-md="3">
+        <ion-card class="groups-card">
           <ion-card-header>
-            Groups
+            <ion-card-title>Groups</ion-card-title>
           </ion-card-header>
+          <ion-card-content>
+            @for(group of groups; track group){
+              <ion-item button detail="true" 
+                (click)="selectGroup(group)" 
+                [class.selected-item]="selectedGroup?.name === group.name" 
+                lines="none">
+                <ion-label>{{group.name}}</ion-label>
+                <ion-badge slot="end" color="primary">{{group.user_table.length}}</ion-badge>
+              </ion-item>
+            }@empty{
+              @for(i of [1,2,3,4,5]; track i){
+                <ion-item>
+                  <ion-skeleton-text style="width: 100%; height: 20px;" animated></ion-skeleton-text>
+                </ion-item>
+              }
+            }
+          </ion-card-content>
         </ion-card>
       </ion-col>
 
-      <ion-col>
-        <ion-card>
+      <!-- Students/Homework Column -->
+      <ion-col size="12" size-md="3">
+        <ion-card class="students-card">
           <ion-card-header>
-            Students/Homework
+            <ion-card-title class="ion-padding-bottom">
+              {{student_selected ? 'Homework' : 'Students'}}
+            </ion-card-title>
+            @if(student_selected){
+              <ion-button fill="clear" (click)="student_selected = false">
+                <ion-icon slot="start" name="arrow-back"></ion-icon>
+                Back to Students
+              </ion-button>
+            }
           </ion-card-header>
+
+          <ion-card-content>  
+            @if(!student_selected){
+              @for(student of selectedGroup?.user_table; track student){
+                <ion-item button detail="true" 
+                  (click)="selectStudent(student)" 
+                  [class.selected-item]="selectedStudent?.id === student.id" 
+                  lines="none">
+
+                  <ion-label>
+                    <h2>{{student.legal_name}}</h2>
+                    <p>{{student.initiated_name}}</p>
+                  </ion-label>
+                  <ion-badge slot="end" color="primary">{{student.student_homework.length}}</ion-badge>
+                </ion-item>
+              }@empty{
+                <ion-item lines="none">
+                  <ion-label color="medium">No students available</ion-label>
+                </ion-item>
+              }
+            }@else{
+              @for(homework of selectedStudent?.student_homework; track homework){
+                <ion-item button detail="true" 
+                  (click)="selectHomework(homework)" 
+                  [class.selected-item]="selectedHomework?.id === homework.id" 
+                  lines="none">
+                  <ion-icon name="document-text" slot="start"></ion-icon>
+                  <ion-label>{{homework.syllabus_homework.title}}</ion-label>
+                </ion-item>
+              }
+            }
+          </ion-card-content>
         </ion-card>
       </ion-col>
 
-      <ion-col>
-        <ion-card>
-          <ion-card-header> 
-            Homework Grading
-          </ion-card-header>
-        </ion-card>
+      <!-- Grading Column -->
+      <ion-col size="12" size-md="6">
+        @if(selectedHomework){
+          <ion-card class="grading-card">
+            <ion-card-header>
+              <ion-card-title>Grading: {{selectedHomework.syllabus_homework.title}}</ion-card-title>
+              <ion-card-subtitle>Student: {{selectedStudent?.legal_name}}</ion-card-subtitle>
+            </ion-card-header>
+
+            <ion-card-content>
+              <ion-grid>
+                <ion-row>
+                  <ion-col size="12" size-lg="6">
+                    <app-mux-video-player [video_link]="selectedStudent?.student_homework[0].video_link"></app-mux-video-player>
+                  </ion-col>
+
+                  <ion-col size="12" size-lg="6">
+                    <div class="grading-section">
+                      @if(selectedHomework?.syllabus_homework.is_exercise){
+                        <ion-list>
+                          <ion-item>
+                            <ion-range labelPlacement="start" label="Voice Score"
+                              min="1" max="5" step="1" snaps="true" color="primary" pin="true"
+                              (ionChange)="avgCalc($event)" [(ngModel)]="homework_graded_object.val1">
+                            </ion-range>
+                          </ion-item>
+
+                          <ion-item>
+                            <ion-range labelPlacement="start" label="Scale Score"
+                              min="1" max="5" step="1" snaps="true" color="primary" pin="true"
+                              (ionChange)="avgCalc($event)" [(ngModel)]="homework_graded_object.val2">
+                            </ion-range>
+                          </ion-item>
+
+                          <ion-item>
+                            <ion-range labelPlacement="start" label="Fingering Score"
+                              min="1" max="5" step="1" snaps="true" color="primary" pin="true"
+                              (ionChange)="avgCalc($event)" [(ngModel)]="homework_graded_object.val3">
+                            </ion-range>
+                          </ion-item>
+
+                          <ion-item>
+                            <ion-range labelPlacement="start" label="Timing Score"
+                              min="1" max="5" step="1" snaps="true" color="primary" pin="true"
+                              (ionChange)="avgCalc($event)" [(ngModel)]="homework_graded_object.val4">
+                            </ion-range>
+                          </ion-item>
+                        </ion-list>
+                      } @else {
+                        <ion-list>
+                          <ion-item>
+                            <ion-range labelPlacement="start" label="Svaras Score"
+                              min="1" max="5" step="1" snaps="true" color="primary" pin="true"
+                              (ionChange)="avgCalc($event)" [(ngModel)]="homework_graded_object.val1">
+                            </ion-range>
+                          </ion-item>
+
+                          <ion-item>
+                            <ion-range labelPlacement="start" label="Timing Score"
+                              min="1" max="5" step="1" snaps="true" color="primary" pin="true"
+                              (ionChange)="avgCalc($event)" [(ngModel)]="homework_graded_object.val2">
+                            </ion-range>
+                          </ion-item>
+
+                          <ion-item>
+                            <ion-range labelPlacement="start" label="Voice Score"
+                              min="1" max="5" step="1" snaps="true" color="primary" pin="true"
+                              (ionChange)="avgCalc($event)" [(ngModel)]="homework_graded_object.val3">
+                            </ion-range>
+                          </ion-item>
+
+                          <ion-item>
+                            <ion-range labelPlacement="start" label="Pronunciation Score"
+                              min="1" max="5" step="1" snaps="true" color="primary" pin="true"
+                              (ionChange)="avgCalc($event)" [(ngModel)]="homework_graded_object.val4">
+                            </ion-range>
+                          </ion-item>
+                        </ion-list>
+                      }
+                       
+                      <ion-item>
+                        <ion-label>Average Score</ion-label>
+                        <ion-note slot="end">{{homework_graded_object.avg}}</ion-note>
+                      </ion-item>
+                      <ion-item>
+                        <ion-textarea 
+                          label="Feedback" 
+                          labelPlacement="floating" 
+                          [value]="homework_graded_object.comment"
+                          placeholder="Enter feedback for the student..."
+                          rows="4">
+                        </ion-textarea>
+                      </ion-item>\
+
+                      <app-audio-recorder></app-audio-recorder>
+
+                      <div class="ion-padding-top ion-text-end">
+                        <ion-button  expand="block">
+                          <ion-icon name="checkmark-circle" slot="start"></ion-icon>
+                          Submit Grades
+                        </ion-button>
+                      </div>
+                    </div>
+                  </ion-col>
+                </ion-row>
+              </ion-grid>
+            </ion-card-content>
+          </ion-card>
+        }
       </ion-col>
     </ion-row>
   </ion-grid>

@@ -11,6 +11,7 @@ import "@mux/mux-player"
 })
 export class MuxVideoPlayerComponent  implements OnInit {
   @Input() video_link: string = '';
+
   constructor() { }
 
   ngOnInit() {}

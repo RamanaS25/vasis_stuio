@@ -1,0 +1,36 @@
+<div class="recorder-container">
+  <div class="timer">{{ formatTime(recordingTime) }}</div>
+  
+  <div class="controls">
+    <button 
+      *ngIf="!isRecording" 
+      (click)="startRecording()" 
+      class="record-btn">
+      🎤 Record
+    </button>
+    
+    <button 
+      *ngIf="isRecording" 
+      (click)="stopRecording()" 
+      class="stop-btn">
+      ⏹️ Stop
+    </button>
+
+    <button 
+      *ngIf="audioUrl && !isRecording && !isUploading" 
+      (click)="uploadToSupabase()" 
+      class="upload-btn">
+      ⬆️ Upload
+    </button>
+  </div>
+
+  <div *ngIf="isRecording" class="recording-indicator">
+    ⚪ Recording...
+  </div>
+
+  <audio *ngIf="audioUrl" [src]="audioUrl" controls></audio>
+
+  <div *ngIf="isUploading" class="progress-bar">
+    <div class="progress" [style.width.%]="uploadProgress"></div>
+  </div>
+</div>

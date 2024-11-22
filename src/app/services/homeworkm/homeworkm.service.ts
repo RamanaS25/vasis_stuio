@@ -51,7 +51,25 @@ export class HomeworkmService {
   }
   
   
-  
+  async get_groups_with_students_homework():Promise<{success:boolean, data?:any, error?:string}>{
+    try {
+      const { data, error } = await this.api.getClient()
+        .from('student_groups')
+        .select('name, user_table!inner(legal_name, initiated_name, email, phone, id, student_homework!inner(*, syllabus_homework(title, is_exercise)))')
+        .not('user_table.student_homework', 'is', null)
+
+      if (error) {
+        console.warn(error)
+        return { success: false, error: error.message || 'Error fetching groups data' }
+      }
+
+      return { success: true, data }
+
+    } catch (error) {
+      console.warn(error)
+      return { success: false, error: 'Unexpected error fetching groups data' }
+    }
+  }
   
 
 }

@@ -1,0 +1,162 @@
+.recorder-container {
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  align-items: center;
+  max-width: 320px;
+  margin: 0 auto;
+  background: #1a1a1a;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  color: #fff;
+}
+
+.controls {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+button {
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 0.875rem;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  
+  &:hover {
+    background: rgba(255, 255, 255, 0.15);
+  }
+}
+
+.record-btn {
+  background: rgba(220, 53, 69, 0.2);
+  color: #ff4d5e;
+  
+  &.recording {
+    animation: subtle-pulse 2s infinite;
+  }
+}
+
+.stop-btn {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+}
+
+.upload-btn {
+  background: rgba(40, 167, 69, 0.2);
+  color: #2ecc71;
+}
+
+.recording-indicator {
+  color: #ff4d5e;
+  font-weight: 400;
+  font-size: 0.875rem;
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+}
+
+.timer {
+  font-family: 'SF Mono', SFMono-Regular, ui-monospace, monospace;
+  font-size: 1rem;
+  color: #fff;
+  letter-spacing: 0.5px;
+}
+
+@keyframes subtle-pulse {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.6;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.progress-bar {
+  width: 100%;
+  height: 2px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 1px;
+  overflow: hidden;
+
+  .progress {
+    height: 100%;
+    background-color: #2ecc71;
+    transition: width 0.3s ease;
+  }
+}
+
+.audio-wrapper {
+  width: 100%;
+  margin-top: 1rem;
+  padding: 0.75rem;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  
+  audio {
+    margin-top: 0;
+    width: 100%;
+    height: 36px;
+    
+    &::-webkit-media-controls-enclosure {
+      border-radius: 6px;
+      background-color: #2a2a2a;
+    }
+    
+    &::-webkit-media-controls-panel {
+      background-color: #2a2a2a;
+      padding: 0 8px;
+    }
+    
+    &::-webkit-media-controls-play-button {
+      background-color: transparent;
+      border-radius: 50%;
+      transform: scale(0.9);
+      filter: invert(1);
+    }
+    
+    &::-webkit-media-controls-current-time-display,
+    &::-webkit-media-controls-time-remaining-display {
+      font-family: 'SF Mono', SFMono-Regular, ui-monospace, monospace;
+      font-size: 0.8125rem;
+      color: #fff;
+    }
+    
+    &::-webkit-media-controls-timeline {
+      height: 2px;
+      padding: 0;
+      margin: 0 10px;
+    }
+    
+    &::-webkit-media-controls-volume-slider {
+      height: 2px;
+      padding: 0;
+    }
+    
+    &::-webkit-media-controls-volume-control-container {
+      padding: 0 5px;
+    }
+    
+    &::-webkit-media-controls-mute-button {
+      transform: scale(0.9);
+      filter: invert(1);
+    }
+    
+    &::-webkit-media-controls-overflow-button {
+      display: none;
+    }
+  }
+}
