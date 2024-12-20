@@ -20,8 +20,6 @@ export const routes: Routes = [
   {
     path: 'tutorial',
     loadComponent: () => import('./pages/tutorial/tutorial.page').then( m => m.TutorialPage),
-
-    
   },
   {
     path: 'studentm',
@@ -55,7 +53,8 @@ export const routes: Routes = [
   },
   {
     path: 'homework-submission',
-    loadComponent: () => import('./pages/homework-submission/homework-submission.page').then( m => m.HomeworkSubmissionPage)
+    loadComponent: () => import('./pages/homework-submission/homework-submission.page').then( m => m.HomeworkSubmissionPage),
+    canActivate: [authGuard]
   },
   {
     path: 'notation',
@@ -64,10 +63,13 @@ export const routes: Routes = [
   },
   {
     path: 'homework-grading',
-    loadComponent: () => import('./pages/homework-grading/homework-grading.page').then( m => m.HomeworkGradingPage)
-  },  {
+    loadComponent: () => import('./pages/homework-grading/homework-grading.page').then( m => m.HomeworkGradingPage),
+    canActivate: [authGuard]
+  },
+  {
     path: 'attendance',
-    loadComponent: () => import('./pages/attendance/attendance.page').then( m => m.AttendancePage)
+    loadComponent: () => import('./pages/attendance/attendance.page').then( m => m.AttendancePage),
+    canActivate: [authGuard]
   },
 
 

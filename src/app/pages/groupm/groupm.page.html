@@ -85,7 +85,8 @@
            <ion-card-content>
             <div class="scrollable-content">
               @if(selectedView === 'Live Sessions') {
-                @for (item of selectedItem?.student_sessions; track $index) {
+
+                @for (item of selectedItem.student_sessions; track $index) {
                   <ion-item lines="none"  [ngClass]="checkDateStatus(item.session_date)">
                     <ion-text slot="start">
                        {{item.week_num}}
@@ -108,17 +109,18 @@
                   </ion-item>
                   
                 } 
+
               } @else {
                   <ion-item class="future">
                      <ion-label>
-                       Start Date: {{selectedItem?.start_date | date: 'medium' : 'Asia/Kolkata' }} IST
+                       Start Date: {{selectedItem.start_date | date: 'medium' : 'Asia/Kolkata' }} IST
                     
                      </ion-label>
                   </ion-item>
 
                   <ion-item class="future">
                     <ion-label>
-                      End Date: {{selectedItem?.end_date | date: 'medium' : 'Asia/Kolkata' }} IST
+                      End Date: {{selectedItem.end_date | date: 'medium' : 'Asia/Kolkata' }} IST
                    
                     </ion-label>
                  </ion-item>
