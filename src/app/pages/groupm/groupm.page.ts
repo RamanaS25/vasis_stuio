@@ -227,7 +227,7 @@ export class GroupmPage implements OnInit {
     console.log('groupm')
   }
 
- async getGroups() {
+  async getGroups() {
   this.groups = []
   console.log('get groups')
    let x = await this.api.getGroups();
@@ -238,7 +238,7 @@ export class GroupmPage implements OnInit {
    }
   }
 
- async insertSessionsIntoGroup(group:any) {
+  async insertSessionsIntoGroup(group:any) {
   console.log('jii',group)
       let class_list = this.getClassesForInsert(group.syllabus_grades.grade)
     console.log(group)

@@ -118,12 +118,14 @@ export class HomeworkSubmissionPage implements OnInit {
             this.getHomework(this.grade);
             this.video_upload_loading = false;
 
-          }else{
+          }
+          else{
             this.toast('Error uploading Video', 'danger');
             this.video_upload_loading = false;
           }
+
          }else{
-          this.toast('Error uploading video', 'danger');
+          this.toast(res.error!, 'danger');
          }
 
          this.video_upload_loading = false;

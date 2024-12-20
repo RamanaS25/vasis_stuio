@@ -14,7 +14,7 @@ addIcons({linkOutline});
   templateUrl: './notations.page.html',
   styleUrls: ['./notations.page.scss'],
   standalone: true,
-  imports: [IonSearchbar, IonToast, IonLabel, IonButton, IonTabButton, IonCard, IonCardContent, IonInput, IonModal, IonIcon, IonItem, IonCol, IonGrid, IonRow, IonButtons, IonBackButton, IonContent, IonHeader, IonTitle, IonToolbar, IonMenuButton, CommonModule, FormsModule, SafeUrlPipe]
+  imports: [ IonToast, IonButton, IonCard, IonCardContent, IonInput, IonModal, IonIcon, IonItem, IonCol, IonGrid, IonRow, IonButtons, IonBackButton, IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule, SafeUrlPipe]
 })
 export class NotationsPage implements OnInit {
   auth = inject(LoginService)
@@ -66,7 +66,6 @@ export class NotationsPage implements OnInit {
     this.toastBool = true
   }
   
-
   async getNotations(grade:number){
     const result = await this._notations.getNotations(grade);
 

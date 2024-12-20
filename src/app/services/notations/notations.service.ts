@@ -17,6 +17,7 @@ export class NotationsService {
         .eq('level_id.grade_id.grade', grade)
         .order('id', { ascending: true });
 
+        console.log(data)
       if (error) {
         return {
           success: false,
