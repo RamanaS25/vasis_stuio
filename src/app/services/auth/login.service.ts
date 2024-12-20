@@ -20,14 +20,14 @@ export class LoginService {
   }
   
   async login(user: any) {
-    console.log(user)
+    console.log(user.user_name, user.password)
      try {
        const { data, error } = await this.supabase
        .from('user_table')
        .select('user_name, legal_name, initiated_name, grade, id, email, phone, voice_scale , is_banned, language, is_registered, is_admin, student_payment_history(session_id), student_groups(name, zoom_link, student_sessions(*)) ')
-       .eq('user_name', user.username).eq('password', user.password);
+       .eq('user_name', user.user_name).eq('password', user.password);
 
-      //  console.log(data)
+       console.log('data',data)
        if (error) {
          return {
            success: false,
@@ -107,7 +107,7 @@ export class LoginService {
     const currentDate = new Date(); // Get the current date
     const payment_status: {
       week_num: any;
-      _date: any;
+      session_date: any;
       is_paid: any;
     }[] = [];
   
@@ -124,7 +124,7 @@ export class LoginService {
       // Add the payment status to the array
       payment_status.push({
         week_num: session.week_num,
-        _date: session._date, // Use '_date' instead of 'date'
+        session_date: session.session_date, // Use 'session_date' instead of 'date'
         is_paid: isPaid ? "paid" : false
       });
     });
@@ -133,7 +133,7 @@ export class LoginService {
     const lastUnpaidSession = payment_status.find((status: any) => status.is_paid === false);
   
     if (lastUnpaidSession) {
-      const lastUnpaidDate = new Date(lastUnpaidSession._date);
+      const lastUnpaidDate = new Date(lastUnpaidSession.session_date);
       const daysDifference = (currentDate.getTime() - lastUnpaidDate.getTime()) / (1000 * 60 * 60 * 24); // Difference in days
   
       // If the last unpaid session is less than or equal to 10 days in the past
@@ -151,8 +151,8 @@ export class LoginService {
     return Math.floor(Math.random() * (max - min + 1)) + min;
   }
 
-  async register(email: string, password: string) {
-    const { data, error } = await this.supabase.from('user_table').insert({ email, password });
+  async register(user: any) {
+    const { data, error } = await this.supabase.from('user_table').insert(user);
     if (error) {
       return {
         success: false,

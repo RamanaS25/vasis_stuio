@@ -1,4 +1,4 @@
-<ion-header [translucent]="true">
+<ion-header [translucent]="true" class="ion-no-border">
   <ion-toolbar>
     <ion-buttons slot="start" style="color: white">
       <ion-menu-button></ion-menu-button>
@@ -28,9 +28,11 @@
       ? 'Aprenda sobre nosso professor!' : '¡Aprenda sobre nuestro maestro!'
       }}</ion-chip
     >
+    @if (user._user?.role == 'admin') {
     <ion-chip slot="end" class="buttons" (click)="text(); modal_open = true"
       >EDIT</ion-chip
     >
+    }
   </ion-toolbar>
 </ion-header>
 

@@ -1,0 +1,26 @@
+.future{
+    --background:rgba(209, 166, 229, 0.76);
+     margin-top: 10px;
+      border-radius: 10px;
+  }
+
+  .past{
+    --background:rgba(58, 24, 92, 0.452);
+     margin-top: 10px;
+      border-radius: 10px;
+  }
+
+  .next{
+    --background:rgb(79, 143, 196);
+    margin-top: 10px;
+     border-radius: 10px;
+  }
+  
+  .session-card {
+    max-width: 600px;
+    margin: 0 auto;
+
+    @media (max-width: 768px) {
+      max-width: 100%;
+    }
+  }

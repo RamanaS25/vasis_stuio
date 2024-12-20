@@ -74,7 +74,7 @@
               </ion-segment-button>
             }
           </ion-segment>
-
+          @if (selectedModule.title != 'Sessions') {
           <ion-card style="border-radius: 10px;">
             <ion-card-header>
               <ion-card-title>{{selectedModule.title}}</ion-card-title>
@@ -93,9 +93,11 @@
                 }
           
             </ion-card-content>
-          </ion-card>
-          
-         }
+              </ion-card>
+            } @else {
+              <app-sessions></app-sessions>
+            }
+          }
         
 
        </ion-col>

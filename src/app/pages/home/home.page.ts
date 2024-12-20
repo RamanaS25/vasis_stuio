@@ -28,8 +28,7 @@ import {
   IonSegment,
   IonList,
   IonInput,
-  IonToast,
-} from '@ionic/angular/standalone';
+  IonToast, IonCardTitle } from '@ionic/angular/standalone';
 
 import { register } from 'swiper/element/bundle';
 import { YoutubePlayerComponent } from 'src/app/components/youtube-player/youtube-player.component';
@@ -41,10 +40,10 @@ import {
   logoFacebook,
   close,
   pencil,
-  logoGoogle,
-} from 'ionicons/icons';
+  logoGoogle, closeOutline, createOutline, personCircleOutline } from 'ionicons/icons';
 import { LoginService } from 'src/app/services/auth/login.service';
 import { ProfileComponent } from 'src/app/components/profile/profile.component';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 
 // register Swiper custom elements
 register();
@@ -54,7 +53,7 @@ register();
   templateUrl: './home.page.html',
   styleUrls: ['./home.page.scss'],
   standalone: true,
-  imports: [
+  imports: [IonCardTitle, 
     IonToast,
     IonInput,
     IonList,
@@ -82,7 +81,7 @@ register();
     IonHeader,
     IonTitle,
     IonToolbar,
-    YoutubePlayerComponent,
+ 
     LoginComponent,
     IonModal,
     SwiperComponent,
@@ -91,6 +90,7 @@ register();
 export class HomePage implements OnInit {
   private api = inject(HomeService);
   auth = inject(LoginService);
+  private sanitizer = inject(DomSanitizer);
 
   img: string = 'banner0802.jpg';
 
@@ -119,15 +119,10 @@ export class HomePage implements OnInit {
   payment_notification: boolean = false;
 
   selectedImageId!: number;
-  constructor() {
-    addIcons({
-      logoInstagram,
-      logoFacebook,
-      logoGoogle,
-      logoWhatsapp,
-      close,
-      pencil,
-    });
+  constructor(
+    
+  ) {
+    addIcons({createOutline,personCircleOutline,close,closeOutline,logoInstagram,logoFacebook,logoGoogle,logoWhatsapp,pencil,});
     this.getText();
   }
 
@@ -268,6 +263,10 @@ export class HomePage implements OnInit {
     } catch (error) {
       console.error('Error uploading image:', error);
     }
+  }
+
+  sanitizeUrl(url: string): SafeResourceUrl {
+    return this.sanitizer.bypassSecurityTrustResourceUrl(url);
   }
 
   ngOnInit() {

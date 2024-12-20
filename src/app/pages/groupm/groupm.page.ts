@@ -1,7 +1,7 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IonContent, IonHeader, IonTitle, IonToolbar, IonButtons,IonMenuButton, IonCol, IonRow, IonGrid, IonCard, IonText, IonCardContent, IonCardHeader, IonItem, IonLabel, IonIcon, IonButton, IonBadge, IonChip, IonSegmentButton, IonSegment, IonModal, IonDatetime, IonDatetimeButton, IonToast, IonSearchbar, IonInput } from '@ionic/angular/standalone';
+import { IonContent, IonHeader, IonTitle, IonToolbar, IonButtons,IonMenuButton, IonCol, IonRow, IonGrid, IonCard, IonText, IonCardContent, IonCardHeader, IonItem, IonLabel, IonIcon, IonButton, IonBadge, IonChip, IonSegmentButton, IonSegment, IonModal, IonDatetime, IonDatetimeButton, IonToast, IonSearchbar, IonInput, IonBackButton } from '@ionic/angular/standalone';
 import { GroupManagementService } from 'src/app/services/group/group-management.service';
 import { Group, StudentSession } from './types';
 
@@ -19,7 +19,7 @@ addIcons({ellipse, playOutline, createOutline, close});
   templateUrl: './groupm.page.html',
   styleUrls: ['./groupm.page.scss'],
   standalone: true,
-  imports: [IonInput,ProfileComponent, YoutubePlayerComponent, IonSearchbar, IonToast, IonDatetimeButton, IonDatetime, IonModal, IonSegment, IonSegmentButton, IonChip, IonBadge, IonButton, IonIcon, IonLabel, IonItem, IonCardHeader, IonCardContent, IonText, IonCard, IonGrid, IonRow, IonCol, IonButtons, IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, IonMenuButton, FormsModule],
+  imports: [IonBackButton, IonInput,ProfileComponent,IonDatetime, YoutubePlayerComponent, IonSearchbar, IonToast, IonDatetimeButton, IonDatetime, IonModal, IonSegment, IonSegmentButton, IonChip, IonBadge, IonButton, IonIcon, IonLabel, IonItem, IonCardHeader, IonCardContent, IonText, IonCard, IonGrid, IonRow, IonCol, IonButtons, IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, IonMenuButton, FormsModule],
   providers: [DatePipe] 
 })
 export class GroupmPage implements OnInit {
@@ -43,6 +43,7 @@ export class GroupmPage implements OnInit {
   duration: number = 3000;
   toastBool = false; 
   searchTerm:string = ''
+  
   start_edit:Group = {
     name: '',
     start_date: '',
@@ -62,34 +63,50 @@ export class GroupmPage implements OnInit {
 
   selectedSession:StudentSession = {
     id: 0,
-    _date: '',
+    session_date: '',
     week_num: 0,
     recorded_class: ''
   }
 
   updated_session:StudentSession = {
     id: 0,
-    _date: '',
+    session_date: '',
     week_num: 0,
     recorded_class: ''
   }
+
+  new_group = {
+    grade_id: 0,
+    name: '',
+    start_date: new Date().toISOString(),
+    end_date: '',
+    weeks: 0,
+    course_id: 1,
+    status: true,
+    zoom_link: ''
+  }
+  addGroupBool = false
 
   constructor() { 
      this.getGroups()
      this.getClasses()
   }
 
-
- async getClasses(){
-  let x = await this.api.getClasses()
-  if(x.success){
-    console.log(x.data)
-    this.classes = x.data
-  }else{
-    this.toast('Error In getting Classes', 'danger', 3000)
-    console.error(x.error)
+  async getClasses(){
+    let x = await this.api.getClasses()
+    if(x.success){
+      console.log(x.data)
+      this.classes = x.data
+    }else{
+      this.toast('Error In getting Classes', 'danger', 3000)
+      console.error(x.error)
+    }
   }
- }
+
+  setDateForNewGroup(event:any){
+    console.log(event)
+    this.new_group.start_date = event.detail.value
+  }
 
   async editLiveSessions(){
   
@@ -104,14 +121,14 @@ export class GroupmPage implements OnInit {
 
        this.updated_session = {
         id: 0,
-        _date: '',
+        session_date: '',
         week_num: 0,
         recorded_class: ''
       }
        this.isOpenGroup = false;
         this.selectedSession = {
           id: 0,
-          _date: '',
+          session_date: '',
           week_num: 0,
           recorded_class: ''
         }
@@ -134,6 +151,7 @@ export class GroupmPage implements OnInit {
   }
 
   getClassesForInsert(grade:number){
+    console.warn(this.classes, grade)
     return this.classes.filter((c) => {
       return c.syllabus_levels.syllabus_grades.grade === grade
     })  
@@ -156,7 +174,7 @@ export class GroupmPage implements OnInit {
       this.toast('Recorded Class Added', 'success', 3000)
       this.updated_session = {
         id: 0,
-        _date: '',
+        session_date: '',
         week_num: 0,
         recorded_class: ''
       }
@@ -233,6 +251,8 @@ export class GroupmPage implements OnInit {
     }
     this.getGroups()
    }
+
+
   }
 
   formatToISOWithoutMilliseconds(dateString: string): string {
@@ -263,7 +283,7 @@ export class GroupmPage implements OnInit {
      if(this.edit_type === 'start_date'){
       this.start_edit.start_date = x
      }else{
-      this.updated_session._date = x
+      this.updated_session.session_date = x
      }
   
     console.log(this.start_edit)
@@ -304,6 +324,53 @@ export class GroupmPage implements OnInit {
         student_sessions: []
      } 
      this.getGroups()
+    }else{
+      this.toast('Error In Operation', 'danger', 3000)
+      console.error(x.error)
+    }
+  }
+
+  async addGroup(){
+    console.log(this.new_group)
+    let classes = this.getClassesForInsert(this.new_group.grade_id)
+    console.log("classes", classes)
+    
+    let end_date = new Date(this.new_group.start_date)
+    this.new_group.weeks = 24
+    end_date.setDate(end_date.getDate() + (24 * 7))
+    this.new_group.end_date = end_date.toISOString()
+
+    console.log(this.new_group)
+    let x = await this.api.addGroup(this.new_group, classes)
+ 
+    if(x.success){
+      this.addGroupBool = false
+      this.toast('Group Added', 'success', 3000)
+
+      this.new_group = {
+        zoom_link: '',
+        grade_id: 0,
+        name: '',
+        start_date: '',
+        end_date: '',
+        weeks: 0,
+        course_id: 0,
+        status: false,
+      }
+
+      this.getGroups()
+    }else{
+      this.addGroupBool = true
+      this.toast('Error In Operation', 'danger', 3000)
+      console.error(x.error)
+    }
+  }
+
+  async deleteGroup(group:any){
+    let x = await this.api.deleteGroup(group)
+    if(x.success){
+      this.toast('Group Deleted', 'success', 3000)
+      this.getGroups()
     }else{
       this.toast('Error In Operation', 'danger', 3000)
       console.error(x.error)

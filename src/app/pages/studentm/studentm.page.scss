@@ -4,14 +4,23 @@
   padding: 15px;
 }
 
+
+
 .listStudent {
-  border-radius: 15px;
+  border-radius: 10px;
   background-color: rgba(253, 253, 253, 0);
 }
 
 .itemStudent {
   --background: rgba(233, 230, 255, 0.158);
   border-bottom: 1px solid rgba(255, 255, 255, 0.432);
+
+
+}
+
+.selectStudent {
+  --background: rgba(131, 90, 150, 0.411);
+  color: white;
 }
 
 .itemSelect {

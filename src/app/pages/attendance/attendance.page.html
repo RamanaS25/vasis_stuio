@@ -1,0 +1,69 @@
+<ion-header [translucent]="true" class="ion-no-border">
+
+
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-title style="color: #ffffff;">Attendance Tracking</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <div class="attendance-container">
+    <ion-select 
+      label="Select Group" 
+      labelPlacement="floating"
+      [(ngModel)]="selectedGroup"
+      (ionChange)="onGroupChange($event)">
+      @for (group of groups | keyvalue; track group.key) {
+        <ion-select-option [value]="group.key">
+          {{ group.value.name }}
+        </ion-select-option>
+      }
+    </ion-select>
+
+    @if (selectedGroup) {
+      <div class="table-container">
+        <div class="scroll-container">
+          <table class="attendance-table">
+            <thead>
+              <tr>
+                <th>Student Name</th>
+                <th>Attendance %</th>
+                @for (session of sessionNumbers; track session) {
+                  <th>Class {{session}}</th>
+                }
+              </tr>
+            </thead>
+            <tbody>
+              @for (student of groups[selectedGroup].students; track student.id) {
+                <tr>
+                  <td>{{student.name}}</td>
+                  <td>
+                    <span class="percentage-cell" 
+                          [class.good]="getAttendancePercentage(student) >= 75"
+                          [class.warning]="getAttendancePercentage(student) >= 50 && getAttendancePercentage(student) < 75"
+                          [class.poor]="getAttendancePercentage(student) < 50">
+                      {{getAttendancePercentage(student)}}%
+                    </span>
+                  </td>
+                  @for (session of sessionNumbers; track session) {
+                 
+                    <td>
+                      <div [class]="'attendance-mark ' + (isStudentPresent(student.id, session) ? 'present' : 'absent')"
+                           (click)=" isStudentPresent(student.id, session) ? removeAttendance(session, student.id) : setAttendance(session, student.id)">
+                        <ion-icon [name]="isStudentPresent(student.id, session) ? 'checkmark-outline' : 'close-outline'">
+                        </ion-icon>
+                      </div>
+                    </td>
+                  }
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </div>
+    }
+  </div>
+</ion-content>

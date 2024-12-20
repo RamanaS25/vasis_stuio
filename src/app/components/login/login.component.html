@@ -14,7 +14,7 @@
     <ion-item class="itemSelect" lines="none">
       <ion-input
         label="Username"
-        [(ngModel)]="user.username"
+        [(ngModel)]="user.user_name"
         labelPlacement="floating"
       ></ion-input>
     </ion-item>
@@ -48,17 +48,26 @@
     <ion-item class="itemSelect" lines="none">
       <ion-input
         label="Confirm Password"
-        [(ngModel)]="user._password"
+        [(ngModel)]="_password"
         labelPlacement="floating"
         type="password"
       ></ion-input>
     </ion-item>
+     
+    <ion-item class="itemSelect" lines="none">
+      <ion-input
+        label="Legal Name"
+        [(ngModel)]="user.legal_name"
+        labelPlacement="floating"
+      >
+      </ion-input>
+    </ion-item>
+
     <ion-item class="itemSelect" lines="none">
       <ion-input
         label="Initiated Name"
         [(ngModel)]="user.initiated_name"
         labelPlacement="floating"
-        type="email"
       >
       </ion-input>
     </ion-item>
@@ -71,6 +80,7 @@
       >
       </ion-input>
     </ion-item>
+    
     <ion-item class="itemSelect" lines="none">
       <ion-input
         label="Phone Number"
@@ -84,19 +94,19 @@
       <div style="align-items: center; display: flex">
         <label> Language type: </label>
 
-        <div (click)="user.lang_type = 'English'">
-          <ion-chip [disabled]="user.lang_type != 'English'">
+        <div (click)="user.language = 'English'">
+          <ion-chip [disabled]="user.language != 'English'">
             English
           </ion-chip>
         </div>
 
-        <div (click)="user.lang_type = 'Spanish'">
-          <ion-chip [disabled]="user.lang_type !== 'Spanish'">
+        <div (click)="user.language = 'Spanish'">
+          <ion-chip [disabled]="user.language !== 'Spanish'">
             Spanish
           </ion-chip>
         </div>
-        <div (click)="user.lang_type = 'Portuguese'">
-          <ion-chip [disabled]="user.lang_type !== 'Portuguese'">
+        <div (click)="user.language = 'Portuguese'">
+          <ion-chip [disabled]="user.language !== 'Portuguese'">
             Portuguese
           </ion-chip>
         </div>

@@ -8,7 +8,7 @@
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <ion-toast [isOpen]="toast.isOpen" [message]="toast.message" [color]="toast.color" (didDismiss)="toast.isOpen = false" duration="1000"></ion-toast>
+  <ion-toast [isOpen]="toast.isOpen" position="top" [message]="toast.message" [color]="toast.color" (didDismiss)="toast.isOpen = false" duration="3000"></ion-toast>
   
   <ion-grid class="ion-padding">
     <ion-row>
@@ -17,6 +17,9 @@
         <ion-card class="groups-card">
           <ion-card-header>
             <ion-card-title>Groups</ion-card-title>
+            <ion-toggle [(ngModel)]="is_graded" (ionChange)="changeIsGraded($event)">
+              Graded
+            </ion-toggle>
           </ion-card-header>
           <ion-card-content>
             @for(group of groups; track group){
@@ -99,73 +102,64 @@
             <ion-card-content>
               <ion-grid>
                 <ion-row>
+
                   <ion-col size="12" size-lg="6">
                     <app-mux-video-player [video_link]="selectedStudent?.student_homework[0].video_link"></app-mux-video-player>
+
+                    <ion-item lines="none" color="success" button (click)="navigateToWhatsApp(selectedStudent?.phone, 'Haribol, I have graded your homework for ' + selectedHomework.syllabus_homework.title + ' Here is the feedback: ' + homework_graded_object.comment)">
+                      <ion-label start="start">
+                        Message {{selectedStudent?.phone}}
+                      </ion-label>
+
+                      <ion-icon name="logo-whatsapp" slot="end"></ion-icon>
+                    </ion-item>
+
+                    <div class="ion-padding-top ion-text-end">
+                      @if(!is_graded){
+                      <ion-button  expand="block" (click)="submitGrades()">
+                        <ion-icon name="checkmark-circle" slot="start"></ion-icon>
+                        Submit Grades
+                      </ion-button>
+                      }
+                    </div>
+
                   </ion-col>
 
                   <ion-col size="12" size-lg="6">
                     <div class="grading-section">
-                      @if(selectedHomework?.syllabus_homework.is_exercise){
-                        <ion-list>
-                          <ion-item>
-                            <ion-range labelPlacement="start" label="Voice Score"
-                              min="1" max="5" step="1" snaps="true" color="primary" pin="true"
-                              (ionChange)="avgCalc($event)" [(ngModel)]="homework_graded_object.val1">
-                            </ion-range>
-                          </ion-item>
+                      <ion-list>
+                        <ion-item>
+                          <ion-range labelPlacement="start" 
+                            [label]="selectedHomework?.syllabus_homework.is_exercise ? 'Voice Score' : 'Svaras Score'"
+                            min="1" [disabled]="is_graded" max="5" step="1" snaps="true" color="primary" pin="true"
+                            (ionChange)="avgCalc($event)" [(ngModel)]="homework_graded_object.val_1">
+                          </ion-range>
+                        </ion-item>
 
-                          <ion-item>
-                            <ion-range labelPlacement="start" label="Scale Score"
-                              min="1" max="5" step="1" snaps="true" color="primary" pin="true"
-                              (ionChange)="avgCalc($event)" [(ngModel)]="homework_graded_object.val2">
-                            </ion-range>
-                          </ion-item>
+                        <ion-item>
+                          <ion-range labelPlacement="start" 
+                            [label]="selectedHomework?.syllabus_homework.is_exercise ? 'Scale Score' : 'Timing Score'"
+                            min="1" [disabled]="is_graded" max="5" step="1" snaps="true" color="primary" pin="true"
+                            (ionChange)="avgCalc($event)" [(ngModel)]="homework_graded_object.val_2">
+                          </ion-range>
+                        </ion-item>
 
-                          <ion-item>
-                            <ion-range labelPlacement="start" label="Fingering Score"
-                              min="1" max="5" step="1" snaps="true" color="primary" pin="true"
-                              (ionChange)="avgCalc($event)" [(ngModel)]="homework_graded_object.val3">
-                            </ion-range>
-                          </ion-item>
+                        <ion-item>
+                          <ion-range labelPlacement="start" 
+                            [label]="selectedHomework?.syllabus_homework.is_exercise ? 'Fingering Score' : 'Voice Score'"
+                            min="1" [disabled]="is_graded" max="5" step="1" snaps="true" color="primary" pin="true"
+                            (ionChange)="avgCalc($event)" [(ngModel)]="homework_graded_object.val_3">
+                          </ion-range>
+                        </ion-item>
 
-                          <ion-item>
-                            <ion-range labelPlacement="start" label="Timing Score"
-                              min="1" max="5" step="1" snaps="true" color="primary" pin="true"
-                              (ionChange)="avgCalc($event)" [(ngModel)]="homework_graded_object.val4">
-                            </ion-range>
-                          </ion-item>
-                        </ion-list>
-                      } @else {
-                        <ion-list>
-                          <ion-item>
-                            <ion-range labelPlacement="start" label="Svaras Score"
-                              min="1" max="5" step="1" snaps="true" color="primary" pin="true"
-                              (ionChange)="avgCalc($event)" [(ngModel)]="homework_graded_object.val1">
-                            </ion-range>
-                          </ion-item>
-
-                          <ion-item>
-                            <ion-range labelPlacement="start" label="Timing Score"
-                              min="1" max="5" step="1" snaps="true" color="primary" pin="true"
-                              (ionChange)="avgCalc($event)" [(ngModel)]="homework_graded_object.val2">
-                            </ion-range>
-                          </ion-item>
-
-                          <ion-item>
-                            <ion-range labelPlacement="start" label="Voice Score"
-                              min="1" max="5" step="1" snaps="true" color="primary" pin="true"
-                              (ionChange)="avgCalc($event)" [(ngModel)]="homework_graded_object.val3">
-                            </ion-range>
-                          </ion-item>
-
-                          <ion-item>
-                            <ion-range labelPlacement="start" label="Pronunciation Score"
-                              min="1" max="5" step="1" snaps="true" color="primary" pin="true"
-                              (ionChange)="avgCalc($event)" [(ngModel)]="homework_graded_object.val4">
-                            </ion-range>
-                          </ion-item>
-                        </ion-list>
-                      }
+                        <ion-item>
+                          <ion-range labelPlacement="start" 
+                            [label]="selectedHomework?.syllabus_homework.is_exercise ? 'Timing Score' : 'Pronunciation Score'"
+                            min="1" [disabled]="is_graded" max="5" step="1" snaps="true" color="primary" pin="true"
+                            (ionChange)="avgCalc($event)" [(ngModel)]="homework_graded_object.val_4">
+                          </ion-range>
+                        </ion-item>
+                      </ion-list>
                        
                       <ion-item>
                         <ion-label>Average Score</ion-label>
@@ -174,23 +168,25 @@
                       <ion-item>
                         <ion-textarea 
                           label="Feedback" 
+                          [disabled]="is_graded"
                           labelPlacement="floating" 
-                          [value]="homework_graded_object.comment"
+                          [(ngModel)]="homework_graded_object.comment"
                           placeholder="Enter feedback for the student..."
-                          rows="4">
+                          rows="3">
                         </ion-textarea>
-                      </ion-item>\
+                      </ion-item>
+                      @if(!is_graded){
+                        <app-audio-recorder [student_id]="selectedStudent.id" (audio_url)="audio_url = $event"></app-audio-recorder>
+                      } @else{
+                        <ion-item>
+                          <audio [src]="selectedHomework.audio_url" controls></audio>
+                        </ion-item>
+                      }
 
-                      <app-audio-recorder></app-audio-recorder>
-
-                      <div class="ion-padding-top ion-text-end">
-                        <ion-button  expand="block">
-                          <ion-icon name="checkmark-circle" slot="start"></ion-icon>
-                          Submit Grades
-                        </ion-button>
-                      </div>
+                  
                     </div>
                   </ion-col>
+                  
                 </ion-row>
               </ion-grid>
             </ion-card-content>

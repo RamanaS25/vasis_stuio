@@ -86,7 +86,7 @@ export class SyllabusPage implements OnInit {
     ngOnInit() {
     
       this.route.queryParams.subscribe(params => {
-       this.grade = params['paramName']; // Retrieve the passed parameter
+       this.grade = params['grade']; // Retrieve the passed parameter
         console.log(this.grade);
       });
 
@@ -209,7 +209,14 @@ export class SyllabusPage implements OnInit {
 
 
    async getVideos(grade:number){
-    const result = await this.api.getGradeData(grade);
+    let result:{success:boolean, data?:any, error?:any}
+    if(grade < this.auth._user.grade){
+      console.log('getting videos')
+       result = await this.api.getVideos();
+    }
+    else{
+       result = await this.api.getGradeData(grade);
+    }
 
     if (result.success) {
       // Use result.data

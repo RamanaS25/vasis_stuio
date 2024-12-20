@@ -14,7 +14,7 @@ export interface Group {
   }
   export interface StudentSession {
     id: number;              // int8
-    _date: string;           // timestamp (ISO string)
+    session_date: string;           // timestamp (ISO string)
     week_num: number;        // numeric
     recorded_class: string;  // varchar
   }

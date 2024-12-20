@@ -17,12 +17,14 @@
     </button>
 
     <button 
-      *ngIf="audioUrl && !isRecording && !isUploading" 
+      *ngIf="audioUrl && !isRecording && !isUploading && !is_uploaded" 
       (click)="uploadToSupabase()" 
       class="upload-btn">
       ⬆️ Upload
     </button>
-  </div>
+    
+    <ion-button  *ngIf="is_uploaded" >Uploaded</ion-button>
+  </div>  
 
   <div *ngIf="isRecording" class="recording-indicator">
     ⚪ Recording...

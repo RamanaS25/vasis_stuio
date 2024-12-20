@@ -1,10 +1,18 @@
 <ion-header [translucent]="true" class="ion-no-border">
   <ion-toolbar>
     <ion-buttons slot="start" style="color: white">
-      <ion-menu-button></ion-menu-button>
+      <ion-back-button></ion-back-button>
     </ion-buttons>
     <ion-title style="color: white">Student Management</ion-title>
+
+    <ion-buttons slot="end">
+      <ion-chip style="--background: white" >
+        {{auth._user.user_name}}
+      </ion-chip>
+    </ion-buttons>
   </ion-toolbar>
+
+
 </ion-header>
 
 <ion-toast
@@ -28,7 +36,7 @@
 
           <div class="scrollable">
             <ion-list class="listStudent">
-              <ion-item class="itemSelect" lines="none">
+              <ion-item class="itemSelect" lines="none" >
                 <ion-select
                   interface="popover"
                   placeholder="Select group"
@@ -50,14 +58,16 @@
                 @for (item of filteredUsers; track $index) {
                 <ion-item
                   lines="none"
-                  class="itemStudent"
+                  [class]="(user === item) ? 'selectStudent' : 'itemStudent'"
+                  
                   button
                   (click)="user = item"
                 >
                   <ul class="custom-list">
-                    <li>{{item?.legal_name}}</li>
+                    <li>{{item?.legal_name === "No Legal Name" ? "" :
+                      item?.legal_name}}</li>
                     <small>
-                      {{item?.initiated_name === "undefined" ? "" :
+                      {{item?.initiated_name === "No Initiated Name" ? "" :
                       item?.initiated_name}}
                     </small>
                   </ul>

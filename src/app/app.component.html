@@ -13,17 +13,17 @@
               <ion-label>{{ p.title }}</ion-label>
             </ion-item>
            } 
-           @if( auth._logged_in){
-            @if(p.access === 'admin' && auth._user.is_admin){  
-            <ion-item routerDirection="root" style="--background: rgba(226, 121, 203, 0);" [routerLink]="[p.url]" lines="none" detail="false" routerLinkActive="selected">
-              <ion-label>{{ p.title }}</ion-label>
-            </ion-item>
-            }
-            @if(p.access !== 'admin'){
+           @if(auth._logged_in && auth._user.is_registered){
+              @if(p.access === 'admin' && auth._user.is_admin){  
               <ion-item routerDirection="root" style="--background: rgba(226, 121, 203, 0);" [routerLink]="[p.url]" lines="none" detail="false" routerLinkActive="selected">
                 <ion-label>{{ p.title }}</ion-label>
               </ion-item>
-            }
+              }
+              @if(p.access !== 'admin'){
+                <ion-item routerDirection="root" style="--background: rgba(226, 121, 203, 0);" [routerLink]="[p.url]" lines="none" detail="false" routerLinkActive="selected">
+                  <ion-label>{{ p.title }}</ion-label>
+                </ion-item>
+              }
            }   
        
         

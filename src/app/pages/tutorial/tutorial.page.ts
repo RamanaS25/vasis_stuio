@@ -52,6 +52,7 @@ import {
   closeOutline,
   logoYoutube,
 } from 'ionicons/icons';
+import { LoginService } from 'src/app/services/auth/login.service';
 addIcons({
   checkmarkOutline: checkmarkOutline,
   storefrontOutline: storefrontOutline,
@@ -101,8 +102,9 @@ addIcons({
   ],
 })
 export class TutorialPage implements OnInit {
-  videoUrl = 'https://www.youtube.com/watch?v=QCO9VSj4h18';
+  videoUrl = 'https://www.youtube.com/watch?v=QCO9VSj4h18'; 
   api = inject(TutorialService);
+  user = inject(LoginService)
   selectLang = 'ENG';
   tutorials: any;
   tutorials_text: any;

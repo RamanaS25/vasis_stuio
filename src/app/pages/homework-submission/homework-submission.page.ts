@@ -7,6 +7,7 @@ import { LoginService } from '../../services/auth/login.service';
 import { addIcons } from 'ionicons';
 import { closeOutline, albums, cloudUpload, chevronForward, arrowBack } from 'ionicons/icons';
 import { MuxVideoPlayerComponent } from "../../components/mux-video-player/mux-video-player.component";
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-homework-submission',
@@ -49,6 +50,7 @@ import { MuxVideoPlayerComponent } from "../../components/mux-video-player/mux-v
 export class HomeworkSubmissionPage implements OnInit {
   video_api = inject(MuxVideoService);
   auth = inject(LoginService);
+  route = inject(ActivatedRoute);
   selectedFile: File | null = null;  // The selected video file
   uploadedUrl: string | null = null;  // The public URL of the uploaded video
   type: string = 'cloud-upload';
@@ -57,8 +59,8 @@ export class HomeworkSubmissionPage implements OnInit {
   homework_ = signal<any>(null);
 
   filteredHomework = computed(() => {
-    console.log(this.selectedClass())
-    return this.homework_()?.filter((item:any) => item.class_id.name === this.selectedClass());
+    console.warn('selectedClass',this.selectedClass())
+    return this.homework_()?.filter((item:any) => item.class_id?.name === this.selectedClass());
   }); 
 
   homework_length = computed(() => {
@@ -77,6 +79,8 @@ export class HomeworkSubmissionPage implements OnInit {
   numbers: number[] = Array.from({length: 24}, (_, i) => i + 1);
 
   modalBool = false;
+
+  grade = 0
 
   video_upload_loading = false
 
@@ -111,7 +115,7 @@ export class HomeworkSubmissionPage implements OnInit {
           if(response.success){
             this.toast('Video uploaded successfully', 'success');
             this.modalBool = false;
-            this.getHomework();
+            this.getHomework(this.grade);
             this.video_upload_loading = false;
 
           }else{
@@ -138,9 +142,10 @@ export class HomeworkSubmissionPage implements OnInit {
     this.color = color;
   }
 
-  async getHomework(){
-    let res = await this.video_api.getHomeworkByGrade(this.auth._user.grade, this.auth._user.id);
-
+  async getHomework(grade:number){
+    console.warn('grade',grade)
+    let res = await this.video_api.getHomeworkByGrade(grade, this.auth._user.id);
+    console.log('res',res)
     if(res.success){
 
       this.homework_.set(res.data!)
@@ -153,7 +158,15 @@ export class HomeworkSubmissionPage implements OnInit {
 
   ngOnInit() {
     console.log('Hello HomeworkSubmissionPage Page');
-    this.getHomework();
+
+    this.route.queryParams.subscribe((params: { [x: string]: number; }) => {
+      this.grade = params['grade']; // Retrieve the passed parameter
+       console.log(this.grade);
+       this.getHomework(this.grade)
+     });
+     console.log('afasef',this.grade)
+
+
   }
 
 }

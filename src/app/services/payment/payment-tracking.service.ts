@@ -11,11 +11,47 @@ export class PaymentTrackingService {
   supabase = this.api.getClient()
   constructor() { }
 
+
+  check_if_paid(sessions: any, payment_history: any) {
+    const currentDate = new Date();
+    
+    // Get all payment dates (week 1 and multiples of 4 up to 20)
+    const paymentDates = sessions
+        .filter((session: any) => 
+            session.week_num === 1 || (session.week_num % 4 === 0 && session.week_num <= 20)
+        )
+        .sort((a: any, b: any) => 
+            new Date(b.session_date).getTime() - new Date(a.session_date).getTime()
+        );
+
+    // Find the most recent payment date that has already passed
+    const latestDueDate = paymentDates.find((session: any) => 
+        new Date(session.session_date) <= currentDate
+    );
+
+    // If no payment dates have passed yet, they're paid up
+    if (!latestDueDate) return "paid";
+
+    // Check if there's a payment for this specific session date
+    const hasPayment = payment_history.some((payment: any) => 
+        payment.student_sessions.week_num === latestDueDate.week_num
+    );
+
+    if (hasPayment) return "paid";
+
+    // Calculate days since payment was due
+    const daysSince = (currentDate.getTime() - new Date(latestDueDate.session_date).getTime()) 
+        / (1000 * 60 * 60 * 24);
+
+    if (daysSince <= 10) return "warning";
+    return "banned";
+}
+  
   async getStudents() {
     try {
       const { data, error } = await this.supabase
         .from('student_groups')
-        .select('name, start_date, end_date, user_table( id, is_banned, legal_name, is_registered, initiated_name, email, phone, is_admin, student_payment_history( id, student_sessions(_date, week_num)))')
+        .select('name, start_date, end_date, student_sessions!inner(*), user_table( id, is_banned, legal_name, is_registered, initiated_name, email, phone, is_admin, student_payment_history( id, student_sessions(session_date, week_num)))')
         // .eq('user_table.is_admin', false)
         .eq('user_table.is_registered', true);
       
@@ -25,14 +61,23 @@ export class PaymentTrackingService {
           error: error.message // Supabase-specific error message
         };
       }
+
+      console.log(data)
   
       // Add the 'finished' property based on the 'end_date'
       const currentDate = new Date();
       const processedData = data.map((group: any) => ({
         ...group,
-        finished: new Date(group.end_date) < currentDate // Set 'finished' based on 'end_date'
+        finished: new Date(group.end_date) < currentDate, // Set 'finished' based on 'end_date'
+        user_table: group.user_table.map((user: any) => ({
+          ...user,
+          payment_status: this.check_if_paid(group.student_sessions, user.student_payment_history),
+          student_payment_history: user.student_payment_history
+      }))
       }));
-  
+
+      console.warn(JSON.stringify(processedData[0].student_sessions, null, 2))
+      console.warn(JSON.stringify(processedData[0].user_table[0], null, 2))
       return {
         success: true,
         data: processedData // Return processed data with 'finished' property
@@ -78,6 +123,8 @@ export class PaymentTrackingService {
           success: false,
           error: "Session not found"
         };
+
+    
       }
   
       // 2. Prepare the data to be inserted
@@ -91,8 +138,8 @@ export class PaymentTrackingService {
       // 3. Insert the payment into student_sessions
       const { data: insertData, error: insertError } = await this.supabase
         .from('student_payment_history')
-        .insert(paymentData);
-  
+        .insert(paymentData)
+        .select();
       // Check for errors in the insert operation
       if (insertError) {
         return {
@@ -228,4 +275,13 @@ export class PaymentTrackingService {
       };
     }
 }
+
+  async getUser(uid:string) {
+    const { data, error } = await this.supabase
+      .from('user_table')
+      .select('id, is_banned, legal_name, is_registered, initiated_name, email, phone, is_admin, student_payment_history( id, student_sessions(session_date, week_num))')
+      .eq('id', uid)
+      .single();
+    return data
+ }
 }

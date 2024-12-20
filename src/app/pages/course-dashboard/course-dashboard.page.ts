@@ -7,6 +7,7 @@ import { addIcons } from 'ionicons';
 import { Router } from '@angular/router';
 import { LoginService } from 'src/app/services/auth/login.service';
 import { ProfileComponent } from 'src/app/components/profile/profile.component';
+import { SessionsComponent } from "../../components/sessions/sessions.component";
 
 addIcons({add, arrowBackOutline});
 @Component({
@@ -14,7 +15,7 @@ addIcons({add, arrowBackOutline});
   templateUrl: './course-dashboard.page.html',
   styleUrls: ['./course-dashboard.page.scss'],
   standalone: true,
-  imports: [IonToast, IonModal, ProfileComponent, IonList, IonCardTitle, IonSegmentButton, IonSegment, IonProgressBar, IonLabel, IonButton, IonIcon, IonItem, IonCardHeader, IonCard, IonCardContent, IonText, IonRow, IonCol, IonGrid, IonButtons, IonChip, IonContent, IonHeader, IonTitle, IonToolbar,IonMenuButton, CommonModule, FormsModule]
+  imports: [IonToast, IonModal, ProfileComponent, IonList, IonCardTitle, IonSegmentButton, IonSegment, IonProgressBar, IonLabel, IonButton, IonIcon, IonItem, IonCardHeader, IonCard, IonCardContent, IonText, IonRow, IonCol, IonGrid, IonButtons, IonChip, IonContent, IonHeader, IonTitle, IonToolbar, IonMenuButton, CommonModule, FormsModule, SessionsComponent]
 })
 export class CourseDashboardPage implements OnInit {
   course_selected = false
@@ -40,7 +41,14 @@ export class CourseDashboardPage implements OnInit {
       title: 'Notations',
       components: ["Module 1", 'Module 2', 'Module 3'],
       link:'/notation'
+    },
+
+    {
+      title: 'Sessions',
+      components: ["Sessions"],
+      link:'/notation'
     }
+
   ]
   selectedModule:any = this.modules[0]
 
@@ -84,10 +92,11 @@ export class CourseDashboardPage implements OnInit {
   }
 
   navigateTo(x:string, component:string){
+
     let grade = this.getNavigationParam(component)
 
     if(this.auth._user.is_admin || this.auth._user.grade >= grade){
-      this.router.navigate([x], {queryParams:{paramName: grade}})
+      this.router.navigate([x], {queryParams:{grade: grade}})
       return
     }
 

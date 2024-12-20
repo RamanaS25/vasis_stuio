@@ -2,7 +2,7 @@
 <ion-header [translucent]="true" class="ion-no-border">
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-menu-button></ion-menu-button>
+      <ion-back-button></ion-back-button>
       
     </ion-buttons>
 
@@ -28,7 +28,7 @@
     </ng-template>
   </ion-modal>
 
- <ion-toast [message]="message" [color]="color" [duration]="duration" [isOpen]="toastBool" (onDidDismiss)="toastBool = false" position="top"></ion-toast>
+ <ion-toast [message]="message" [color]="color" [duration]="duration" [isOpen]="toastBool" (didDismiss)="toastBool = false" position="top"></ion-toast>
   <ion-grid fixed="true">
      <ion-row>
        <ion-col size="4">
@@ -38,6 +38,17 @@
               <ion-searchbar placeholder="Search For Groups" mode="ios" [(ngModel)]="searchTerm" animated></ion-searchbar>
             </ion-card-header>
              <ion-card-content>
+
+              <ion-button expand="block" (click)="addGroupBool = true" 
+                style="--background: linear-gradient(45deg, #4481eb, #04befe);
+                       margin: 10px;
+                       --border-radius: 10px;
+                       font-weight: bold;
+                       text-transform: uppercase;
+                       letter-spacing: 1px;
+                       box-shadow: 0 4px 15px rgba(0,0,0,0.2);">
+                Add Group
+              </ion-button>
   
               @for (item of _groups; track $index) {
                 <ion-item detail="true" lines="none" (click)="selectedItem = item" [ngClass]="(item === selectedItem)? 'selected' : 'groupItem'" button>
@@ -75,12 +86,12 @@
             <div class="scrollable-content">
               @if(selectedView === 'Live Sessions') {
                 @for (item of selectedItem?.student_sessions; track $index) {
-                  <ion-item lines="none"  [ngClass]="checkDateStatus(item._date)">
+                  <ion-item lines="none"  [ngClass]="checkDateStatus(item.session_date)">
                     <ion-text slot="start">
                        {{item.week_num}}
                     </ion-text>
                    <ion-chip style="--background:white;">
-                     {{ item._date | date: 'medium' : 'Asia/Kolkata' }} IST
+                     {{ item.session_date | date: 'medium' : 'Asia/Kolkata' }} IST
                    </ion-chip>
                     @if(item.recorded_class === null) {
                       <ion-icon name="play-outline" slot="end" (click)="isOpenGroup = true; selectedSession = item; edit_type='recorded_class'"  [color]="(item.recorded_class !== null) ? 'success' : 'dark'" ></ion-icon>
@@ -111,6 +122,8 @@
                    
                     </ion-label>
                  </ion-item>
+ 
+
 
                  <ion-item class="future">
                   <ion-label slot="start">
@@ -121,6 +134,14 @@
                   <ion-button slot="end" (click)=" isOpenGroup = true; edit_type = 'start_date'" >
                     click
                   </ion-button>
+               </ion-item>
+               
+
+               <ion-item class="future">
+                 <ion-label slot="start"> Delete Group </ion-label>
+                 <ion-button slot="end" (click)="deleteGroup(selectedItem)" color="danger">
+                  Delete
+                 </ion-button>
                </ion-item>
               }
              
@@ -181,7 +202,7 @@
                  Current Session Date: 
               </ion-label>
 
-              <ion-chip slot="end">  {{selectedSession._date | date: 'medium' : 'Asia/Kolkata' }} IST</ion-chip>
+              <ion-chip slot="end">  {{selectedSession.session_date | date: 'medium' : 'Asia/Kolkata' }} IST</ion-chip>
              
             </ion-item>
           </ion-card>
@@ -265,6 +286,43 @@
        
 
        </ion-content>
+    </ng-template>
+  </ion-modal>
+
+  <ion-modal [isOpen]="addGroupBool" (didDismiss)="addGroupBool = false">
+    <ng-template>
+       <ion-item>
+         <ion-icon name="close" (click)="addGroupBool = false" slot="end" style="cursor: pointer;"></ion-icon>
+       </ion-item>
+       <ion-content>
+         <ion-card>
+           <ion-item>
+             <ion-input [(ngModel)]="new_group.name" placeholder="Enter Group Name"></ion-input>
+           </ion-item>
+           <ion-item lines="full">
+              <ion-label slot="start">
+                 Start Date:
+              </ion-label>
+              <ion-datetime-button datetime="datetimeadd" ></ion-datetime-button>
+           </ion-item>
+           <ion-item> 
+            <ion-input [(ngModel)]="new_group.grade_id" label="Enter Module" type="number"></ion-input>
+           </ion-item>
+           <ion-item> 
+            <ion-input [(ngModel)]="new_group.zoom_link" placeholder="Enter Zoom Link"></ion-input>
+           </ion-item>
+         </ion-card>
+       </ion-content>
+
+       <ion-button expand="block" (click)="addGroup()">
+        Add Group
+       </ion-button>
+    </ng-template>
+  </ion-modal>
+
+  <ion-modal [keepContentsMounted]="true">
+    <ng-template>
+      <ion-datetime id="datetimeadd" (ionChange)="setDateForNewGroup($event)"></ion-datetime>
     </ng-template>
   </ion-modal>
 

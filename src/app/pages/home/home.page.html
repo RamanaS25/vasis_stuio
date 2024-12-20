@@ -18,12 +18,13 @@
           <ion-select-option value="POR">POR</ion-select-option>
         </ion-select>
       </ion-chip>
-
+      @if(auth._user?.is_admin) {
       <ion-chip
         style="--background: rgb(247, 219, 255)"
         (click)="edit_text(); edit_open=true"
         >Edit</ion-chip
       >
+      }
 
       @if(!auth._logged_in) {
       <ion-chip style="--background: white" (click)="login_open=true">
@@ -67,12 +68,9 @@
 <ion-modal
   [isOpen]="login_open"
   (didDismiss)="login_open = false"
-  style="
-    --border-radius: 10px;
-    backdrop-filter: blur(10px);
-    --background: linear-gradient(to bottom, #9290ff, #ff93fa);
-  "
->
+  style="--background: linear-gradient(to bottom, #9290ff, #ff93fa);"
+  >
+  
   <ng-template>
     <app-login
       (_message)="handleNotification( $event)"
@@ -193,22 +191,42 @@
   [isOpen]="edit_img_open"
   (didDismiss)="edit_img_open = false"
   style="
-    --border-radius: 10px;
-    backdrop-filter: blur(10px);
     --background: linear-gradient(to bottom, #9290ff, #ff93fa);
   "
 >
   <ng-template>
-    <ion-card>
-      <ion-input type="file" (change)="onFileSelected($event)">
-        choose file
-      </ion-input>
-      <ion-button (click)="uploadImage()">Upload file</ion-button>
-    </ion-card>
+    <ion-item>
+      <ion-icon name="close-outline" slot="end" (click)="edit_img_open = false" style="cursor: pointer"></ion-icon>
+    </ion-item>
+    <ion-content>
+      <ion-card>
+        <ion-card-content>
+          <ion-input type="file"  (change)="onFileSelected($event)">
+          </ion-input>
+  
+          <ion-button (click)="uploadImage()">Upload file</ion-button>
+        </ion-card-content>
+  
+      </ion-card>
+    </ion-content>
+ 
   </ng-template>
 </ion-modal>
 
 <ion-content [fullscreen]="true">
+
+  @if(auth._logged_in && !auth._user.is_registered){
+       <ion-card style="border-radius: 10px;">
+         <ion-card-content>
+            <ion-item style="--background: rgba(0, 0, 0, 0);" lines="none">
+               <ion-label>
+                Your account is not registered yet. Please wait for our admin to email you once registration is complete.
+               </ion-label>
+            </ion-item>
+         </ion-card-content>
+       </ion-card>
+      }
+    
   <ion-grid fixed="true">
     <ion-row>
       <ion-col>
@@ -255,10 +273,16 @@
     <ion-row>
       @for (item of text?.slice(0, 2); track $index) {
       <ion-col sizeLg="6" sizeMd="12" sizeSm="12" sizeXs="12">
-        <app-youtube-player
-          videoUrl="https://www.youtube.com/watch?v={{item?.video_id}}"
-        >
-        </app-youtube-player>
+        <div class="video-container">
+          <iframe
+            width="100%"
+            height="100%"
+            [src]="sanitizeUrl('https://www.youtube.com/embed/' + item?.video_id)"
+            frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen
+          ></iframe>
+        </div>
         <ion-item>
           {{selectLang === 'ENG' ? item.video_title_e : selectLang === 'POR' ?
           item.video_title_p : item.video_title_s }}
@@ -305,14 +329,22 @@
     <ion-row>
       @for (item of text?.slice(-2); track $index) {
       <ion-col sizeLg="6" sizeMd="12" sizeSm="12" sizeXs="12">
-        <app-youtube-player
-          videoUrl="https://www.youtube.com/watch?v={{item?.video_id}}"
-        >
-        </app-youtube-player>
-        <ion-item>
-          {{selectLang === 'ENG' ? item.video_title_e : selectLang === 'POR' ?
+        <div class="video-container">
+          <iframe
+            width="100%"
+            height="100%"
+            [src]="sanitizeUrl('https://www.youtube.com/embed/' + item?.video_id)"
+            frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen
+          ></iframe>
+        </div>
+        <ion-card style="border-radius: 10px;">
+          <ion-card-content>
+            {{selectLang === 'ENG' ? item.video_title_e : selectLang === 'POR' ?
           item.video_title_p : item.video_title_s }}
-        </ion-item>
+          </ion-card-content>
+        </ion-card>
       </ion-col>
       }
     </ion-row>

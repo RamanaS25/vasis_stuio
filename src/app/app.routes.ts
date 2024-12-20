@@ -49,11 +49,6 @@ export const routes: Routes = [
     canActivate: [authGuard]
   },
   {
-    path: 'student-sessions',
-    loadComponent: () => import('./pages/student-sessions/student-sessions.page').then( m => m.StudentSessionsPage),
-    canActivate: [authGuard]
-  },
-  {
     path: 'homeworkm',
     loadComponent: () => import('./pages/homeworkm/homeworkm.page').then( m => m.HomeworkmPage),
     canActivate: [authGuard]
@@ -64,12 +59,17 @@ export const routes: Routes = [
   },
   {
     path: 'notation',
-    loadComponent: () => import('./pages/notations/notation.page').then( m => m.NotationPage),
+    loadComponent: () => import('./pages/notations/notations.page').then( m => m.NotationsPage),
     canActivate: [authGuard]
-  },  {
+  },
+  {
     path: 'homework-grading',
     loadComponent: () => import('./pages/homework-grading/homework-grading.page').then( m => m.HomeworkGradingPage)
+  },  {
+    path: 'attendance',
+    loadComponent: () => import('./pages/attendance/attendance.page').then( m => m.AttendancePage)
   },
+
 
 
 ];

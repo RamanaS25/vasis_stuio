@@ -1,0 +1,133 @@
+:host {
+  --notation-primary: var(--ion-color-primary);
+  --notation-bg: #ffffff;
+  --notation-hover: #f8f9fa;
+  --notation-border: rgba(0, 0, 0, 0.05);
+  --notation-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+  --notation-radius: 12px;
+  --item-height: 52px;
+}
+
+.scrollable-container {
+  height: 80vh;
+  overflow-y: auto;
+  margin: 0;
+  padding: 8px;
+  background: var(--notation-bg);
+  border-radius: var(--notation-radius);
+  box-shadow: var(--notation-shadow);
+
+  &::-webkit-scrollbar {
+    width: 4px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.06);
+    border-radius: 2px;
+  }
+
+  ion-item {
+    --padding-start: 12px;
+    --padding-end: 8px;
+    --min-height: var(--item-height);
+    --background: transparent;
+    --border-color: transparent;
+    margin: 2px 0;
+    border-radius: 6px;
+    font-size: 14px;
+    letter-spacing: -0.2px;
+    font-weight: 400;
+    transition: all 0.15s ease;
+    
+    &::part(native) {
+      padding: 0 4px;
+    }
+
+    &:hover {
+      --background: var(--notation-hover);
+    }
+
+    &.selected-class {
+      --background: rgba(var(--ion-color-primary-rgb), 0.06);
+      --color: var(--notation-primary);
+      font-weight: 500;
+
+      ion-icon {
+        color: var(--notation-primary);
+      }
+    }
+
+  }
+}
+
+// PDF viewer improvements
+iframe {
+  border: none;
+  border-radius: var(--notation-radius);
+  box-shadow: var(--notation-shadow);
+  background: var(--notation-bg);
+}
+
+// Modal improvements
+ion-modal {
+  --border-radius: var(--notation-radius);
+  
+  ion-header {
+    ion-toolbar {
+      --background: var(--notation-bg);
+    }
+  }
+
+  iframe {
+    border: none;
+    width: 100%;
+    height: calc(100vh - 56px);
+  }
+
+  ion-card {
+    margin: 16px;
+    border-radius: var(--notation-radius);
+    box-shadow: var(--notation-shadow);
+
+    ion-card-content {
+      padding: 20px;
+    }
+
+    ion-input {
+      margin-bottom: 16px;
+      --padding-start: 16px;
+      --padding-end: 16px;
+      --background: var(--notation-hover);
+      --border-radius: 8px;
+    }
+
+    ion-button {
+      --border-radius: 8px;
+      margin-top: 8px;
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .scrollable-container {
+    height: 80vh;
+    margin-bottom: 16px;
+    padding: 6px;
+
+    ion-item {
+      --min-height: 48px;
+      font-size: 13px;
+    }
+  }
+
+  ion-modal {
+    &.mobile-pdf-modal {
+      --height: 100%;
+      --width: 100%;
+      
+      ion-content {
+        --background: var(--notation-bg);
+      }
+    }
+  }
+}

@@ -94,19 +94,19 @@ export class MuxVideoService {
   }
 
 
-  async getHomeworkByGrade(grade: string, user_id: number): Promise<{ success: boolean; data?: Homework[]; error?: string }> {
+  async getHomeworkByGrade(grade: number, user_id: number): Promise<{ success: boolean; data?: Homework[]; error?: string }> {
     try {
       // Query the syllabus_homework table filtered by grade
       const { data, error } = await this.api.getClient()
         .from('syllabus_homework')
         .select(`
           *,
-          class_id (
+          class_id!inner (
             name,
-             id,
-            level_id (
+            id,
+            level_id!inner (
               id,
-              grade_id (
+              grade_id!inner (
                 grade
               )
             )

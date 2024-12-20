@@ -1,14 +1,17 @@
 <swiper-container
-  slides-per-view="auto"
+  slides-per-view="1"
   speed="500"
   navigation="true"
   pagination="true"
+  loop="true"
+  autoplay="true"
+  class="modern-swiper"
 >
   @for(x of _images; track $index) {
   <swiper-slide>
-    <ion-card class="image-card-background" (click)="select_img = 1; selectImage(x)">
+    <div class="slide-content" (click)="select_img = 1; selectImage(x)">
       <img src="{{ x.link }}" alt="{{ x.link }}" />
-    </ion-card>
+    </div>
   </swiper-slide>
   }
 </swiper-container>

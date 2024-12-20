@@ -1,12 +1,12 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { NotationPage } from './notation.page';
+import { NotationsPage } from './notations.page';
 
-describe('NotationPage', () => {
-  let component: NotationPage;
-  let fixture: ComponentFixture<NotationPage>;
+describe('NotationsPage', () => {
+  let component: NotationsPage;
+  let fixture: ComponentFixture<NotationsPage>;
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(NotationPage);
+    fixture = TestBed.createComponent(NotationsPage);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

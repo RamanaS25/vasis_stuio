@@ -35,4 +35,238 @@
     border: 0;
   }
   
+  .video-container {
+    position: relative;
+    width: 100%;
+  }
+
+  .video-controls {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(0, 0, 0, 0.7);
+    padding: 10px;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+  }
+
+  .control-button {
+    background: transparent;
+    border: none;
+    color: white;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.3s;
+
+    &:hover {
+      background-color: rgba(255, 255, 255, 0.1);
+    }
+
+    ion-icon {
+      font-size: 24px;
+    }
+  }
+  
+  .youtube-video-wrapper {
+    position: relative;
+    width: 100%;
+    padding-top: 56.25%; /* 16:9 aspect ratio */
+    background: #000;
+    border-radius: 12px;
+    overflow: hidden;
+  }
+
+  .youtube-video-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  .transparent-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: transparent;
+  }
+
+  .seeker-container {
+    width: 100%;
+    padding: 0 10px;
+    
+    input[type="range"] {
+      width: 100%;
+    }
+  }
+
+  .control-buttons {
+    ion-item {
+      --padding-start: 0;
+      --padding-end: 0;
+    }
+  }
+
+  .sound-bar-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 0 15px;
+    
+    input[type="range"] {
+      width: 100px;
+    }
+    
+    .sound-icon {
+      font-size: 20px;
+    }
+  }
+
+  .seeker-item {
+    margin: 10px;
+    --padding-start: 0;
+    --padding-end: 0;
+  }
+
+  .controls-wrapper {
+    background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+    padding: 15px;
+    border-radius: 0 0 12px 12px;
+    margin-top: -80px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .progress-container {
+    width: 100%;
+    padding: 0 5px;
+    margin-bottom: 15px;
+
+    .progress-bar {
+      width: 100%;
+      height: 4px;
+      -webkit-appearance: none;
+      background: rgba(255,255,255,0.1);
+      border-radius: 2px;
+      outline: none;
+      transition: height 0.15s ease;
+
+      &::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        width: 12px;
+        height: 12px;
+        background: var(--ion-color-primary);
+        border-radius: 50%;
+        cursor: pointer;
+        transition: transform 0.15s ease;
+      }
+
+      &:hover {
+        height: 6px;
+
+        &::-webkit-slider-thumb {
+          transform: scale(1.2);
+        }
+      }
+    }
+  }
+
+  .control-panel {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 5px;
+  }
+
+  .left-controls, .right-controls {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .control-btn {
+    background: transparent;
+    border: none;
+    color: white;
+    padding: 8px;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    ion-icon {
+      font-size: 24px;
+      color: white;
+    }
+
+    &:hover {
+      background: rgba(255,255,255,0.1);
+      transform: scale(1.1);
+    }
+
+    &.play-pause {
+      ion-icon {
+        font-size: 28px;
+      }
+    }
+  }
+
+  .volume-controls {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0 8px;
+
+    .volume-icon {
+      color: white;
+      font-size: 20px;
+    }
+
+    .volume-slider {
+      width: 80px;
+      height: 4px;
+      -webkit-appearance: none;
+      background: rgba(255,255,255,0.1);
+      border-radius: 2px;
+      outline: none;
+      transition: all 0.2s ease;
+
+      &::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        width: 10px;
+        height: 10px;
+        background: white;
+        border-radius: 50%;
+        cursor: pointer;
+        transition: transform 0.15s ease;
+      }
+
+      &:hover {
+        height: 6px;
+
+        &::-webkit-slider-thumb {
+          transform: scale(1.2);
+        }
+      }
+    }
+  }
+
+  // Remove default Ionic styles
+  ion-item {
+    --background: transparent;
+    --padding-start: 0;
+    --padding-end: 0;
+    --inner-padding-end: 0;
+  }
+  
   

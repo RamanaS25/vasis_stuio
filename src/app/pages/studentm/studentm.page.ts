@@ -7,7 +7,6 @@ import {
   IonTitle,
   IonToolbar,
   IonButtons,
-  IonMenuButton,
   IonGrid,
   IonRow,
   IonCol,
@@ -17,27 +16,25 @@ import {
   IonSelect,
   IonSelectOption,
   IonSearchbar,
-  IonLabel,
   IonInput,
   IonButton,
   IonToggle,
   IonSkeletonText,
-  IonToast,
-} from '@ionic/angular/standalone';
+  IonToast, IonChip, IonBackButton } from '@ionic/angular/standalone';
 import { StudentManagementService } from 'src/app/services/student/student-management.service';
+import { LoginService } from 'src/app/services/auth/login.service';
 
 @Component({
   selector: 'app-studentm',
   templateUrl: './studentm.page.html',
   styleUrls: ['./studentm.page.scss'],
   standalone: true,
-  imports: [
+  imports: [IonBackButton, IonChip, 
     IonToast,
     IonSkeletonText,
     IonToggle,
     IonButton,
     IonInput,
-    IonLabel,
     IonSearchbar,
     IonSelect,
     IonSelectOption,
@@ -54,14 +51,14 @@ import { StudentManagementService } from 'src/app/services/student/student-manag
     IonToolbar,
     CommonModule,
     FormsModule,
-    IonMenuButton,
+    IonBackButton,
   ],
 })
 export class StudentmPage implements OnInit {
   studentApi = inject(StudentManagementService);
   allUsers: any;
   allGroups: any;
-
+  auth = inject(LoginService);
   user = {
     banned_payment: null,
     created_at: '',
@@ -80,7 +77,7 @@ export class StudentmPage implements OnInit {
     user_name: '',
     voice_scale: '',
   };
-  onlyRegistered = false;
+  onlyRegistered = true;
   selectedGroup: string = '';
   searchInput: string = '';
 
@@ -123,7 +120,7 @@ export class StudentmPage implements OnInit {
 
     let x = this.allUsers?.filter((user: any) => {
       return (
-        user.legal_name.toLowerCase().includes(searchValue) ||
+        user.legal_name?.toLowerCase().includes(searchValue) ||
         user.initiated_name?.toLowerCase().includes(searchValue) // Check for initiated_name
       );
     });

@@ -1,7 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { SupabaseService } from '../api/supabase.service';
-import { Group, StudentSession } from '../../pages/groupm/types';
-import { from, Observable } from 'rxjs';
+import { Group } from '../../pages/groupm/types';
+
 
 @Injectable({
   providedIn: 'root'
@@ -9,8 +9,8 @@ import { from, Observable } from 'rxjs';
 export class GroupManagementService {
  private api = inject(SupabaseService)
  private supabase = this.api.getClient()
+ 
   constructor() { 
-   
   }
 
   async getGroups(): Promise<{ success: boolean; data?: Group[]; error?: string }> {
@@ -46,8 +46,6 @@ export class GroupManagementService {
     }
   }
   
-
-
   async getClasses(): Promise<{ success: boolean; data?: any; error?: string }> {
     try {
       const { data, error } = await this.supabase
@@ -76,6 +74,7 @@ export class GroupManagementService {
   }
 
   returnClassId(classes: any[], week_num: number): number | undefined {
+    
     const classObj = classes.find(c => {
       const classNumber = parseInt(c.name.split(' ')[1]);
       return classNumber === week_num;
@@ -83,56 +82,65 @@ export class GroupManagementService {
     return classObj?.id;
   }
   
-  async insertGroupSessions( group: { name: string, start_date: string, end_date: string, weeks: number } , classes:any ) {
-    const { name, start_date, end_date, weeks } = group;
-    
-    // Convert startDate and endDate to Date objects
-    console.log(start_date, end_date)
-    let currentDate = new Date(start_date);
-    const finalDate = new Date(end_date);
-    console.log('hi', currentDate, finalDate)
-    // Array to hold session data for batch insert
-    const sessionData: { _date: string, week_num: number, group_name: string, class_id?: number }[] = [];
-    console.log('weeks', weeks)
-    
-    for (let weekNum = 1; weekNum <= weeks; weekNum++) {
-      // Ensure that the current session date does not exceed the final date
-      console.log(currentDate, finalDate)
-    
-  
-      // Format current date to ISO string for insertion
-      sessionData.push({
-        _date: currentDate.toISOString(),
-        week_num: weekNum,
-        group_name: name,
-        class_id: this.returnClassId(classes, weekNum)
-      });
-  
-      // Move to the next week's session (add 7 days)
-      currentDate.setDate(currentDate.getDate() + 7);
-    }
-
-    console.log(sessionData)
-  
-    // Insert all session data into the student_sessions table
-    const { data, error } = await this.supabase.from('student_sessions').insert(sessionData);
-  
-    if (error) {
-      console.error('Error inserting group sessions:', error);
-      return false
+  async insertGroupSessions( group: { name: string, start_date: string, end_date: string, weeks: number } , classes:any ): Promise<{ success: boolean; data?: any; error?: string }> {
+    try {
+      const { name, start_date, end_date, weeks } = group;
       
-    } else {
-     let x = await this.insertStartandEndDates(group)
-     if(x.success){
-      console.log('Inserted Start and End Dates:', x.data);
-     }else{
-      console.log('Error Inserting Start and End Dates:', x.error);
-     }
-      console.log('Inserted group sessions:', data);
-      return true
+      let currentDate = new Date(start_date);
+      const finalDate = new Date(end_date);
       
-    }
+      // Array to hold session data for batch insert
+      const sessionData: { session_date: string, week_num: number, group_name: string, class_id?: number }[] = [];
+      
+      for (let weekNum = 1; weekNum <= weeks; weekNum++) {
+        // Format current date to ISO string for insertion
+        sessionData.push({
+          session_date: currentDate.toISOString(),
+          week_num: weekNum,
+          group_name: name,
+          class_id: this.returnClassId(classes, weekNum)
+        });
+    
+        // Move to the next week's session (add 7 days)
+        currentDate.setDate(currentDate.getDate() + 7);
+      } 
+      console.log(group, classes)
+      console.log("session data",sessionData)
+    
+      // Insert all session data into the student_sessions table
+      const { data, error } = await this.supabase.from('student_sessions').insert(sessionData);
+      
+      if (error) {
+        return {
+          success: false,
+          error: error.message
+        };
+      }
+      
+      // Insert start and end dates
+      const datesResult = await this.insertStartandEndDates(group);
 
+      if (!datesResult.success) {
+        return {
+          success: false,
+          error: 'Failed to insert start and end dates: ' + datesResult.error
+        };
+      }
+
+      return {
+        success: true,
+        data: {
+          sessions: data,
+          dates: datesResult.data
+        }
+      };
+
+    } catch (err) {
+      return {
+        success: false,
+        error: 'An unexpected error occurred: ' + (err instanceof Error ? err.message : String(err))
+      };
+    }
   }
 
   async insertStartandEndDates(group: any) {
@@ -142,8 +150,9 @@ export class GroupManagementService {
         .from('student_groups')
         .update({ start_date, end_date })
         .eq('name', name);
-
+        
       if (error) {
+        console.log("error",error)
         return {
           success: false,
           error: error.message,
@@ -191,7 +200,7 @@ export class GroupManagementService {
 
         // Array to hold the updated session data
         const updatedSessions = existingSessions.map((session, index) => {
-            // Update the _date field based on the new start date
+            // Update the session_date field based on the new start date
             const updatedDate = new Date(currentDate);
             currentDate.setDate(currentDate.getDate() + 7); // Move to the next week's session
 
@@ -200,7 +209,7 @@ export class GroupManagementService {
 
             return {
                 ...session,
-                _date: updatedDate.toISOString(),
+                session_date: updatedDate.toISOString(),
                 class_id: updatedClassId,
             };
         });
@@ -221,7 +230,7 @@ export class GroupManagementService {
         console.error('An unexpected error occurred while updating sessions:', err);
         return { success: false, error: 'An unexpected error occurred while updating sessions' };
     }
-}
+  }
 
   async editLiveSession(sessionId: number, updatedData: any) {
     try {
@@ -271,5 +280,60 @@ export class GroupManagementService {
         }
     }
   }
+
+  async addGroup(group: any, classes:any): Promise<{ success: boolean; data?: any; error?: string }> {
+    try {
+      const { data, error } = await this.supabase.from('student_groups').insert(group);
+
+      if (error) {
+        return {
+          success: false,
+          error: error.message
+        };
+      }
+
+      let x = await this.insertGroupSessions(group, classes)
+      if(x.success){
+        console.log('Inserted Start and End Dates:', x.data);
+       }else{
+        console.log("error",x)
+        return {
+          success: false,
+          error: "failed to insert start and end dates"
+        }
+       }
+
+       
+
+      return {
+        success: true,
+        data: data
+      };
+    } catch (err) {
+      let errorMessage = 'An unexpected error occurred';
+      if (err instanceof Error) {
+        errorMessage = err.message;
+      }
+      return {
+        success: false,
+        error: errorMessage
+      };
+    }
+  }
+
+  async deleteGroup(group: any) : Promise<{ success: boolean; data?: any; error?: string }>  {
+    const { data, error } = await this.supabase.from('student_groups').delete().eq('id', group.id);
+    if (error) {
+      return {
+        success: false,
+        error: error.message
+      };
+    }
+
+    return {
+      success: true,
+      data: data
+    };
+  } 
 
 }

@@ -1,19 +1,22 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IonContent, IonMenuButton, IonHeader, IonTitle, IonToolbar, IonCol, IonRow, IonGrid, IonItem, IonSkeletonText, IonList, IonSelect, IonSelectOption, IonCardContent, IonCard, IonSearchbar, IonCardHeader, IonToggle, IonCardTitle, IonCardSubtitle, IonLabel, IonChip, IonCheckbox, IonBadge, IonButtons, IonText, IonToast } from '@ionic/angular/standalone';
+import { IonContent, IonMenuButton, IonHeader, IonTitle, IonToolbar, IonCol, IonRow, IonGrid, IonItem, IonSkeletonText, IonList, IonSelect, IonSelectOption, IonCardContent, IonCard, IonSearchbar, IonCardHeader, IonToggle, IonCardTitle, IonCardSubtitle, IonLabel, IonChip, IonCheckbox, IonBadge, IonButtons, IonText, IonToast, IonIcon } from '@ionic/angular/standalone';
 import { PaymentTrackingService } from 'src/app/services/payment/payment-tracking.service';
-import { add } from 'ionicons/icons';
-
+import { add, arrowForwardOutline, ellipse } from 'ionicons/icons';
+import { addIcons } from 'ionicons';
+import { LoginService } from 'src/app/services/auth/login.service';
+addIcons({ellipse,add, arrowForwardOutline})
 @Component({
   selector: 'app-payment-tracking',
   templateUrl: './payment-tracking.page.html',
   styleUrls: ['./payment-tracking.page.scss'],
   standalone: true,
-  imports: [IonToast, IonText, IonButtons,IonMenuButton, IonBadge, IonCheckbox, IonChip, IonLabel, IonCardSubtitle, IonCardTitle, IonToggle, IonCardHeader, IonSearchbar, IonCard, IonCardContent, IonList, IonSkeletonText, IonItem, IonGrid, IonRow, IonCol, IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule, IonSelectOption, IonSelect]
+  imports: [IonIcon, IonToast, IonText, IonButtons,IonMenuButton, IonBadge, IonCheckbox, IonChip, IonLabel, IonCardSubtitle, IonCardTitle, IonToggle, IonCardHeader, IonSearchbar, IonCard, IonCardContent, IonList, IonSkeletonText, IonItem, IonGrid, IonRow, IonCol, IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule, IonSelectOption, IonSelect]
 })
 export class PaymentTrackingPage implements OnInit {
   api = inject(PaymentTrackingService)
+  user = inject(LoginService)
   students:any
   selectedGroup:string = 'All Groups'
   searchInput:string = ''
@@ -42,13 +45,17 @@ toastBool = false;
     this.getAllStudents()
   }
 
-    async getAllStudents() {
-    console.log('get groups')
-     let x = await this.api.getStudents();
-     if(x.success) {
-       console.log(x.data)
-       this.students = x.data
-     }
+    async getAllStudents(): Promise<void> {
+      console.log('get groups')
+      let x = await this.api.getStudents();
+      console.log(x)
+      return new Promise((resolve) => {
+        if(x.success) {
+          console.log(x.data)
+          this.students = x.data
+          resolve()
+        }
+      })
     }
 
     isDateInThePast(dateString: string): boolean {
@@ -98,7 +105,7 @@ toastBool = false;
         }
       });
     
-      console.log(processedDates);
+      console.warn('processedDates',processedDates);
       this.student_payment_history = processedDates;
     }
     
@@ -162,14 +169,16 @@ toastBool = false;
       this.toastBool = true;
     }
 
-    handlecheckbox(event: any,session:any) {
+    handlecheckbox(event: any,session:any, uid:string) {
       if(event.detail.checked){
-        this.addPayment(this.selected_user,session.week_num)
+        this.addPayment(this.selected_user,session.week_num, uid)
       } else{
-        this.deletePayment(session.id)
+        this.deletePayment(session.id, uid)
       }
       console.log(event)
     }
+
+
 
     handleBannedToggle(event: any,student:any) {
       if(event.detail.checked){
@@ -195,14 +204,17 @@ toastBool = false;
       }
     }
 
-   async addPayment(student: any, week_num: number) {
+   async addPayment(student: any, week_num: number, uid:string) {
       console.log(student, week_num)
       let group = this.getGroupForStudent(student)
       console.log(group, student, week_num)
       const result = await this.api.addPayment(student, week_num, group.name);
       if (result.success) {
         // Use result.data
-        this.getAllStudents()
+        console.warn(result.data)
+
+        await this.getandsetStudent(student.id)
+
         this.handleToast('Payment added successfully', 'success')
         
       } else {
@@ -212,12 +224,91 @@ toastBool = false;
       }
     }
 
-    async deletePayment(payment_history_id:number) {
+    async check_if_paid(sessions: any, payment_history: any) {
+      console.log(sessions, payment_history)
+      const currentDate = new Date(); // Get the current date
+      const payment_status: {
+        week_num: any;
+        session_date: any;
+        is_paid: any;
+      }[] = [];
+    
+      // Filter out all the sessions that represent payment dates (based on week numbers)
+      const payment_dates = sessions.filter((session: any) =>
+        session.week_num === 1 || (session.week_num % 4 === 0 && session.week_num <= 20)
+      );
+    
+      // Loop through each payment date
+      payment_dates.forEach((session: any) => {
+        // Check if the session has been paid for
+        const isPaid = payment_history.some((payment: any) => payment.session_id === session.id);
+    
+        // Add the payment status to the array
+        payment_status.push({
+          week_num: session.week_num,
+          session_date: session.session_date, // Use 'session_date' instead of 'date'
+          is_paid: isPaid ? "paid" : false
+        });
+      });
+    
+      // Find the last unpaid session
+      const lastUnpaidSession = payment_status.find((status: any) => status.is_paid === false);
+    
+      if (lastUnpaidSession) {
+        const lastUnpaidDate = new Date(lastUnpaidSession.session_date);
+        const daysDifference = (currentDate.getTime() - lastUnpaidDate.getTime()) / (1000 * 60 * 60 * 24); // Difference in days
+    
+        // If the last unpaid session is less than or equal to 10 days in the past
+        if (daysDifference >= 0 && daysDifference <= 10) {
+          lastUnpaidSession.is_paid = "warning"; // Within 10 days
+        } else if (daysDifference > 10) {
+          lastUnpaidSession.is_paid = "banned"; // More than 10 days in the past
+        }
+      }
+    
+      return payment_status;
+    }
+    
+
+    async getandsetStudent(uid:string) {
+      let x = await this.api.getUser(uid)
+      if(x){
+        this.selected_user = {
+          ...x,
+          payment_status: this.api.check_if_paid(this.getGroupForStudent(x).student_sessions, x.student_payment_history),
+          student_payment_history: x.student_payment_history
+        };
+
+     
+        console.log(this.selected_user)
+        this.processPaymentDates(this.paymentDates, x.student_payment_history, this.getGroupForStudent(x).start_date)
+
+        this.students = this.students.map((group:any) => {
+          if(group.user_table.find((student:any) => student.id === uid)){
+            return { 
+              ...group, 
+              user_table: group.user_table.map((student:any) => 
+                student.id === uid ? this.selected_user : student
+              )
+            }
+          }
+          return group
+        })
+        console.log('selected usewdqwdadwdadr',this.selected_user.payment_status)
+        console.log('selected wwwww',this.students)
+      }
+    }
+
+
+
+    async deletePayment(payment_history_id:number, uid:string) {
+      console.log('delete payment')
       console.log(payment_history_id)
       const result = await this.api.deletePayment(payment_history_id);
       if (result.success) {
         // Use result.data
-        // this.getAllStudents()
+        await this.getandsetStudent(uid)
+   
         this.handleToast('Payment deleted successfully', 'success')
         
       } else {

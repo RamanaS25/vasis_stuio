@@ -1,22 +1,22 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IonContent, IonHeader, IonTitle, IonBackButton, IonToolbar, IonButtons, IonMenuButton, IonRow, IonGrid, IonCol, IonItem, IonIcon, IonModal, IonInput, IonCardContent, IonCard, IonTabButton, IonButton, IonLabel, IonToast } from '@ionic/angular/standalone';
+import { IonContent, IonHeader, IonTitle, IonBackButton, IonToolbar, IonButtons, IonMenuButton, IonRow, IonGrid, IonCol, IonItem, IonIcon, IonModal, IonInput, IonCardContent, IonCard, IonTabButton, IonButton, IonLabel, IonToast, Platform, IonSearchbar } from '@ionic/angular/standalone';
 import { ActivatedRoute } from '@angular/router';
 import { NotationsService } from 'src/app/services/notations/notations.service';
 import { addIcons } from 'ionicons';
-import { linkOutline, createOutline, closeOutline } from 'ionicons/icons';
+import { linkOutline, createOutline, closeOutline, documentTextOutline, eyeOutline } from 'ionicons/icons';
 import { SafeUrlPipe } from "../../pipes/safe/safe-url.pipe";
 import { LoginService } from 'src/app/services/auth/login.service';
 addIcons({linkOutline});
 @Component({
-  selector: 'app-notation',
-  templateUrl: './notation.page.html',
-  styleUrls: ['./notation.page.scss'],
+  selector: 'app-notations',
+  templateUrl: './notations.page.html',
+  styleUrls: ['./notations.page.scss'],
   standalone: true,
-  imports: [IonToast, IonLabel, IonButton, IonTabButton, IonCard, IonCardContent, IonInput, IonModal, IonIcon, IonItem, IonCol, IonGrid, IonRow, IonButtons, IonBackButton, IonContent, IonHeader, IonTitle, IonToolbar, IonMenuButton, CommonModule, FormsModule, SafeUrlPipe]
+  imports: [IonSearchbar, IonToast, IonLabel, IonButton, IonTabButton, IonCard, IonCardContent, IonInput, IonModal, IonIcon, IonItem, IonCol, IonGrid, IonRow, IonButtons, IonBackButton, IonContent, IonHeader, IonTitle, IonToolbar, IonMenuButton, CommonModule, FormsModule, SafeUrlPipe]
 })
-export class NotationPage implements OnInit {
+export class NotationsPage implements OnInit {
   auth = inject(LoginService)
   route = inject(ActivatedRoute)
   _notations = inject(NotationsService)
@@ -32,17 +32,22 @@ export class NotationPage implements OnInit {
   toastBool = false
   editingNotation: any = null;
   newPdfLink = ''
+  pdfModalOpen = false;
+  platform = inject(Platform);
+
+  newPdfLinks = { pdf_link: '', pdf_link_s: '', pdf_link_por: '' }
+
   constructor() {
-      addIcons({linkOutline,createOutline,closeOutline}); }
+      addIcons({documentTextOutline,linkOutline,createOutline,closeOutline,eyeOutline}); }
 
   isMobile() {
-    return window.matchMedia('(max-width: 767px)').matches;
+    return this.platform.is('mobile') || this.platform.width() < 768;
   }
 
   ngOnInit() {
     
     this.route.queryParams.subscribe(params => {
-     this.grade = params['paramName']; // Retrieve the passed parameter
+     this.grade = params['grade']; // Retrieve the passed parameter
       console.log(this.grade);
       this.getNotations(this.grade)
     });
@@ -69,6 +74,7 @@ export class NotationPage implements OnInit {
       // Use result.data
       console.log(result.data)
       this.notations = result.data;
+      this.selectedClass = this.notations[0]
       
     } else {
       // Handle the error
@@ -79,21 +85,29 @@ export class NotationPage implements OnInit {
 
   async updateLink(notationId: number, newLink: string) {
     try {
-      const result = await this._notations.updateNotationLink(notationId, newLink);
+
+      let updatedNotation = {...this.selectedClass, ...this.newPdfLinks}
+      const result = await this._notations.updateNotationLink(notationId, updatedNotation);
       
       if (result.success) {
         // Update the local notation data
+        this.editBool = false
+        this.toast('Notation link updated successfully','success')
         this.notations = this.notations.map((notation: any) => 
           notation.id === notationId ? { ...notation, pdf_link: newLink } : notation
         );
         this.editingNotation = null;
        
-      } else {
+      } else {  
+        this.editBool = false
+        this.toast('Failed to update notation','danger')
         console.error('Failed to update notation:', result.error);
       }
       
       return result;
     } catch (err) {
+      this.editBool = false
+      this.toast('Failed to update notation','danger')
       return {
         success: false,
         error: 'Failed to update notation link'
@@ -101,6 +115,13 @@ export class NotationPage implements OnInit {
     }
   }
 
+  handlePdfView(item: any) {
+    this.selectedClass = item;
+    this.newPdfLinks = { pdf_link: item.pdf_link, pdf_link_s: item.pdf_link_s, pdf_link_por: item.pdf_link_por }
+    if (this.isMobile()) {
+      this.pdfModalOpen = true;
+    }
+  }
 
   
 }

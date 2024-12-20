@@ -1,13 +1,14 @@
-<ion-header [translucent]="true">
+<ion-header [translucent]="true" class="ion-no-border">
   <ion-toolbar>
     <ion-buttons slot="start" style="color: white">
-      <ion-menu-button></ion-menu-button>
+      <ion-back-button></ion-back-button>
     </ion-buttons>
     <ion-title style="color: white">Homework Management</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true" mode="ios">
+  <ion-toast [isOpen]="toast.open" [message]="toast.message" (ionDidDismiss)="toast.open=false" [color]="toast.color" duration="2000" ></ion-toast>
   <ion-grid fixed="true">
     <ion-row>
       <ion-col>
@@ -29,7 +30,8 @@
           mode="md"
           interface="popover"
           placeholder="Level"
-          [(ngModel)]="selectedLevel"
+      
+          (ionChange)="onLevelChange($event)"
         >
           @for (item of filteredLevel; track $index) {
           <ion-select-option [value]="item.name"
@@ -43,10 +45,12 @@
           mode="md"
           interface="popover"
           placeholder="Class"
-          [(ngModel)]="selectedClass"
+          [value]="selectedClass"
+          (ionChange)="onClassChange($event)"
+        
         >
           @for (item of filteredClass; track $index) {
-          <ion-select-option [value]="item.name"
+          <ion-select-option [value]="item"
             >{{item.name}}</ion-select-option
           >
           }
@@ -62,7 +66,8 @@
           </ion-item></ion-card
         >
 
-        } @for (item of filteredHomework; track $index) {
+        }
+         @for (item of filteredHomework; track $index) {
         <ion-card>
           <ion-item lines="none"> English Title:  {{item?.title}}</ion-item>
           <ion-item lines="none"
@@ -72,8 +77,8 @@
             >Portuguese Title: {{item?.title_p}}</ion-item
           >
           <ion-item lines="none"> 
-            <ion-chip>
-              {{(item?.is_exercise) ? 'Melody' : 'Excercise'}}
+            <ion-chip style="--background:white;">
+              {{(item?.is_exercise) ? 'Excercise' : 'Melody'}}
             </ion-chip>
           </ion-item>
           <ion-fab vertical="top" horizontal="end">
@@ -82,19 +87,88 @@
             </ion-fab-button>
             <ion-fab-list side="start">
               <ion-fab-button>
-                <ion-icon name="add-outline"></ion-icon>
+                <ion-icon name="add-outline" (click)="homework_modal=true; type='add'"></ion-icon>
               </ion-fab-button>
               <ion-fab-button>
-                <ion-icon name="pencil-outline"></ion-icon>
+                <ion-icon name="pencil-outline" (click)="homework_modal=true; new_homework=item; type='edit'"></ion-icon>
               </ion-fab-button>
               <ion-fab-button>
-                <ion-icon name="trash-bin-outline"></ion-icon>
+                <ion-icon name="trash-bin-outline" (click)="homework_modal=true; new_homework=item; type='delete'"></ion-icon>
               </ion-fab-button>
             </ion-fab-list>
           </ion-fab>
         </ion-card>
+        } @empty{
+          @if( class_selected){
+          <ion-card>
+            <ion-card-content>
+              <ion-item lines="none" style="--background:rgba(255, 255, 255, 0);">
+                <ion-label>Add Homework</ion-label>
+                <ion-button (click)="homework_modal=true; type='add'">
+                  <ion-icon name="add-outline"></ion-icon>
+                </ion-button>
+              </ion-item>
+            </ion-card-content>
+          </ion-card>
+          }
+
         }
       </ion-col>
     </ion-row>
   </ion-grid>
 </ion-content>
+
+
+<ion-modal [isOpen]="homework_modal" (didDismiss)="homework_modal=false">
+  <ng-template>
+    <ion-item>
+      <ion-label>
+        @if(type=='add'){
+        Add Homework
+        }@else if(type=='edit'){
+        Edit Homework
+        }@else{
+        Delete Homework
+        }
+
+        For {{selectedClass.name}} | {{selectedClass.id}} 
+      </ion-label>
+      <ion-icon name="close-outline" slot="end" (click)="homework_modal=false"></ion-icon>
+    </ion-item>
+    <ion-content>
+        <ion-card>
+           <ion-card-content>
+            @if(type=='add' || type=='edit'){   
+             <ion-item>
+              <ion-input placeholder="English Title" labelPlacement="stacked" [(ngModel)]="new_homework.title"></ion-input>
+             </ion-item>
+             <ion-item>
+              <ion-input placeholder="Spanish Title" labelPlacement="stacked" [(ngModel)]="new_homework.title_s"></ion-input>
+             </ion-item>
+             <ion-item>
+              <ion-input placeholder="Portuguese Title" labelPlacement="stacked" [(ngModel)]="new_homework.title_p"></ion-input>
+             </ion-item>
+             <ion-item>
+              <ion-label slot="start">Is Exercise</ion-label>
+              <ion-checkbox [checked]="new_homework.is_exercise" (ionChange)="checkbox_handler($event)" slot="end"></ion-checkbox>
+             </ion-item>
+             }@else{
+                    <ion-card>
+                       <ion-card-content>
+                         <ion-title>
+                           Are you sure you want to delete this homework?
+                         </ion-title>
+                       </ion-card-content>
+                    </ion-card>
+
+                    <ion-button expand="full" (click)="deleteHomework()">Delete</ion-button>
+             }
+         
+             @if(type=='add' || type=='edit'){
+             <ion-button expand="full"  (click)="addHomework()">{{type=='add' ? 'Add' : 'Edit'}}</ion-button>
+             }
+           </ion-card-content>
+        </ion-card>
+    </ion-content>
+  </ng-template>
+</ion-modal>

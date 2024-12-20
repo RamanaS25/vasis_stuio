@@ -8,7 +8,7 @@
 
     <ion-buttons slot="end">
        <ion-chip style="--background:white;">
-          User
+         {{user._user.name}}
        </ion-chip>
     </ion-buttons>
   </ion-toolbar>
@@ -68,6 +68,10 @@
                           student.initiated_name}}
                         </small>
                       </ul>
+                      
+                        @if(!finished) {
+                          <ion-icon slot="end" name="ellipse" [color]="(student.payment_status === 'paid') ? 'success' : (student.payment_status === 'warning') ? 'warning' : 'danger'"></ion-icon>
+                        }
                     </ion-item>
                      }
                
@@ -148,7 +152,7 @@
                           {{addOneDay(item.date)  | date: 'medium' : 'Asia/Kolkata' }} IST
                         </ion-chip>
               
-                       <ion-checkbox slot="end" [(ngModel)]="item.checked" (ionChange)="handlecheckbox($event,item)"></ion-checkbox>
+                       <ion-checkbox slot="end" [(ngModel)]="item.checked" (ionChange)="handlecheckbox($event,item, selected_user.id)"></ion-checkbox>
                      </ion-item>
  
                     }

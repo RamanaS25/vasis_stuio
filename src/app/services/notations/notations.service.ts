@@ -14,7 +14,8 @@ export class NotationsService {
       const { data, error } = await this.supabase
         .from('syllabus_classes')
         .select('id, name, pdf_link, level_id!inner(grade_id!inner(grade))')
-        .eq('level_id.grade_id.grade', grade);
+        .eq('level_id.grade_id.grade', grade)
+        .order('id', { ascending: true });
 
       if (error) {
         return {
@@ -43,11 +44,11 @@ export class NotationsService {
     }
   }
 
-  async updateNotationLink(notationId: number, newPdfLink: string) {
+  async updateNotationLink(notationId: number, updatedNotation: any) {
     try {
       const { data, error } = await this.supabase
         .from('syllabus_classes')
-        .update({ pdf_link: newPdfLink })
+        .update(updatedNotation)
         .eq('id', notationId)
         .select();
 

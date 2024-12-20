@@ -12,8 +12,8 @@ export class HomeworkmService {
     try {
       const { data, error } = await this.api.getClient()
         .from('syllabus_grades')
-        .select('grade, syllabus_levels(name, syllabus_classes(name, syllabus_homework(title_s, title_p, title, is_exercise, week_num)))')
-  
+        .select('grade, syllabus_levels(name, syllabus_classes(name, id, syllabus_homework(id,title_s, title_p, title, is_exercise, week_num)))')
+        
       if (error) {
         console.warn(error)
         return { success: false, error: error.message || 'Error fetching homework' }
@@ -37,11 +37,14 @@ export class HomeworkmService {
             name: level.name,
             classes: level.classes.map(classItem => ({
               name: classItem.name,
+              id: classItem.id,
               homework: classItem.homework
             }))
           }))
         }
       })
+
+      console.log('renamedData',renamedData)
   
       return { success: true, data: renamedData }
     } catch (error) {
@@ -49,14 +52,65 @@ export class HomeworkmService {
       return { success: false, error: 'Unexpected error fetching homework' }
     }
   }
+
+
+  async upsertHomework(homework:any): Promise<{success:boolean, data?:any, error?:string}> {
+    try {
+      const {data, error} = await this.api.getClient()
+        .from('syllabus_homework')
+        .upsert(homework)
+
+      if (error) {
+        console.warn(error)
+        return { success: false, error: error.message || 'Error upserting homework' }
+      }
+
+      return { success: true, data }
+    } catch (error) {
+      console.warn(error) 
+      return { success: false, error: 'Unexpected error upserting homework' }
+    }
+  }
+
+  async deleteHomework(id:string):Promise<{success:boolean, data?:any, error?:string}> {
+    try {
+      const {data, error} = await this.api.getClient()
+        .from('syllabus_homework')
+        .delete()
+        .eq('id', id)
+
+      if (error) {
+        console.warn(error)
+        return { success: false, error: error.message || 'Error deleting homework' }
+      }
+
+      return { success: true, data }
+    } catch (error) {
+      console.warn(error)
+      return { success: false, error: 'Unexpected error deleting homework' }
+    }
+  }
   
   
-  async get_groups_with_students_homework():Promise<{success:boolean, data?:any, error?:string}>{
+  async get_groups_with_students_homework(is_graded: boolean):Promise<{success:boolean, data?:any, error?:string}> {
     try {
       const { data, error } = await this.api.getClient()
         .from('student_groups')
-        .select('name, user_table!inner(legal_name, initiated_name, email, phone, id, student_homework!inner(*, syllabus_homework(title, is_exercise)))')
-        .not('user_table.student_homework', 'is', null)
+        .select(`
+          name,
+          user_table!inner(
+            legal_name,
+            initiated_name,
+            email,
+            phone,
+            id,
+            student_homework!inner(
+              *,
+              syllabus_homework(title, is_exercise)
+            )
+          )
+        `)
+        .eq('user_table.student_homework.graded', is_graded)
 
       if (error) {
         console.warn(error)
@@ -70,6 +124,25 @@ export class HomeworkmService {
       return { success: false, error: 'Unexpected error fetching groups data' }
     }
   }
-  
+
+  async submit_homework_grades(grades:any):Promise<{success:boolean, data?:any, error?:string}>{
+    try {
+      const {data, error} = await this.api.getClient()
+        .from('student_homework')
+        .update(grades) 
+        .eq('id', grades.id)
+
+      if (error) {
+        console.warn(error)
+        return { success: false, error: error.message || 'Error submitting grades' }
+      }
+
+      return { success: true, data }
+    } catch (error) {
+      console.warn(error)
+      return { success: false, error: 'Unexpected error submitting grades' }
+    }
+  }
+
 
 }

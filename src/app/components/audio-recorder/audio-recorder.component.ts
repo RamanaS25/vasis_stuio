@@ -1,17 +1,21 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, Input, OnInit, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { SupabaseService } from '../../services/api/supabase.service';  
+import { SupabaseService } from '../../services/api/supabase.service';
+import { IonNote, IonButton } from "@ionic/angular/standalone";
 
 @Component({
   selector: 'app-audio-recorder',
   templateUrl: './audio-recorder.component.html',
   styleUrls: ['./audio-recorder.component.scss'],
   standalone: true,
-  imports: [CommonModule]
+  imports: [IonButton, IonNote, CommonModule]
 })
 export class AudioRecorderComponent  {
   api = inject(SupabaseService)  
   supabase = this.api.getClient()
+
+  @Input() student_id:any
+  @Output() audio_url:any = new EventEmitter()
 
   private mediaRecorder: MediaRecorder | null = null;
   private audioChunks: Blob[] = [];
@@ -24,6 +28,8 @@ export class AudioRecorderComponent  {
 
   recordedBlob: Blob | null = null;
   isUploading = false;
+
+  is_uploaded = false
 
   ngOnInit() {}
 
@@ -43,7 +49,6 @@ export class AudioRecorderComponent  {
         const audioBlob = new Blob(this.audioChunks, { type: 'audio/webm' });
         this.audioUrl = URL.createObjectURL(audioBlob);
         this.recordedBlob = audioBlob;
-        this.uploadToSupabase();
       };
 
       this.mediaRecorder.start();
@@ -81,7 +86,7 @@ export class AudioRecorderComponent  {
     this.uploadProgress = 0;
     
     try {
-      const fileName = `audio_${Date.now()}.webm`;
+      const fileName = `audio_${Date.now()}_${this.student_id}.webm`;
       
       // Simulate upload progress (real progress tracking would require custom implementation)
       const progressInterval = setInterval(() => {
@@ -92,6 +97,7 @@ export class AudioRecorderComponent  {
 
       const { data, error } = await this.supabase.storage
         .from('audio-recordings')
+
         .upload(fileName, this.recordedBlob, {
           upsert: false
         });
@@ -105,11 +111,13 @@ export class AudioRecorderComponent  {
         .from('audio-recordings')
         .getPublicUrl(fileName);
 
+      this.audio_url.emit(publicUrl)
       console.log('Upload successful:', publicUrl);
     } catch (error) {
       console.error('Upload failed:', error);
     } finally {
       this.isUploading = false;
+      this.is_uploaded = true
     }
   }
 

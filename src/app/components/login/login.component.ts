@@ -2,34 +2,15 @@ import { Component, EventEmitter, inject, Input, OnInit, Output, output } from '
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {
-  IonContent,
-  IonHeader,
-  IonTitle,
   IonToolbar,
   IonButtons,
   IonButton,
-  IonModal,
-  IonIcon,
   IonList,
   IonItem,
   IonLabel,
   IonInput,
   IonChip,
-  IonGrid,
-  IonRow,
-  IonCol,
-  IonAccordion,
-  IonSegment,
-  IonSegmentButton,
-  IonAccordionGroup,
-  IonFab,
-  IonFabButton,
-  IonFabList,
-  IonSearchbar,
   IonProgressBar,
-  IonPopover,
-  IonSkeletonText,
-  IonCard,
   IonToast,
 } from '@ionic/angular/standalone';
 import { LoginService } from 'src/app/services/auth/login.service';
@@ -39,34 +20,15 @@ import { LoginService } from 'src/app/services/auth/login.service';
   styleUrls: ['./login.component.scss'],
   standalone: true,
   imports: [
-    IonContent,
-    IonHeader,
-    IonTitle,
     IonToolbar,
     IonButtons,
     IonButton,
-    IonModal,
-    IonIcon,
     IonList,
     IonItem,
     IonLabel,
     IonInput,
     IonChip,
-    IonGrid,
-    IonRow,
-    IonCol,
-    IonAccordion,
-    IonSegment,
-    IonSegmentButton,
-    IonAccordionGroup,
-    IonFab,
-    IonFabButton,
-    IonFabList,
-    IonSearchbar,
     IonProgressBar,
-    IonPopover,
-    IonSkeletonText,
-    IonCard,
     IonToast,
     CommonModule,
     FormsModule,
@@ -82,15 +44,18 @@ export class LoginComponent implements OnInit {
   @Output() _message = new EventEmitter<string>();
   signup_open = false;
   user = {
-    username: '',
+    user_name: '',
+    legal_name: '',
     initiated_name: '',
     password: '',
-    _password: '',
     email: '',
     phone: '',
-    lang_type: 'English',
+    language: 'English',
+    group_name: '0',
+    grade: 1,
+    is_registered: false,
   };
-
+  _password = '';
   loginOutput = output<boolean>();
   constructor() {}
 
@@ -118,7 +83,7 @@ export class LoginComponent implements OnInit {
 
 
   signUp() {
-    if (this.user.password !== this.user._password) {
+    if (this.user.password !== this._password) {
       this.open_toast = true;
       this.message = 'Passwords do not match';
       return;
@@ -142,6 +107,17 @@ export class LoginComponent implements OnInit {
         return;
       }
     });
+
+    this.api.register(this.user).then((res) => {
+      if(res.success){
+        this.open_toast = true;
+        this.message = 'Account created successfully';
+        this.signup_open = false;
+      }else{
+        this.open_toast = true;
+        this.message = res.error || 'An unexpected error occurred';
+      }
+    })
   }
 
   ngOnInit() {

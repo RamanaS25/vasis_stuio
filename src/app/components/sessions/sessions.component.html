@@ -1,23 +1,5 @@
-<ion-header [translucent]="true" class="ion-no-border">
-  <ion-toolbar>
- 
-    <ion-buttons slot="start">
-      <ion-menu-button></ion-menu-button>
-    </ion-buttons>
 
-    <ion-title>Zoom Sessions</ion-title>
-    <ion-buttons slot="end">
-      @if(auth._logged_in) 
-     {
-        <ion-chip style="--background: white" (click)="user_profile=true">
-          {{auth._user.user_name}}
-        </ion-chip>
-      }
-    </ion-buttons>
-  </ion-toolbar>
-</ion-header>
 
-<ion-content [fullscreen]="true">
    
   <ion-modal
   [isOpen]="user_profile"
@@ -42,6 +24,7 @@
 <ion-grid fixed="true">
    <ion-row>
      <ion-col>
+      <div class="session-card">
       <ion-card style="border-radius: 16px; --background:rgba(255, 255, 255, 0.678);">
         <ion-card-header>
            {{auth._user.student_groups.name}}
@@ -61,7 +44,7 @@
              
               @if(item.recorded_class === null) {
 
-                <ion-icon name="play-outline" slot="end"  [color]="'dark'" ></ion-icon>
+                <ion-icon name="play-outline" slot="end"  [color]="'success'" ></ion-icon>
                 
               } @else {
                 
@@ -78,7 +61,7 @@
 
         </ion-card-content>
       </ion-card>
- 
+      </div>
      </ion-col>
    </ion-row>
 </ion-grid>
@@ -87,6 +70,9 @@
 
   <ng-template>
      <ion-item>
+      <ion-label slot="start">
+        Recorded Video for Class {{selectedSession.week_num}}
+     </ion-label>
        <ion-icon name="close" (click)="watchVideo = false" slot="end" style="cursor: pointer;"></ion-icon>
      </ion-item>
 
@@ -97,11 +83,6 @@
               <app-youtube-player 
                 [videoUrl]="selectedSession.recorded_class">
               </app-youtube-player>
-              <ion-item>
-                <ion-label>
-                   Recorded Video for Class {{selectedSession.week_num}}
-                </ion-label>
-              </ion-item>
            </ion-col>
          </ion-row>
        </ion-grid>
@@ -112,4 +93,4 @@
 
 </ion-modal>
 
-</ion-content>
+

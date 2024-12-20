@@ -22,7 +22,7 @@
           
           <ion-item>
             <ion-select [(ngModel)]="selectedClass">
-              <ion-select-option *ngFor="let item of numbers" [value]="'Class '+item"> Class {{item}}</ion-select-option>
+              <ion-select-option *ngFor="let item of numbers" [value]=" 'Class ' + item"> Class {{item}}</ion-select-option>
             </ion-select>
           </ion-item> 
       
@@ -42,6 +42,10 @@
                     <ion-icon  name="cloud-upload" size="large" slot="end" (click)="selectedHomework = item; modalBool = true; type = 'cloud-upload'" [color]="item.student_homework.length > 0 ? 'success' : 'warning'" style="cursor: pointer"></ion-icon>
                   </ion-item>
 
+            }@empty {
+              <ion-item>
+                <ion-label>No homework found</ion-label>
+              </ion-item>
             }
           </ion-card>
         </ion-col>
@@ -59,7 +63,7 @@
         </ion-item>
         <ion-loading [isOpen]="video_upload_loading" message="Uploading Video..."></ion-loading>
 
-        <ion-content> 
+        <ion-content fullscreen="true"> 
 
           @if(type !== 'upload-selected'){
             <ion-card>
@@ -137,9 +141,23 @@
                     <ion-label>Pronunciation Score</ion-label>
                     <ion-badge slot="end" color="primary">{{selectedHomework_upload?.val_4}}</ion-badge>
                   </ion-item>
+
+                  <ion-item>  
+                    <ion-label>Average Score</ion-label>
+                    <ion-badge slot="end" color="primary">{{selectedHomework_upload?.avg}}</ion-badge>
+                  </ion-item>
                 </ion-list>
               </ion-card-content>
             </ion-card>
+
+            @if(selectedHomework_upload?.audio_url !== 'No Audio'){
+              <ion-card>
+                <ion-card-content>
+                  <audio [src]="selectedHomework_upload?.audio_url" controls></audio>
+                </ion-card-content>
+                
+              </ion-card>
+            }
 
             <app-mux-video-player [video_link]="selectedHomework_upload?.video_link"></app-mux-video-player>
           }
