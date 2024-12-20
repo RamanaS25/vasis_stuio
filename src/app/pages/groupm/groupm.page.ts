@@ -26,7 +26,20 @@ export class GroupmPage implements OnInit {
   api = inject(GroupManagementService);
   datePipe = inject(DatePipe)
   auth = inject(LoginService)
-  selectedItem!:Group
+  selectedItem:Group = {
+    name: '',
+    start_date: '',
+    end_date: '',
+    weeks: 0,
+    id: 0,
+    course_id: 0,
+    status: false,
+    zoom_link: '',
+    syllabus_grades: {
+      grade: 0
+    },
+    student_sessions: []
+  }
   groups:Group[] = []
   selectedView:string = 'Live Sessions'
 
