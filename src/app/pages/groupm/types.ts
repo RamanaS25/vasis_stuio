@@ -10,7 +10,7 @@ export interface Group {
     status: boolean;      // bool
     weeks: number;        // numeric
     zoom_link: string;    // varchar
-    student_sessions: StudentSession[];
+    student_sessions?: StudentSession[];
   }
   export interface StudentSession {
     id: number;              // int8
