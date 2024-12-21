@@ -62,7 +62,10 @@ ion-header {
   
   /* Ensure content below the header is not overlapped */
   ion-content {
-    --padding-top: 60px; /* Should match the header height */
+    --overflow: hidden;
+    height: 100vh;
+    height: -webkit-fill-available;
+    min-height: -webkit-fill-available;
   }
   
   /* For older browsers that don't support backdrop-filter */
