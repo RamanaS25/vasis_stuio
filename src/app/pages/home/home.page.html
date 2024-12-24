@@ -213,7 +213,7 @@
   </ng-template>
 </ion-modal>
 
-<ion-content [fullscreen]="true">
+<ion-content [fullscreen]="true" [scrollY]="true">
 
   @if(auth._logged_in && !auth._user.is_registered){
        <ion-card style="border-radius: 10px;">

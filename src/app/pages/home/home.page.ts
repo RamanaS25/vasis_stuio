@@ -31,7 +31,7 @@ import {
   IonToast, IonCardTitle } from '@ionic/angular/standalone';
 
 import { register } from 'swiper/element/bundle';
-import { YoutubePlayerComponent } from 'src/app/components/youtube-player/youtube-player.component';
+
 import { addIcons } from 'ionicons';
 import { LoginComponent } from 'src/app/components/login/login.component';
 import {
