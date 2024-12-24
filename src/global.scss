@@ -62,9 +62,13 @@ ion-header {
   
   /* Ensure content below the header is not overlapped */
   ion-content {
-    --overflow: hidden;
+    --overflow: auto;  // Changed from hidden to auto
     height: 100vh;
     height: -webkit-fill-available;
+  }
+  
+  ion-content::part(scroll) {
+    height: 100%;
     min-height: -webkit-fill-available;
   }
   
