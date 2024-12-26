@@ -68,7 +68,14 @@ export class HomeworkSubmissionPage implements OnInit {
     return this.filteredHomework().length;
   });
 
-  selectedHomework:Homework | null = null;
+  selectedHomework:Homework = {
+    id: '',
+    title: '',
+    title_s: '',
+    title_p: '',
+    is_exercise: false,
+    student_homework: []
+  };
 
   selectedClass = signal<string>('Class 1')
   
@@ -87,7 +94,8 @@ export class HomeworkSubmissionPage implements OnInit {
   constructor() {
      
       addIcons({albums,cloudUpload,closeOutline,chevronForward,arrowBack});
-
+     let x = this.video_api.getUploadUrl();
+     console.log('x',x)
    }
 
   onFileSelected(event: any): void {
@@ -105,14 +113,14 @@ export class HomeworkSubmissionPage implements OnInit {
     this.video_upload_loading = true;
     if (this.selectedFile) {
       try {
-        const res = await this.video_api.uploadToStorage(this.selectedFile);
-        this.uploadedUrl = res.data!;  // Set the public URL once uploaded
+        let video_url = await this.video_api.uploadVideo(this.selectedFile, this.auth._user.id, this.selectedHomework);
 
-        if(res.success && this.selectedHomework){
-          let response = await this.video_api.uploadVideo(res.data!, this.auth._user.id, this.selectedHomework);
-          console.log(response)
+        if(video_url.success && this.selectedHomework){
 
-          if(response.success){
+        
+          
+
+          if(video_url.success){
             this.toast('Video uploaded successfully', 'success');
             this.modalBool = false;
             this.getHomework(this.grade);
@@ -125,7 +133,7 @@ export class HomeworkSubmissionPage implements OnInit {
           }
 
          }else{
-          this.toast(res.error!, 'danger');
+          this.toast(video_url.error!, 'danger');
          }
 
          this.video_upload_loading = false;
@@ -169,6 +177,11 @@ export class HomeworkSubmissionPage implements OnInit {
      console.log('afasef',this.grade)
 
 
+  }
+
+  loghomework(){
+    console.log('homework',this.selectedHomework)
+    console.log('homework',this.selectedHomework_upload)
   }
 
 }

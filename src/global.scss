@@ -62,6 +62,7 @@ ion-header {
   
   /* Ensure content below the header is not overlapped */
   ion-content {
+    margin-top: 50px;
     --overflow: auto;  // Changed from hidden to auto
     height: 100vh;
     height: -webkit-fill-available;

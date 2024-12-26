@@ -15,82 +15,86 @@ export interface Homework {
 })
 export class MuxVideoService {
  api = inject(SupabaseService)
+ private upload_progress: number = 0
   constructor() { }
 
-  async uploadToStorage(file: File): Promise<{ success: boolean; data?: string; error?: string }> {
-    try {
-      console.log('Uploading video to storage...');
-  
-      // Upload the file to the specified storage bucket
-      const { data, error } = await this.api.getClient()
-        .storage
-        .from('videos') // Replace 'videos' with your actual storage bucket name
-        .upload(`videos/${file.name}`, file);
-  
-      if (error) {
-        console.error('Error uploading to storage:', error.message);
-        return { success: false, error: error.message }; // Return the error message
-      }
-  
-      console.log('Upload successful, fetching public URL...');
-  
-      // Get the public URL for the uploaded file
-      const { data: url } = this.api.getClient()
-        .storage
-        .from('videos')
-        .getPublicUrl(`videos/${file.name}`);
-  
-      if (!url) {
-        console.error('Failed to retrieve public URL for uploaded file.');
-        return { success: false, error: 'Failed to retrieve public URL.' }; // Handle case where URL is not returned
-      }
-  
-      return { success: true, data: url.publicUrl }; // Return the public URL
-    } catch (error) {
-      console.error('Error during upload to storage:', error);
-      return { success: false, error: 'error uploading video to supabase' }; // Return the error message
-    }
+  getUploadProgress(){
+    return this.upload_progress.toFixed(2)
   }
   
-
-  async uploadVideo(videoUrl: string, user_id: string, homework: Homework): Promise<{ success: boolean; data?: string; error?: string }> {
+  async uploadVideo(video:Blob, user_id: string, homework: Homework): Promise<{ success: boolean; data?: string; error?: string }> {
     try {
       console.log('Initiating video upload...');
   
-      // Call the edge function and await the result
-      const response = await this.api.getClient().functions.invoke('upload-video', {
-        body: { videoUrl: videoUrl, user_id: user_id }
-      });
+      // GET THE UPLOAD LINK FROM MUX
+      const urlData = await this.api.getClient().functions.invoke('upload-video');
   
       // Log the full response to the console
-      console.log('Upload response:', response);
+      console.log('Upload response:', urlData);
   
-      if (response.error) {
-        console.error('Error from function:', response.error.message);
-        return { success: false, error: response.error.message }; // Return the error message
+      if (urlData.error) {
+        console.error('Error getting Upload Link:');
+        return { success: false, error: 'Error getting Upload Link' }; // Return the error message
       } else {
-        console.log('Upload successful, playbackId:', response.data.uploadUrl.data.playback_ids[0].id);
+
+          // UPLOADING VIDEO TO MUX
+          const xhr = new XMLHttpRequest();
+          
+          // Create a promise to handle the upload
+          const uploadPromise = new Promise((resolve, reject) => {
+            xhr.upload.addEventListener('progress', (event) => {
+              if (event.lengthComputable) {
+                const percentComplete = (event.loaded / event.total) * 100;
+                console.log(`Upload progress: ${percentComplete.toFixed(2)}%`);
+                this.upload_progress = percentComplete
+              }
+            });
+
+            xhr.addEventListener('load', () => resolve(xhr.response));
+            xhr.addEventListener('error', () => reject(xhr.statusText));
+            
+            xhr.open('PUT', urlData.data.data.url);
+            xhr.setRequestHeader('Content-Type', video.type);
+            xhr.send(video);
+          });
+
+          await uploadPromise;
+
+          if(xhr.status !== 200){
+            return { success: false, error: 'Error Uploading Video' };
+          }
+    
+         // SAVE THE HOMEWORK TO THE DATABASE
+         console.log('uploading to database',homework)
+          const { data: homeworkData, error: homeworkError } = await this.api.getClient()
+          .from('student_homework')
+          .insert({
+            homework_id: homework.id, 
+            student_id: user_id,
+            upload_id: urlData.data.data.id,
+            status: 'pending'
+          });
+
+          if (homeworkError) {
+            console.error('Error from function:', homeworkError.message);
+            return { success: false, error: homeworkError.message }; // Return the error message
+          }
+
+          return { success: true, data: 'playback_id' };  
+
       }
 
-      // Save the homework to the database
-      const { data: homeworkData, error: homeworkError } = await this.api.getClient().from('student_homework').insert({
-        homework_id: homework.id, 
-        student_id: user_id,
-        video_link: response.data.uploadUrl.data.playback_ids[0].id
-      });
-
-      if (homeworkError) {
-        console.error('Error from function:', homeworkError.message);
-        return { success: false, error: homeworkError.message }; // Return the error message
-      }
-  
-      // Return the playback ID if the upload is successful
-      return { success: true, data: response.data.uploadUrl.data.playback_ids[0].id };
   
     } catch (error) {
       console.error('Error during upload:', error);
       return { success: false, error: 'error uploading video' }; // Return the error message
     }
+  }
+
+ async getUploadUrl(){
+   let x = await this.api.getClient().functions.invoke('upload-video');
+   console.log('x',x)
+   return x
   }
 
 

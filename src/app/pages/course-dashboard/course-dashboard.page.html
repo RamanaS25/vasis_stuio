@@ -29,23 +29,10 @@
 </ion-header>
 
 <ion-content [fullscreen]="true">
+  <br>
+  <br>
 <ion-toast [color]="color" [isOpen]="toastBool" [message]="message" position="top" duration="5000" (didDismiss)="toastBool = false"></ion-toast>
- <ion-modal
-  [isOpen]="profile_open"
-  (didDismiss)="profile_open = false"
-  style="
-    --border-radius: 10px;
-    backdrop-filter: blur(10px);
-    --background: linear-gradient(to bottom, #9290ff, #ff93fa);
-  "
->
-  <ng-template>
-    <app-profile
-      (profileOutput)="profile_open = !profile_open"
-      [profile_open]="profile_open"
-    ></app-profile>
-  </ng-template>
-</ion-modal>
+
    
   <ion-grid fixed="true">
      <ion-row>
@@ -105,3 +92,20 @@
   </ion-grid>
 
 </ion-content>
+
+<ion-modal
+[isOpen]="profile_open"
+(didDismiss)="profile_open = false"
+style="
+  --border-radius: 10px;
+  backdrop-filter: blur(10px);
+  --background: linear-gradient(to bottom, #9290ff, #ff93fa);
+"
+>
+<ng-template>
+  <app-profile
+    (profileOutput)="profile_open = !profile_open"
+    [profile_open]="profile_open"
+  ></app-profile>
+</ng-template>
+</ion-modal>

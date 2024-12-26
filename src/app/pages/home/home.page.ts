@@ -119,6 +119,11 @@ export class HomePage implements OnInit {
   payment_notification: boolean = false;
 
   selectedImageId!: number;
+
+  video_url1: SafeResourceUrl = '';
+  video_url2: SafeResourceUrl = '';
+  video_url3: SafeResourceUrl = '';
+  video_url4: SafeResourceUrl = '';
   constructor(
     
   ) {
@@ -160,10 +165,21 @@ export class HomePage implements OnInit {
       if (this.text?.[0]?.link) {
         this.link = this.text[0].link;
       }
+      this.sanitize_all_videos();
     } catch (error) {
       console.error('Error fetching home data:', error);
     }
   }
+  
+
+  sanitize_all_videos() {
+    this.text[0].video_id = this.sanitizeUrl('https://www.youtube.com/embed/' + this.text[0].video_id);
+    this.text[1].video_id = this.sanitizeUrl('https://www.youtube.com/embed/' + this.text[1].video_id);
+    this.text[2].video_id = this.sanitizeUrl('https://www.youtube.com/embed/' + this.text[2].video_id);
+    this.text[3].video_id = this.sanitizeUrl('https://www.youtube.com/embed/' + this.text[3].video_id);
+    console.log('sanitized videos', this.video_url1, this.video_url2, this.video_url3, this.video_url4);
+  }
+  
 
   _lang() {
     this.edit_text();
@@ -266,10 +282,12 @@ export class HomePage implements OnInit {
   }
 
   sanitizeUrl(url: string): SafeResourceUrl {
+    
     return this.sanitizer.bypassSecurityTrustResourceUrl(url);
   }
 
   ngOnInit() {
+
     console.log('HomePage initialized');
   }
 }

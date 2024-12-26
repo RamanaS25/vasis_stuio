@@ -8,6 +8,8 @@
   </ion-header>
 
   <ion-content [fullscreen]="true">
+    <br>
+    <br>
     <ion-toast [isOpen]="toastBool" [message]="message" [color]="color" position="top" duration="3000"></ion-toast>
    
     
@@ -58,7 +60,7 @@
             
             <ion-icon name="close-outline" slot="end" (click)="modalBool = false" style="cursor: pointer"></ion-icon>
         </ion-item>
-        <ion-loading [isOpen]="video_upload_loading" message="Uploading Video..."></ion-loading>
+        <ion-loading [isOpen]="video_upload_loading" [message]="'Uploading Video... ' + video_api.getUploadProgress() + '%'"></ion-loading>
 
         <ion-content fullscreen="true"> 
 
@@ -73,7 +75,7 @@
                 <ion-card-content>
                       @if(type === 'albums') {
                         @for (item of selectedHomework?.student_homework; track $index) {
-                          <ion-item button (click)="selectedHomework_upload = item; type = 'upload-selected'">
+                          <ion-item button (click)="selectedHomework_upload = item; loghomework(); type = 'upload-selected'">
                             <ion-label>{{item.created_at | date:'medium'}}</ion-label>
 
                             <ion-chip slot="end" [color]="item.graded ? 'primary' : 'warning'">
