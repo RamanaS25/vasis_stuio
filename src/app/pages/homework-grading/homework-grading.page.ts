@@ -7,13 +7,14 @@ import { MuxVideoPlayerComponent } from "../../components/mux-video-player/mux-v
 import { addIcons } from 'ionicons';
 import { arrowBackOutline, documentText, checkmarkCircle,arrowBack, logoWhatsapp } from 'ionicons/icons';
 import { AudioRecorderComponent } from "../../components/audio-recorder/audio-recorder.component";
+import { HeaderComponent } from "../../components/header/header.component";
 
 @Component({
   selector: 'app-homework-grading',
   templateUrl: './homework-grading.page.html',
   styleUrls: ['./homework-grading.page.scss'],
   standalone: true,
-  imports: [IonToggle, IonBadge, IonAvatar, IonList, IonCardSubtitle, IonCardTitle, IonTextarea, IonInput, IonLabel, IonIcon, IonButton, IonSkeletonText, IonNote, IonItem, IonCardContent, IonToast, IonBackButton, IonButtons, IonCardHeader, IonCard, IonGrid, IonRow, IonCol, IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule, MuxVideoPlayerComponent, IonRange, AudioRecorderComponent]
+  imports: [IonToggle, IonBadge, IonAvatar, IonList, IonCardSubtitle, IonCardTitle, IonTextarea, IonInput, IonLabel, IonIcon, IonButton, IonSkeletonText, IonNote, IonItem, IonCardContent, IonToast, IonBackButton, IonButtons, IonCardHeader, IonCard, IonGrid, IonRow, IonCol, IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule, MuxVideoPlayerComponent, IonRange, AudioRecorderComponent, HeaderComponent]
 })
 export class HomeworkGradingPage implements OnInit {
 api = inject(HomeworkmService)

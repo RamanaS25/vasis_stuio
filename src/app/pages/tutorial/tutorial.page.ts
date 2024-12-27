@@ -53,6 +53,7 @@ import {
   logoYoutube,
 } from 'ionicons/icons';
 import { LoginService } from 'src/app/services/auth/login.service';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 addIcons({
   checkmarkOutline: checkmarkOutline,
   storefrontOutline: storefrontOutline,
@@ -71,7 +72,6 @@ addIcons({
   standalone: true,
   imports: [
     IonMenuButton,
-    IonCardHeader,
     IonButtons,
     IonSegmentButton,
     IonSegment,
@@ -102,13 +102,14 @@ addIcons({
   ],
 })
 export class TutorialPage implements OnInit {
-  videoUrl = 'https://www.youtube.com/watch?v=QCO9VSj4h18'; 
+  videoUrl: SafeResourceUrl = ''; 
   api = inject(TutorialService);
   user = inject(LoginService)
   selectLang = 'ENG';
   tutorials: any;
   tutorials_text: any;
   group_names: any;
+
   video: any;
   _names: any;
   page_text: any;
@@ -126,9 +127,12 @@ export class TutorialPage implements OnInit {
   modal_open: boolean = false;
   open_video: boolean = false;
   _update: boolean = false;
+
+  sanitizer = inject(DomSanitizer);
   constructor() {
     this.getTutorials();
     this.getTutorials_text();
+    this.videoUrl = this.setVideoUrl('QCO9VSj4h18');
   }
 
   isMobile(): boolean {
@@ -170,12 +174,14 @@ export class TutorialPage implements OnInit {
     this.open_video = false;
     this.getTutorials();
   }
+
   async deleteVideo() {
     console.log(this.newVideo);
     let x = await this.api.deleteVideo(this.newVideo);
     this.open_video = false;
     this.getTutorials();
   }
+
   getTutorials() {
     let x = this.api.getTutorials();
     x.then((result) => {
@@ -192,12 +198,22 @@ export class TutorialPage implements OnInit {
     });
   }
 
+  setVideoUrl(id: string): SafeResourceUrl {
+    return  this.sanitizer.bypassSecurityTrustResourceUrl('https://www.youtube-nocookie.com/embed/' + id);
+  }
+
   getTutorials_text() {
     let x = this.api.getTutorial_text();
     x.then((result) => {
       if (result.success) {
         this.tutorials_text = result.data;
-        this.video = this.tutorials_text[0];
+        let x = this.tutorials_text[0];
+        this.video = {
+          video_id: this.sanitizeUrl('https://www.youtube-nocookie.com/embed/' + x.video_id),
+          title_e: x.video_title_e,
+          title_s: x.video_title_s,
+          title_p: x.video_title_p,
+        };
         console.log(this.tutorials_text);
       } else {
         console.error(result.error);
@@ -205,11 +221,17 @@ export class TutorialPage implements OnInit {
     });
   }
 
+  sanitizeUrl(url: string): SafeResourceUrl {
+    
+    return this.sanitizer.bypassSecurityTrustResourceUrl(url);
+  }
+
   group_name() {
     let array: any = [];
     switch (this.selectLang) {
       case 'ENG':
         array = this.tutorials.map((element: { group_title_e: any }) => {
+
           return element.group_title_e;
         });
         break;
@@ -244,7 +266,7 @@ export class TutorialPage implements OnInit {
               id: element.id,
               title: element.title_e,
               group_title: element.group_title_e,
-              video_id: element.video_id,
+              video_id: this.setVideoUrl(element.video_id),
               order_number: element.order_number,
             };
           }
@@ -263,7 +285,7 @@ export class TutorialPage implements OnInit {
               id: element.id,
               title: element.title_s,
               group_title: element.group_title_s,
-              video_id: element.video_id,
+              video_id: this.setVideoUrl(element.video_id),
               order_number: element.order_number,
             };
           }
@@ -282,7 +304,7 @@ export class TutorialPage implements OnInit {
               id: element.id,
               title: element.title_p,
               group_title: element.group_title_p,
-              video_id: element.video_id,
+              video_id: this.setVideoUrl(element.video_id),
               order_number: element.order_number,
             };
           }
@@ -291,6 +313,7 @@ export class TutorialPage implements OnInit {
     }
     this._names = array;
   }
+
   text() {
     let array: any = [];
     switch (this.selectLang) {

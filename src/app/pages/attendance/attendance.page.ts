@@ -5,6 +5,7 @@ import { IonContent, IonHeader, IonTitle, IonToolbar, IonSelect, IonSelectOption
 import { AttendenceService } from './attendence.service';
 import { checkmarkOutline, closeOutline } from 'ionicons/icons';
 import { addIcons } from 'ionicons';
+import { HeaderComponent } from "../../components/header/header.component";
 
 interface Session {
   id: number;
@@ -31,10 +32,10 @@ interface Group {
   templateUrl: './attendance.page.html',
   styleUrls: ['./attendance.page.scss'],
   standalone: true,
-  imports: [IonBackButton, IonButtons, 
-    IonContent, 
-    IonHeader, 
-    IonTitle, 
+  imports: [IonBackButton, IonButtons,
+    IonContent,
+    IonHeader,
+    IonTitle,
     IonToolbar,
     IonSelect,
     IonSelectOption,
@@ -46,9 +47,8 @@ interface Group {
     IonIcon,
     IonItem,
     IonLabel,
-    CommonModule, 
-    FormsModule
-  ]
+    CommonModule,
+    FormsModule, HeaderComponent]
 })
 export class AttendancePage implements OnInit {
   private attendanceService = inject(AttendenceService);

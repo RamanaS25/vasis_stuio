@@ -20,6 +20,7 @@ import {
 import { Router } from '@angular/router';
 import { ProfileComponent } from 'src/app/components/profile/profile.component';
 import { LoginService } from 'src/app/services/auth/login.service';
+import { HeaderComponent } from "../../components/header/header.component";
 @Component({
   selector: 'app-management-dashboard',
   templateUrl: './management-dashboard.page.html',
@@ -43,7 +44,8 @@ import { LoginService } from 'src/app/services/auth/login.service';
     IonMenuButton,
     FormsModule,
     ProfileComponent,
-  ],
+    HeaderComponent
+],
 })
 export class ManagementDashboardPage implements OnInit {
   auth = inject(LoginService);

@@ -8,6 +8,7 @@ import { addIcons } from 'ionicons';
 import { closeOutline, albums, cloudUpload, chevronForward, arrowBack } from 'ionicons/icons';
 import { MuxVideoPlayerComponent } from "../../components/mux-video-player/mux-video-player.component";
 import { ActivatedRoute } from '@angular/router';
+import { HeaderComponent } from "../../components/header/header.component";
 
 @Component({
   selector: 'app-homework-submission',
@@ -16,7 +17,7 @@ import { ActivatedRoute } from '@angular/router';
   standalone: true,
   imports: [
     IonButtons,
-    IonCardHeader, 
+    IonCardHeader,
     IonIcon,
     IonCardContent,
     IonList,
@@ -27,7 +28,7 @@ import { ActivatedRoute } from '@angular/router';
     IonToast,
     IonCard,
     IonCol,
-    IonRow, 
+    IonRow,
     IonGrid,
     IonInput,
     IonButton,
@@ -43,8 +44,9 @@ import { ActivatedRoute } from '@angular/router';
     IonLoading,
     IonChip,
     IonBackButton,
-    MuxVideoPlayerComponent
-  ],
+    MuxVideoPlayerComponent,
+    HeaderComponent
+],
 
 })
 export class HomeworkSubmissionPage implements OnInit {

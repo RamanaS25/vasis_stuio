@@ -1,11 +1,4 @@
-<ion-header [translucent]="true" class="ion-no-border">
-  <ion-toolbar>
-    <ion-buttons slot="start" style="color: white">
-      <ion-back-button></ion-back-button>
-    </ion-buttons>
-    <ion-title style="color: white">Homework Management</ion-title>
-  </ion-toolbar>
-</ion-header>
+<app-header [header]="'Homework Management'"></app-header>
 
 <ion-content [fullscreen]="true" mode="ios">
   <ion-toast [isOpen]="toast.open" [message]="toast.message" (ionDidDismiss)="toast.open=false" [color]="toast.color" duration="2000" ></ion-toast>

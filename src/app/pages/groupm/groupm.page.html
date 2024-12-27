@@ -1,20 +1,5 @@
 
-<ion-header [translucent]="true" class="ion-no-border">
-  <ion-toolbar>
-    <ion-buttons slot="start">
-      <ion-back-button></ion-back-button>
-      
-    </ion-buttons>
-
-    <ion-title style="color: aliceblue;">Group Management</ion-title>
-
-    <ion-buttons slot="end">
-      <ion-chip style="--background:white; color:black;" (click)="is_profile_open = true">
-        {{auth._user?.user_name}}
-      </ion-chip>
-    </ion-buttons>
-  </ion-toolbar>
-</ion-header>
+<app-header [header]="'Group Management'"></app-header>
 
 <ion-content [fullscreen]="true">
 

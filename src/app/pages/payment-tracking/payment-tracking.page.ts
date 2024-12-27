@@ -6,13 +6,14 @@ import { PaymentTrackingService } from 'src/app/services/payment/payment-trackin
 import { add, arrowForwardOutline, ellipse } from 'ionicons/icons';
 import { addIcons } from 'ionicons';
 import { LoginService } from 'src/app/services/auth/login.service';
+import { HeaderComponent } from "../../components/header/header.component";
 addIcons({ellipse,add, arrowForwardOutline})
 @Component({
   selector: 'app-payment-tracking',
   templateUrl: './payment-tracking.page.html',
   styleUrls: ['./payment-tracking.page.scss'],
   standalone: true,
-  imports: [IonIcon, IonToast, IonText, IonButtons,IonMenuButton, IonBadge, IonCheckbox, IonChip, IonLabel, IonCardSubtitle, IonCardTitle, IonToggle, IonCardHeader, IonSearchbar, IonCard, IonCardContent, IonList, IonSkeletonText, IonItem, IonGrid, IonRow, IonCol, IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule, IonSelectOption, IonSelect]
+  imports: [IonIcon, IonToast, IonText, IonButtons, IonMenuButton, IonBadge, IonCheckbox, IonChip, IonLabel, IonCardSubtitle, IonCardTitle, IonToggle, IonCardHeader, IonSearchbar, IonCard, IonCardContent, IonList, IonSkeletonText, IonItem, IonGrid, IonRow, IonCol, IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule, IonSelectOption, IonSelect, HeaderComponent]
 })
 export class PaymentTrackingPage implements OnInit {
   api = inject(PaymentTrackingService)

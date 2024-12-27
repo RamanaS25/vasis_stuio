@@ -1,11 +1,4 @@
-<ion-header [translucent]="true" class="ion-no-border">
-  <ion-toolbar>
-    <ion-buttons slot="start">
-      <ion-back-button></ion-back-button>
-    </ion-buttons>
-    <ion-title>Homework Grading</ion-title>
-  </ion-toolbar>
-</ion-header>
+<app-header [header]="'Homework Grading'"></app-header>
 
 <ion-content [fullscreen]="true">
   <ion-toast [isOpen]="toast.isOpen" position="top" [message]="toast.message" [color]="toast.color" (didDismiss)="toast.isOpen = false" duration="3000"></ion-toast>

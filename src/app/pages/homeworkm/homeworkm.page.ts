@@ -38,13 +38,14 @@ import {
   IonIcon,
   IonFabList, IonChip, IonModal, IonToast, IonCardContent, IonButton, IonInput, IonCheckbox, IonBackButton } from '@ionic/angular/standalone';
 import { HomeworkmService } from 'src/app/services//homeworkm/homeworkm.service';
+import { HeaderComponent } from "../../components/header/header.component";
 
 @Component({
   selector: 'app-homeworkm',
   templateUrl: './homeworkm.page.html',
   styleUrls: ['./homeworkm.page.scss'],
   standalone: true,
-  imports: [IonBackButton, IonButton, IonCardContent, IonToast, IonModal, IonChip, 
+  imports: [IonBackButton, IonButton, IonCardContent, IonToast, IonModal, IonChip,
     IonFabList,
     IonIcon,
     IonFabButton,
@@ -66,8 +67,7 @@ import { HomeworkmService } from 'src/app/services//homeworkm/homeworkm.service'
     FormsModule,
     IonMenuButton,
     IonInput,
-    IonCheckbox
-  ],
+    IonCheckbox, HeaderComponent],
 })
 export class HomeworkmPage implements OnInit {
   selectedGrade = 1;

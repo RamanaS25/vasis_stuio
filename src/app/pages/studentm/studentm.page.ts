@@ -23,13 +23,14 @@ import {
   IonToast, IonChip, IonBackButton } from '@ionic/angular/standalone';
 import { StudentManagementService } from 'src/app/services/student/student-management.service';
 import { LoginService } from 'src/app/services/auth/login.service';
+import { HeaderComponent } from "../../components/header/header.component";
 
 @Component({
   selector: 'app-studentm',
   templateUrl: './studentm.page.html',
   styleUrls: ['./studentm.page.scss'],
   standalone: true,
-  imports: [IonBackButton, IonChip, 
+  imports: [IonBackButton, IonChip,
     IonToast,
     IonSkeletonText,
     IonToggle,
@@ -51,8 +52,7 @@ import { LoginService } from 'src/app/services/auth/login.service';
     IonToolbar,
     CommonModule,
     FormsModule,
-    IonBackButton,
-  ],
+    IonBackButton, HeaderComponent],
 })
 export class StudentmPage implements OnInit {
   studentApi = inject(StudentManagementService);

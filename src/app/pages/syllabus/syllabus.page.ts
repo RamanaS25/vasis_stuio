@@ -9,6 +9,7 @@ import { ShortVideosService } from 'src/app/services/short-videos/short-videos.s
 import { LoginService } from 'src/app/services/auth/login.service';
 import { ProfileComponent } from 'src/app/components/profile/profile.component';
 import { ActivatedRoute } from '@angular/router';
+import { HeaderComponent } from "../../components/header/header.component";
 
 addIcons({lockClosed, ellipseOutline, addOutline, closeOutline, createOutline, ellipse})
 
@@ -17,7 +18,7 @@ addIcons({lockClosed, ellipseOutline, addOutline, closeOutline, createOutline, e
   templateUrl: './syllabus.page.html',
   styleUrls: ['./syllabus.page.scss'],
   standalone: true,
-  imports: [IonBackButton, IonCardSubtitle, ProfileComponent,IonToast, IonButton, IonSelect, IonSelectOption, IonModal, IonCheckbox, IonInput, IonIcon, IonRow, IonGrid, IonChip, IonCardContent, IonItem, IonCardHeader,IonMenuButton, IonLabel, IonCard, IonCol, IonAccordion, IonAccordionGroup, IonButtons, IonButtons, IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule, VimeoPlayerComponent, IonSkeletonText],
+  imports: [IonBackButton, IonCardSubtitle, ProfileComponent, IonToast, IonButton, IonSelect, IonSelectOption, IonModal, IonCheckbox, IonInput, IonIcon, IonRow, IonGrid, IonChip, IonCardContent, IonItem, IonCardHeader, IonMenuButton, IonLabel, IonCard, IonCol, IonAccordion, IonAccordionGroup, IonButtons, IonButtons, IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule, VimeoPlayerComponent, IonSkeletonText, HeaderComponent],
 })
 export class SyllabusPage implements OnInit {
   route = inject(ActivatedRoute)

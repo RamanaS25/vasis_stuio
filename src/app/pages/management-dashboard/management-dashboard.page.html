@@ -1,17 +1,4 @@
-<ion-header [translucent]="true" class="ion-no-border">
-  <ion-toolbar>
-    <ion-buttons slot="start">
-      <ion-menu-button></ion-menu-button>
-    </ion-buttons>
-    <ion-title>Management Dashboard</ion-title>
-
-    <ion-buttons slot="end">
-      <ion-chip style="--background: white" (click)="profile_open=true">
-        {{auth._user.user_name}}
-      </ion-chip>
-    </ion-buttons>
-  </ion-toolbar>
-</ion-header>
+<app-header [header]="'Management Dashboard'"></app-header>
 
 <ion-modal
   [isOpen]="profile_open"

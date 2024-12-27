@@ -1,95 +1,66 @@
-<ion-header [translucent]="true" class="ion-no-border">
-  <ion-toolbar>
-    @if(course_selected) {
-      <ion-buttons slot="start">
-        <ion-button (click)="course_selected = false">
-           <ion-icon name="arrow-back-outline" size="large" ></ion-icon>
-          
-        </ion-button>
-      </ion-buttons>
-    }@else {
-      <ion-buttons slot="start">
-        <ion-menu-button></ion-menu-button>
-     </ion-buttons>
-    }
- 
+<app-header [header]="'Course Dashboard'"></app-header>
 
-    <ion-title style="color: white;">Course Dashboard</ion-title>
+<ion-content [fullscreen]="true" class="ion-padding">
 
-    <ion-buttons slot="end">
-      @if(auth._logged_in){
-        <ion-chip style="--background:white;" (click)="profile_open = true">
-          {{auth._user.user_name}}
-         </ion-chip>
-       }
-       
-    </ion-buttons>
+    <ion-toast [color]="color" [isOpen]="toastBool" [message]="message" position="top" duration="5000" (didDismiss)="toastBool = false"></ion-toast>
 
-  </ion-toolbar>
-</ion-header>
+      
+      <ion-grid fixed="true">
+        <ion-row>
+          <ion-col>
 
-<ion-content [fullscreen]="true">
-  <br>
-  <br>
-<ion-toast [color]="color" [isOpen]="toastBool" [message]="message" position="top" duration="5000" (didDismiss)="toastBool = false"></ion-toast>
-
-   
-  <ion-grid fixed="true">
-     <ion-row>
-       <ion-col>
-
-        @if (!course_selected) {
-        <div class="course-grid">
-          <ion-card (click)="course_selected = true" class="special-card">
-            <ion-card-content class="ion-text-center">
-              <ion-text>Harmonium Course</ion-text>
-            </ion-card-content>
-          </ion-card>
-
-          <ion-card class="coming-soon">
-            <ion-card-content class="ion-text-center">
-              <ion-text>Coming Soon</ion-text>
-            </ion-card-content>
-          </ion-card>
-        </div>
-        
-         }@else {
-          <ion-segment  [(ngModel)]="selectedModule" mode="ios">
-            @for (item of modules; track $index) {
-              <ion-segment-button [value]="item">  
-                <ion-label   >{{item.title}}</ion-label>
-              </ion-segment-button>
-            }
-          </ion-segment>
-          @if (selectedModule.title != 'Sessions') {
-          <ion-card style="border-radius: 10px;">
-            <ion-card-header>
-              <ion-card-title>{{selectedModule.title}}</ion-card-title>
-            </ion-card-header>
-            <ion-card-content>
-        
-                @for (item of selectedModule.components; track $index) {
-                  <ion-item detail="false" lines="none" style="border-radius: 10px; margin-bottom: 10px; --background:rgb(237, 213, 253);" (click)="navigateTo(selectedModule.link, item)" detail="true" button>
-                    <ion-label>{{item}}</ion-label>
-
-                    @if (auth._user.grade < this.getNavigationParam(item) && !auth._user.is_admin) {  
-                    <ion-icon slot="end" name="lock-closed" color="danger" ></ion-icon>
-                    }
-
-                  </ion-item>
-                }
-          
-            </ion-card-content>
+            @if (!course_selected) {
+            <div class="course-grid">
+              <ion-card (click)="course_selected = true" class="special-card">
+                <ion-card-content class="ion-text-center">
+                  <ion-text>Harmonium Course</ion-text>
+                </ion-card-content>
               </ion-card>
-            } @else {
-              <app-sessions></app-sessions>
-            }
-          }
-        
 
-       </ion-col>
-     </ion-row>
-  </ion-grid>
+              <ion-card class="coming-soon">
+                <ion-card-content class="ion-text-center">
+                  <ion-text>Coming Soon</ion-text>
+                </ion-card-content>
+              </ion-card>
+            </div>
+            
+            }@else {
+              <ion-segment  [(ngModel)]="selectedModule" mode="ios">
+                @for (item of modules; track $index) {
+                  <ion-segment-button [value]="item">  
+                    <ion-label   >{{item.title}}</ion-label>
+                  </ion-segment-button>
+                }
+              </ion-segment>
+              @if (selectedModule.title != 'Sessions') {
+              <ion-card style="border-radius: 10px;">
+                <ion-card-header>
+                  <ion-card-title>{{selectedModule.title}}</ion-card-title>
+                </ion-card-header>
+                <ion-card-content>
+            
+                    @for (item of selectedModule.components; track $index) {
+                      <ion-item detail="false" lines="none" style="border-radius: 10px; margin-bottom: 10px; --background:rgb(237, 213, 253);" (click)="navigateTo(selectedModule.link, item)" detail="true" button>
+                        <ion-label>{{item}}</ion-label>
+
+                        @if (auth._user.grade < this.getNavigationParam(item) && !auth._user.is_admin) {  
+                        <ion-icon slot="end" name="lock-closed" color="danger" ></ion-icon>
+                        }
+
+                      </ion-item>
+                    }
+              
+                </ion-card-content>
+                  </ion-card>
+                } @else {
+                  <app-sessions></app-sessions>
+                }
+              }
+            
+
+          </ion-col>
+        </ion-row>
+      </ion-grid>
 
 </ion-content>
 

@@ -9,11 +9,13 @@ export class NotationsService {
   supabase = this.api.getClient()
   constructor() { }
 
-   async getNotations(grade:number) {
+   async getNotations(grade:number, group_name:string) {
+    console.log('group_name', group_name)
     try {
       const { data, error } = await this.supabase
         .from('syllabus_classes')
-        .select('id, name, pdf_link, level_id!inner(grade_id!inner(grade))')
+        .select('id, name, pdf_link, level_id!inner(grade_id!inner(grade)), student_sessions(session_date, group_name)')
+        .eq('student_sessions.group_name', group_name)
         .eq('level_id.grade_id.grade', grade)
         .order('id', { ascending: true });
 
@@ -44,6 +46,8 @@ export class NotationsService {
       };
     }
   }
+
+
 
   async updateNotationLink(notationId: number, updatedNotation: any) {
     try {

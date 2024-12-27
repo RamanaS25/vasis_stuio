@@ -1,18 +1,4 @@
-<ion-header [translucent]="true" class="ion-no-border">
-  <ion-toolbar>
-
-    <ion-buttons slot="start">
-      <ion-menu-button></ion-menu-button>
-    </ion-buttons>
-    <ion-title>Payment Tracking</ion-title>
-
-    <ion-buttons slot="end">
-       <ion-chip style="--background:white;">
-         {{user._user.name}}
-       </ion-chip>
-    </ion-buttons>
-  </ion-toolbar>
-</ion-header>
+<app-header [header]="'Payment Tracking'"></app-header>
 
 <ion-content [fullscreen]="true">
   <ion-toast [message]="message" [color]="color" [duration]="3000" [isOpen]="toastBool" (didDismiss)="toastBool = false" position="top"></ion-toast>

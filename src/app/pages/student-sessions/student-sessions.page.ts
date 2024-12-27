@@ -8,13 +8,14 @@ import { LoginService } from 'src/app/services/auth/login.service';
 import { ProfileComponent } from 'src/app/components/profile/profile.component';
 import { addIcons } from 'ionicons';
 import { play, link, playOutline, close } from 'ionicons/icons';
+import { HeaderComponent } from "../../components/header/header.component";
 addIcons({play,link});
 @Component({
   selector: 'app-student-sessions',
   templateUrl: './student-sessions.page.html',
   styleUrls: ['./student-sessions.page.scss'],
   standalone: true,
-  imports: [IonCardHeader, IonButtons,ProfileComponent, IonCardContent, IonToast,IonMenuButton, IonModal, YoutubePlayerComponent, IonLabel, IonItem, IonIcon, IonChip, IonText, IonCard, IonRow, IonCol, IonGrid, IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule]
+  imports: [IonCardHeader, IonButtons, ProfileComponent, IonCardContent, IonToast, IonMenuButton, IonModal, YoutubePlayerComponent, IonLabel, IonItem, IonIcon, IonChip, IonText, IonCard, IonRow, IonCol, IonGrid, IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule, HeaderComponent]
 })
 export class StudentSessionsPage implements OnInit {
 auth = inject(LoginService)

@@ -8,6 +8,7 @@ import { Router } from '@angular/router';
 import { LoginService } from 'src/app/services/auth/login.service';
 import { ProfileComponent } from 'src/app/components/profile/profile.component';
 import { SessionsComponent } from "../../components/sessions/sessions.component";
+import { HeaderComponent } from "../../components/header/header.component";
 
 addIcons({add, arrowBackOutline});
 @Component({
@@ -15,7 +16,7 @@ addIcons({add, arrowBackOutline});
   templateUrl: './course-dashboard.page.html',
   styleUrls: ['./course-dashboard.page.scss'],
   standalone: true,
-  imports: [IonToast, IonModal, ProfileComponent, IonList, IonCardTitle, IonSegmentButton, IonSegment, IonProgressBar, IonLabel, IonButton, IonIcon, IonItem, IonCardHeader, IonCard, IonCardContent, IonText, IonRow, IonCol, IonGrid, IonButtons, IonChip, IonContent, IonHeader, IonTitle, IonToolbar, IonMenuButton, CommonModule, FormsModule, SessionsComponent]
+  imports: [IonToast, IonModal, ProfileComponent, IonList, IonCardTitle, IonSegmentButton, IonSegment, IonProgressBar, IonLabel, IonButton, IonIcon, IonItem, IonCardHeader, IonCard, IonCardContent, IonText, IonRow, IonCol, IonGrid, IonButtons, IonChip, IonContent, IonHeader, IonTitle, IonToolbar, IonMenuButton, CommonModule, FormsModule, SessionsComponent, HeaderComponent]
 })
 export class CourseDashboardPage implements OnInit {
   course_selected = false

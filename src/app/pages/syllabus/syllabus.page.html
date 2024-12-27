@@ -1,45 +1,4 @@
-<ion-header [translucent]="true" class="ion-no-border">
-  <ion-toolbar>
-    <ion-buttons slot="start">
-      <ion-back-button></ion-back-button>
-    </ion-buttons>
-    <ion-title style="color: white;">Short Videos</ion-title>
-
-    <ion-buttons slot="end">
-       
-      <ion-select
-      placeholder="Voice Scale"
-      (ionChange)="voiceScaleChange($event)"
-      [value]="auth._user.voice_scale"
-
-      >
-
-      <ion-select-option value="W1">W1</ion-select-option>
-      <ion-select-option value="B1">B1</ion-select-option>
-      <ion-select-option value="B4">B4</ion-select-option>
-      <ion-select-option value="B5">B5</ion-select-option>
-    </ion-select>   
-
-</ion-buttons>
-
-    <ion-buttons slot="end">
-
-     @if(auth._logged_in) {
-
-      <ion-chip slot="end" style="--background:white;" (click)="profile_open = true" a-m>
-        {{auth._user.user_name}}
-      </ion-chip>
-     }
-
-     
-      
-    </ion-buttons>
-
-  
-
-  </ion-toolbar>
-
-</ion-header>
+<app-header [header]="'Syllabus'"></app-header>
 
 
 <ion-content [fullscreen]="true">

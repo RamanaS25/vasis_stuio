@@ -5,16 +5,17 @@ import { IonContent, IonHeader, IonTitle, IonBackButton, IonToolbar, IonButtons,
 import { ActivatedRoute } from '@angular/router';
 import { NotationsService } from 'src/app/services/notations/notations.service';
 import { addIcons } from 'ionicons';
-import { linkOutline, createOutline, closeOutline, documentTextOutline, eyeOutline } from 'ionicons/icons';
+import { linkOutline, createOutline, closeOutline, documentTextOutline, eyeOutline,lockClosed } from 'ionicons/icons';
 import { SafeUrlPipe } from "../../pipes/safe/safe-url.pipe";
 import { LoginService } from 'src/app/services/auth/login.service';
-addIcons({linkOutline});
+import { HeaderComponent } from "../../components/header/header.component";
+addIcons({linkOutline, lockClosed});
 @Component({
   selector: 'app-notations',
   templateUrl: './notations.page.html',
   styleUrls: ['./notations.page.scss'],
   standalone: true,
-  imports: [ IonToast, IonButton, IonCard, IonCardContent, IonInput, IonModal, IonIcon, IonItem, IonCol, IonGrid, IonRow, IonButtons, IonBackButton, IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule, SafeUrlPipe]
+  imports: [IonToast, IonButton, IonCard, IonCardContent, IonInput, IonModal, IonIcon, IonItem, IonCol, IonGrid, IonRow, IonButtons, IonBackButton, IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule, SafeUrlPipe, HeaderComponent]
 })
 export class NotationsPage implements OnInit {
   auth = inject(LoginService)
@@ -38,7 +39,7 @@ export class NotationsPage implements OnInit {
   newPdfLinks = { pdf_link: '', pdf_link_s: '', pdf_link_por: '' }
 
   constructor() {
-      addIcons({documentTextOutline,linkOutline,createOutline,closeOutline,eyeOutline}); }
+      addIcons({eyeOutline,lockClosed,createOutline,closeOutline,documentTextOutline,linkOutline}); }
 
   isMobile() {
     return this.platform.is('mobile') || this.platform.width() < 768;
@@ -67,11 +68,11 @@ export class NotationsPage implements OnInit {
   }
   
   async getNotations(grade:number){
-    const result = await this._notations.getNotations(grade);
+    console.log('group_name', this.auth._user)
+    const result = await this._notations.getNotations(grade, this.auth._user.student_groups.name);
 
     if (result.success) {
       // Use result.data
-      console.log(result.data)
       this.notations = result.data;
       this.selectedClass = this.notations[0]
       
@@ -114,7 +115,36 @@ export class NotationsPage implements OnInit {
     }
   }
 
+  
+  isPdfLocked(session:any){
+    if(session?.session_date){
+      let session_date = session.session_date
+      const today = new Date();
+      const sessionDate = new Date(session_date);
+      const twoDaysFromNow = new Date();
+      twoDaysFromNow.setDate(today.getDate() + 2);
+      return sessionDate < twoDaysFromNow;
+    } else {
+      if(this.auth._user.grade >= this.grade){
+        return true
+      } 
+    }
+    return false
+  }
+
+  getSessionDate(session_date:string){
+    console.log('session_date', session_date)
+    const sessionDate = new Date(session_date);
+    return sessionDate.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+  }
+
   handlePdfView(item: any) {
+    if(this.isPdfLocked(item.student_sessions.session_date)){
+      if(this.auth._user.grade < this.grade){
+        this.toast(`This Pdf Will be Available 2 days before ${item.student_sessions.session_date}`,'warning')
+        return
+      }
+    }
     this.selectedClass = item;
     this.newPdfLinks = { pdf_link: item.pdf_link, pdf_link_s: item.pdf_link_s, pdf_link_por: item.pdf_link_por }
     if (this.isMobile()) {

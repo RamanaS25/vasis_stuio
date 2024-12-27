@@ -9,12 +9,14 @@ export class LoginService {
   api = inject(SupabaseService)
   supabase = this.api.getClient()
   private user:any
+  user_language:string = 'English'
   private logged_in:boolean = false
   constructor() { }
 
   get _user() {
     return this.user;
   }
+  
   get _logged_in() {
     return this.logged_in;
   }
@@ -87,6 +89,7 @@ export class LoginService {
           }
 
           this.logged_in = true
+          this.user_language = data[0].language
           return {
             success: true,
             message: 'Logged in successfully'

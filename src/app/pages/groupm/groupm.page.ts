@@ -10,6 +10,7 @@ import { ellipse, playOutline, createOutline, close } from 'ionicons/icons';
 import { YoutubePlayerComponent } from 'src/app/components/youtube-player/youtube-player.component';
 import { ProfileComponent } from 'src/app/components/profile/profile.component';
 import { LoginService } from 'src/app/services/auth/login.service';
+import { HeaderComponent } from "../../components/header/header.component";
 
 
 addIcons({ellipse, playOutline, createOutline, close});
@@ -19,7 +20,7 @@ addIcons({ellipse, playOutline, createOutline, close});
   templateUrl: './groupm.page.html',
   styleUrls: ['./groupm.page.scss'],
   standalone: true,
-  imports: [IonBackButton, IonInput,ProfileComponent,IonDatetime, YoutubePlayerComponent, IonSearchbar, IonToast, IonDatetimeButton, IonDatetime, IonModal, IonSegment, IonSegmentButton, IonChip, IonBadge, IonButton, IonIcon, IonLabel, IonItem, IonCardHeader, IonCardContent, IonText, IonCard, IonGrid, IonRow, IonCol, IonButtons, IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, IonMenuButton, FormsModule],
+  imports: [IonBackButton, IonInput, ProfileComponent, IonDatetime, YoutubePlayerComponent, IonSearchbar, IonToast, IonDatetimeButton, IonDatetime, IonModal, IonSegment, IonSegmentButton, IonChip, IonBadge, IonButton, IonIcon, IonLabel, IonItem, IonCardHeader, IonCardContent, IonText, IonCard, IonGrid, IonRow, IonCol, IonButtons, IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, IonMenuButton, FormsModule, HeaderComponent],
   providers: [DatePipe] 
 })
 export class GroupmPage implements OnInit {

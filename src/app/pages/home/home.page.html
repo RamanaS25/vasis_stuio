@@ -1,43 +1,4 @@
-<ion-header [translucent]="true" class="ion-no-border">
-  <ion-toolbar>
-    <ion-buttons slot="start">
-      <ion-menu-button></ion-menu-button>
-    </ion-buttons>
-
-    <ion-title>Vasis Studio</ion-title>
-    <ion-buttons slot="end">
-      <ion-chip style="--background: rgba(255, 255, 255, 0)">
-        <ion-select
-          aria-label="Favorite Fruit"
-          value="ENG"
-          [(ngModel)]="selectLang"
-          (ionChange)="_lang(); edit_text()"
-        >
-          <ion-select-option value="ENG">ENG</ion-select-option>
-          <ion-select-option value="SPN">SPN</ion-select-option>
-          <ion-select-option value="POR">POR</ion-select-option>
-        </ion-select>
-      </ion-chip>
-      @if(auth._user?.is_admin) {
-      <ion-chip
-        style="--background: rgb(247, 219, 255)"
-        (click)="edit_text(); edit_open=true"
-        >Edit</ion-chip
-      >
-      }
-
-      @if(!auth._logged_in) {
-      <ion-chip style="--background: white" (click)="login_open=true">
-        Log In
-      </ion-chip>
-      }@else {
-      <ion-chip style="--background: white" (click)="user_profile=true">
-        {{auth._user.user_name}}
-      </ion-chip>
-      }
-    </ion-buttons>
-  </ion-toolbar>
-</ion-header>
+<app-header (changeLangEmitter)="change_lang($event)"></app-header>
 
 <ion-toast
   [message]="message"
@@ -48,37 +9,7 @@
   position="top"
 ></ion-toast>
 
-<ion-modal
-  [isOpen]="user_profile"
-  (didDismiss)="user_profile = false"
-  style="
-    --border-radius: 10px;
-    backdrop-filter: blur(10px);
-    --background: linear-gradient(to bottom, #9290ff, #ff93fa);
-  "
->
-  <ng-template>
-    <app-profile
-      (profileOutput)="user_profile = false"
-      [profile_open]="user_profile"
-    ></app-profile>
-  </ng-template>
-</ion-modal>
 
-<ion-modal
-  [isOpen]="login_open"
-  (didDismiss)="login_open = false"
-  style="--background: linear-gradient(to bottom, #9290ff, #ff93fa);"
-  >
-  
-  <ng-template>
-    <app-login
-      (_message)="handleNotification( $event)"
-      (loginOutput)="open($event)"
-      [login_open]="login_open"
-    ></app-login>
-  </ng-template>
-</ion-modal>
 
 <ion-modal
   [isOpen]="payment_notification"
@@ -130,9 +61,10 @@
         <ion-toolbar>
           <ion-segment
             [(ngModel)]="selectLang"
-            (ionChange)="_lang(); edit_text()"
+            (ionChange)="change_lang(selectLang)"
             mode="ios"
           >
+
             <ion-segment-button value="ENG">
               <ion-label>English</ion-label>
             </ion-segment-button>
@@ -214,8 +146,6 @@
 </ion-modal>
 
 <ion-content [fullscreen]="true" [scrollY]="true">
-<br>
-<br>
   @if(auth._logged_in && !auth._user.is_registered){
        <ion-card style="border-radius: 10px;">
          <ion-card-content>
@@ -285,7 +215,7 @@
           ></iframe>
         </div>
         <ion-item>
-          {{selectLang === 'ENG' ? item.video_title_e : selectLang === 'POR' ?
+          {{auth.user_language === 'English' ? item.video_title_e : auth.user_language === 'Portuguese' ?
           item.video_title_p : item.video_title_s }}
         </ion-item>
       </ion-col>
@@ -304,8 +234,8 @@
             <br />
             <ion-item lines="full" style="--background: transparent">
               <ion-label>
-                {{selectLang === 'ENG' ? message.message_e : selectLang ===
-                'POR' ? message.message_p : message.message_s }}
+                {{auth.user_language === 'English' ? message.message_e : auth.user_language ===
+                'Portuguese' ? message.message_p : message.message_s }}
               </ion-label>
               <a href="{{link}}" target="_blank">
                 <ion-button slot="end"> Click Now </ion-button>
@@ -342,7 +272,7 @@
         </div>
         <ion-card style="border-radius: 10px;">
           <ion-card-content>
-            {{selectLang === 'ENG' ? item.video_title_e : selectLang === 'POR' ?
+            {{auth.user_language === 'English' ? item.video_title_e : auth.user_language === 'Portuguese' ?
           item.video_title_p : item.video_title_s }}
           </ion-card-content>
         </ion-card>

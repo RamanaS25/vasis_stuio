@@ -28,7 +28,7 @@ import {
   IonSegment,
   IonList,
   IonInput,
-  IonToast, IonCardTitle } from '@ionic/angular/standalone';
+  IonToast, IonCardTitle, IonText } from '@ionic/angular/standalone';
 
 import { register } from 'swiper/element/bundle';
 
@@ -44,6 +44,7 @@ import {
 import { LoginService } from 'src/app/services/auth/login.service';
 import { ProfileComponent } from 'src/app/components/profile/profile.component';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+import { HeaderComponent } from "../../components/header/header.component";
 
 // register Swiper custom elements
 register();
@@ -53,15 +54,11 @@ register();
   templateUrl: './home.page.html',
   styleUrls: ['./home.page.scss'],
   standalone: true,
-  imports: [IonCardTitle, 
+  imports: [IonText, 
     IonToast,
     IonInput,
-    IonList,
     IonSegmentButton,
     IonSegment,
-    IonMenuButton,
-    IonSelect,
-    IonSelectOption,
     IonLabel,
     IonCardContent,
     IonCardHeader,
@@ -70,9 +67,7 @@ register();
     IonItem,
     CommonModule,
     FormsModule,
-    ProfileComponent,
     IonButtons,
-    IonChip,
     IonButton,
     IonCol,
     IonRow,
@@ -81,11 +76,9 @@ register();
     IonHeader,
     IonTitle,
     IonToolbar,
- 
-    LoginComponent,
     IonModal,
     SwiperComponent,
-  ],
+    HeaderComponent],
 })
 export class HomePage implements OnInit {
   private api = inject(HomeService);
@@ -106,7 +99,6 @@ export class HomePage implements OnInit {
   displayedMessages: any;
   video_id: string = 'https://www.youtube.com/watch?v=QCO9VSj4h18';
   link: string = 'https://vasisstudio.com/kirtan-school';
-  selectLang = 'ENG';
 
   toastBool = false;
   message: string = '';
@@ -124,9 +116,9 @@ export class HomePage implements OnInit {
   video_url2: SafeResourceUrl = '';
   video_url3: SafeResourceUrl = '';
   video_url4: SafeResourceUrl = '';
-  constructor(
-    
-  ) {
+
+  selectLang: string = 'English';
+  constructor() {
     addIcons({createOutline,personCircleOutline,close,closeOutline,logoInstagram,logoFacebook,logoGoogle,logoWhatsapp,pencil,});
     this.getText();
   }
@@ -171,52 +163,18 @@ export class HomePage implements OnInit {
     }
   }
   
-
   sanitize_all_videos() {
-    this.text[0].video_id = this.sanitizeUrl('https://www.youtube.com/embed/' + this.text[0].video_id);
-    this.text[1].video_id = this.sanitizeUrl('https://www.youtube.com/embed/' + this.text[1].video_id);
-    this.text[2].video_id = this.sanitizeUrl('https://www.youtube.com/embed/' + this.text[2].video_id);
-    this.text[3].video_id = this.sanitizeUrl('https://www.youtube.com/embed/' + this.text[3].video_id);
+    this.text[0].video_id = this.sanitizeUrl('https://www.youtube-nocookie.com/embed/' + this.text[0].video_id);
+    this.text[1].video_id = this.sanitizeUrl('https://www.youtube-nocookie.com/embed/' + this.text[1].video_id);
+    this.text[2].video_id = this.sanitizeUrl('https://www.youtube-nocookie.com/embed/' + this.text[2].video_id);
+    this.text[3].video_id = this.sanitizeUrl('https://www.youtube-nocookie.com/embed/' + this.text[3].video_id);
     console.log('sanitized videos', this.video_url1, this.video_url2, this.video_url3, this.video_url4);
   }
-  
 
-  _lang() {
-    this.edit_text();
-  }
-
-  edit_text() {
-    if (!this.text) return;
-
-    switch (this.selectLang) {
-      case 'ENG':
-        this.textForEdit = this.text.map((element: any) => ({
-          id: element.id,
-          message: element.message_e,
-          video_title: element.video_title_e,
-          video_id: element.video_id,
-          link: element.link,
-        }));
-        break;
-      case 'SPN':
-        this.textForEdit = this.text.map((element: any) => ({
-          id: element.id,
-          message: element.message_s,
-          video_title: element.video_title_s,
-          video_id: element.video_id,
-          link: element.link,
-        }));
-        break;
-      case 'POR':
-        this.textForEdit = this.text.map((element: any) => ({
-          id: element.id,
-          message: element.message_p,
-          video_title: element.video_title_p,
-          video_id: element.video_id,
-          link: element.link,
-        }));
-        break;
-    }
+  change_lang(lang: any) {
+     this.auth.user_language = lang;
+    console.log('text', this.text);
+    console.log('textForEdit', this.textForEdit);
   }
 
   async saveEdit(

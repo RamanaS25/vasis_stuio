@@ -1,14 +1,7 @@
-<ion-header [translucent]="true" class="ion-no-border">
-  <ion-toolbar>
-    <ion-buttons slot="start"> 
-      <ion-back-button></ion-back-button>
-    </ion-buttons>
-    <ion-title>Notations</ion-title>
-  </ion-toolbar>
-</ion-header>
+<app-header [header]="'Notations'"></app-header>
 
 <ion-content [fullscreen]="true">
-  <ion-toast [isOpen]="toastBool" [message]="message" [color]="color" position="top" duration="3000"></ion-toast>
+  <ion-toast [isOpen]="toastBool" [message]="message" [color]="color" position="top" duration="3000" (didDismiss)="toastBool = false"></ion-toast>
   <ion-grid fixed>
     <ion-row>
       @if(!isMobile()){   
@@ -25,7 +18,12 @@
              
                 {{item.name}}
                 @if (!auth._user.is_admin) {
-                  <ion-icon name="eye-outline" slot="end" (click)="$event.stopPropagation(); modalBool = true; linkToPdf(id)"></ion-icon>
+                  @if(isPdfLocked(item.student_sessions[0])) {
+                    <ion-icon name="eye-outline" slot="end" (click)="$event.stopPropagation(); modalBool = true; linkToPdf(id)"></ion-icon>
+                  } @else{
+                    <ion-icon name="lock-closed" slot="end" (click)="toast('This Pdf Will be Available 2 days before ' + getSessionDate(item.student_sessions[0].session_date), 'warning')"></ion-icon>
+                  }
+              
                 }
                 @if(auth._user.is_admin) {
                   <ion-icon name="create-outline" slot="end" (click)="$event.stopPropagation(); selectedClass = item; editBool = true;"></ion-icon>

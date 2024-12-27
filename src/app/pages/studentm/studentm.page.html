@@ -1,19 +1,4 @@
-<ion-header [translucent]="true" class="ion-no-border">
-  <ion-toolbar>
-    <ion-buttons slot="start" style="color: white">
-      <ion-back-button></ion-back-button>
-    </ion-buttons>
-    <ion-title style="color: white">Student Management</ion-title>
-
-    <ion-buttons slot="end">
-      <ion-chip style="--background: white" >
-        {{auth._user.user_name}}
-      </ion-chip>
-    </ion-buttons>
-  </ion-toolbar>
-
-
-</ion-header>
+<app-header [header]="'Student Management'"></app-header>
 
 <ion-toast
   [isOpen]="isToastOpen"
