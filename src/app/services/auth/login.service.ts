@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { SupabaseService } from '../api/supabase.service';
-
+import { TranslateService } from '@ngx-translate/core';
 
 @Injectable({
   providedIn: 'root'
@@ -11,6 +11,7 @@ export class LoginService {
   private user:any
   user_language:string = 'English'
   private logged_in:boolean = false
+  translate = inject(TranslateService);
   constructor() { }
 
   get _user() {
@@ -56,6 +57,7 @@ export class LoginService {
           this.user = data[0]
           if(data[0].is_admin) {
             this.logged_in = true
+            this.translate.use(this.user_language);
             return {
               success: true,
               message: 'Logged in successfully'
@@ -70,6 +72,7 @@ export class LoginService {
 
           if(this.user.payment_status.some((x: { is_paid: string; }) => x.is_paid === 'warning')) {
             this.logged_in = true
+            this.translate.use(this.user_language);
             return {
               success: true,
             message: data[0].language === 'English' ? 'Please Complete your Payment for this level' :

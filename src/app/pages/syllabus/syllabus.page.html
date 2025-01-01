@@ -1,4 +1,4 @@
-<app-header [header]="'Syllabus'"></app-header>
+<app-header [header]="'Short Videos'"></app-header>
 
 
 <ion-content [fullscreen]="true">
@@ -30,7 +30,7 @@
                
               <ion-card-header>
                 <ion-label style="color:white">
-                  {{level.level_name}}
+                  {{removeNumberFromClass(level.level_name) | translate}} {{$index + 1}}
                 </ion-label>
               </ion-card-header>
           
@@ -41,12 +41,12 @@
                 
                     <ion-accordion [value]="class.class_name">
                       <ion-item slot="header" color="light">
-                        <ion-label>{{class.class_name}}</ion-label>
+                        <ion-label>{{removeNumberFromClass(class.class_name) | translate}} {{$index + 1}}</ion-label>
                       </ion-item>
                       <div  slot="content">
                         @if(class.locked && !auth._user.is_admin) {
                           <ion-item lines="full">
-                            This classes videos will be release on {{class.session_date | date: 'dd/MM/yy, h:mm a'}}
+                            {{'This classes videos will be release on' | translate}} {{class.session_date | date: 'dd/MM/yy, h:mm a'}}
                           </ion-item>
                         }
                       
@@ -54,7 +54,7 @@
                            <ion-item lines="none" (click)="selectedVideo = video;" [ngClass]="(selectedVideo === video) ? 'selectedClass': 'ion-item-ns'"
                            [disabled]="videoLocked(class.session_date, class.locked, video.is_melody)"
                             >
-                             <ion-label>{{video.title}}</ion-label>
+                             <ion-label>{{(auth.user_language === 'English') ? video.title : (auth._user.language === 'Portuguese') ? video.title_p : video.title_s}}</ion-label>
 
                              <!-- @if (video.locked) {
                               <ion-icon name="lock-closed" slot="end" color="danger"></ion-icon>

@@ -4,6 +4,8 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
 
 import { IonApp, IonSplitPane, IonMenu, IonContent, IonList, IonListHeader, IonNote, IonMenuToggle, IonItem, IonIcon, IonLabel, IonRouterOutlet, IonRouterLink } from '@ionic/angular/standalone';
 import { LoginService } from './services/auth/login.service';
+import { TranslateService } from '@ngx-translate/core';
+
 
 
 @Component({
@@ -16,7 +18,6 @@ import { LoginService } from './services/auth/login.service';
     RouterLinkActive,
     CommonModule,
     IonApp,
-    IonSplitPane,
     IonMenu,
     IonContent,
     IonList,
@@ -24,7 +25,6 @@ import { LoginService } from './services/auth/login.service';
     IonNote,
     IonMenuToggle,
     IonItem,
-    IonIcon,
     IonLabel,
     IonRouterLink,
     IonRouterOutlet,
@@ -41,5 +41,10 @@ export class AppComponent {
     { title: 'Contact', url: '/contact', icon: 'mail',access:'public' }
 
   ];
-  constructor() {}
+  translate = inject(TranslateService);
+  constructor() {
+    this.translate.setDefaultLang('English');
+    
+    this.translate.use(this.auth.user_language);
+  }
 }

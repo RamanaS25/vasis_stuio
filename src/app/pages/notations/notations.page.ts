@@ -9,13 +9,14 @@ import { linkOutline, createOutline, closeOutline, documentTextOutline, eyeOutli
 import { SafeUrlPipe } from "../../pipes/safe/safe-url.pipe";
 import { LoginService } from 'src/app/services/auth/login.service';
 import { HeaderComponent } from "../../components/header/header.component";
+import { TranslatePipe } from '@ngx-translate/core';
 addIcons({linkOutline, lockClosed});
 @Component({
   selector: 'app-notations',
   templateUrl: './notations.page.html',
   styleUrls: ['./notations.page.scss'],
   standalone: true,
-  imports: [IonToast, IonButton, IonCard, IonCardContent, IonInput, IonModal, IonIcon, IonItem, IonCol, IonGrid, IonRow, IonButtons, IonBackButton, IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule, SafeUrlPipe, HeaderComponent]
+  imports: [IonToast, TranslatePipe, IonButton, IonCard, IonCardContent, IonInput, IonModal, IonIcon, IonItem, IonCol, IonGrid, IonRow, IonButtons, IonBackButton, IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule, SafeUrlPipe, HeaderComponent]
 })
 export class NotationsPage implements OnInit {
   auth = inject(LoginService)
@@ -45,6 +46,9 @@ export class NotationsPage implements OnInit {
     return this.platform.is('mobile') || this.platform.width() < 768;
   }
 
+  removeNumberFromName(name:string){
+    return name.replace(/\d+|\s+/g, '');
+  }
   ngOnInit() {
     
     this.route.queryParams.subscribe(params => {
@@ -139,14 +143,19 @@ export class NotationsPage implements OnInit {
   }
 
   handlePdfView(item: any) {
-    if(this.isPdfLocked(item.student_sessions.session_date)){
-      if(this.auth._user.grade < this.grade){
-        this.toast(`This Pdf Will be Available 2 days before ${item.student_sessions.session_date}`,'warning')
+    console.log('item', this.isPdfLocked(item.student_sessions[0]))
+    if(!this.isPdfLocked(item.student_sessions[0])){
+        console.log("grade", this.auth._user.grade, this.grade)
+      if(this.auth._user.grade == this.grade){
+        this.toast(`This Pdf Will be Available 2 days before ${this.getSessionDate(item.student_sessions[0].session_date)}`,'warning')
         return
       }
+        
     }
+
     this.selectedClass = item;
     this.newPdfLinks = { pdf_link: item.pdf_link, pdf_link_s: item.pdf_link_s, pdf_link_por: item.pdf_link_por }
+
     if (this.isMobile()) {
       this.pdfModalOpen = true;
     }

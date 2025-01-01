@@ -21,7 +21,7 @@
 
 <ion-toast [isOpen]="showToast" [message]="message" [color]="color" (didDismiss)="showToast = false" duration="1000" position="top"></ion-toast>
 
-<ion-grid fixed="true">
+<ion-grid>
    <ion-row>
      <ion-col>
       <div class="session-card">
@@ -44,7 +44,7 @@
              
               @if(item.recorded_class === null) {
 
-                <ion-icon name="play-outline" slot="end"  [color]="'success'" ></ion-icon>
+                <ion-icon name="play" slot="end"  [color]="'warning'" ></ion-icon>
                 
               } @else {
                 

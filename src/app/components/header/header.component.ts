@@ -1,35 +1,26 @@
 import { Component, EventEmitter, inject, Input, OnInit, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import {
-  IonContent,
   IonHeader,
   IonTitle,
   IonToolbar,
-  IonGrid,
-  IonRow,
-  IonCol,
-  IonButton,
   IonChip,
   IonButtons,
   IonModal,
-  IonItem,
-  IonIcon,
-  IonCard,
-  IonCardHeader,
-  IonCardContent,
-  IonLabel,
   IonMenuButton,
   IonSelect,
   IonSelectOption,
-  IonSegmentButton,
-  IonSegment,
-  IonList,
-  IonInput,
-  IonToast, IonCardTitle } from '@ionic/angular/standalone';
+  IonToast } from '@ionic/angular/standalone';
 import { ProfileComponent } from "../profile/profile.component";
 import { LoginComponent } from "../login/login.component";
 import { LoginService } from 'src/app/services/auth/login.service';
 import { HomeService } from 'src/app/services/home/home.service';
+
+import {
+  TranslateService,
+  TranslatePipe,
+  TranslateDirective
+} from "@ngx-translate/core";
 
 @Component({
   selector: 'app-header',
@@ -49,7 +40,8 @@ import { HomeService } from 'src/app/services/home/home.service';
     IonModal,
     ProfileComponent,
     LoginComponent,
-    IonToast
+    IonToast,
+    TranslatePipe
 ],
 })
 export class HeaderComponent  implements OnInit {
@@ -63,10 +55,14 @@ export class HeaderComponent  implements OnInit {
   message: string = '';
   color: string = '';
   toastBool: boolean = false;
-  selectLang: string = 'ENG';
+  selectLang: string = 'English';
   payment_notification: boolean = false;
- 
-  constructor() { }
+  translate = inject(TranslateService);
+  constructor() { 
+    this.translate.setDefaultLang('English');
+    
+    this.translate.use(this.auth.user_language);
+  }
 
   handleNotification(message: string) {
     if (message === 'Logged in successfully') {
@@ -74,6 +70,16 @@ export class HeaderComponent  implements OnInit {
     } else if (message === 'Please Complete your Payment for this level') {
       this.payment_notification = true;
     }
+  }
+
+  changeLang_auth(lang: string) {
+    this.auth.user_language = lang;
+
+    this.translate.use(this.auth.user_language);
+  }
+
+  isMobile() {
+    return window.innerWidth <= 768; 
   }
 
   toast(message: string, color: string) {
@@ -86,8 +92,8 @@ export class HeaderComponent  implements OnInit {
     this.login_open = false;
   }
 
-  changeLang() {
-    this.changeLangEmitter.emit(this.selectLang);
+  changeLang(lang: string) {
+    this.changeLangEmitter.emit(lang);
   }
 
   ngOnInit() {}

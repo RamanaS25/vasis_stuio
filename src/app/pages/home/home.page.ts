@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, SecurityContext } from '@angular/core';
 import { HomeService } from 'src/app/services/home/home.service';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -12,7 +12,6 @@ import {
   IonRow,
   IonCol,
   IonButton,
-  IonChip,
   IonButtons,
   IonModal,
   IonItem,
@@ -21,30 +20,34 @@ import {
   IonCardHeader,
   IonCardContent,
   IonLabel,
-  IonMenuButton,
-  IonSelect,
-  IonSelectOption,
   IonSegmentButton,
   IonSegment,
-  IonList,
   IonInput,
-  IonToast, IonCardTitle, IonText } from '@ionic/angular/standalone';
-
+  IonToast,
+  IonText, IonFab, IonFabButton } from '@ionic/angular/standalone';
 import { register } from 'swiper/element/bundle';
-
 import { addIcons } from 'ionicons';
-import { LoginComponent } from 'src/app/components/login/login.component';
+
 import {
   logoInstagram,
   logoWhatsapp,
   logoFacebook,
   close,
   pencil,
-  logoGoogle, closeOutline, createOutline, personCircleOutline } from 'ionicons/icons';
+  logoGoogle,
+  closeOutline,
+  createOutline,
+  personCircleOutline, add } from 'ionicons/icons';
 import { LoginService } from 'src/app/services/auth/login.service';
-import { ProfileComponent } from 'src/app/components/profile/profile.component';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { HeaderComponent } from "../../components/header/header.component";
+
+import {
+  TranslateService,
+  TranslatePipe,
+  TranslateDirective
+} from "@ngx-translate/core";
+
 
 // register Swiper custom elements
 register();
@@ -54,7 +57,7 @@ register();
   templateUrl: './home.page.html',
   styleUrls: ['./home.page.scss'],
   standalone: true,
-  imports: [IonText, 
+  imports: [IonFabButton, IonFab, 
     IonToast,
     IonInput,
     IonSegmentButton,
@@ -78,7 +81,9 @@ register();
     IonToolbar,
     IonModal,
     SwiperComponent,
-    HeaderComponent],
+    HeaderComponent,
+    TranslatePipe
+  ],
 })
 export class HomePage implements OnInit {
   private api = inject(HomeService);
@@ -112,15 +117,23 @@ export class HomePage implements OnInit {
 
   selectedImageId!: number;
 
+  stored_ids = {}
+
   video_url1: SafeResourceUrl = '';
   video_url2: SafeResourceUrl = '';
   video_url3: SafeResourceUrl = '';
   video_url4: SafeResourceUrl = '';
 
   selectLang: string = 'English';
+
+  translate = inject(TranslateService);
   constructor() {
-    addIcons({createOutline,personCircleOutline,close,closeOutline,logoInstagram,logoFacebook,logoGoogle,logoWhatsapp,pencil,});
+    addIcons({close,closeOutline,add,logoInstagram,logoFacebook,logoGoogle,logoWhatsapp,createOutline,personCircleOutline,pencil,});
     this.getText();
+
+    this.translate.setDefaultLang('English');
+    
+    this.translate.use(this.auth.user_language);
   }
 
   handleNotification(message: string) {
@@ -162,6 +175,42 @@ export class HomePage implements OnInit {
       console.error('Error fetching home data:', error);
     }
   }
+
+
+  edit_text() {
+    if (!this.text) return;
+
+    switch (this.selectLang) {
+      case 'English':
+        this.textForEdit = this.text.map((element: any) => ({
+          id: element.id,
+          message: element.message_e,
+          video_title: element.video_title_e,
+          video_id: this.extractUrl(element.video_id),
+          link: element.link,
+        }));
+        break;
+      case 'Spanish':
+        this.textForEdit = this.text.map((element: any) => ({
+          id: element.id,
+          message: element.message_s,
+          video_title: element.video_title_s,
+          video_id: this.extractUrl(element.video_id),
+          link: element.link,
+        }));
+        break;
+      case 'Portuguese':
+        this.textForEdit = this.text.map((element: any) => ({
+          id: element.id,
+          message: element.message_p,
+          video_title: element.video_title_p,
+          video_id: this.extractUrl(element.video_id),
+          link: element.link,
+        }));
+        break;
+    }
+
+  }
   
   sanitize_all_videos() {
     this.text[0].video_id = this.sanitizeUrl('https://www.youtube-nocookie.com/embed/' + this.text[0].video_id);
@@ -171,10 +220,18 @@ export class HomePage implements OnInit {
     console.log('sanitized videos', this.video_url1, this.video_url2, this.video_url3, this.video_url4);
   }
 
+  extractUrl(safeUrl: SafeResourceUrl): string {
+    // Get the sanitized URL string from the SafeResourceUrl object
+    const urlString = this.sanitizer.sanitize(SecurityContext.URL, safeUrl) || '';
+    
+    // Remove the YouTube embed prefix to get back the video ID
+    return urlString.replace('https://www.youtube-nocookie.com/embed/', '');
+  }
+
   change_lang(lang: any) {
      this.auth.user_language = lang;
-    console.log('text', this.text);
-    console.log('textForEdit', this.textForEdit);
+    this.edit_text();
+    this.translate.use(lang);
   }
 
   async saveEdit(

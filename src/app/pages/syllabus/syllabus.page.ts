@@ -9,7 +9,8 @@ import { ShortVideosService } from 'src/app/services/short-videos/short-videos.s
 import { LoginService } from 'src/app/services/auth/login.service';
 import { ProfileComponent } from 'src/app/components/profile/profile.component';
 import { ActivatedRoute } from '@angular/router';
-import { HeaderComponent } from "../../components/header/header.component";
+import { HeaderComponent } from "../../components/header/header.component";                                           
+import { TranslatePipe } from '@ngx-translate/core';
 
 addIcons({lockClosed, ellipseOutline, addOutline, closeOutline, createOutline, ellipse})
 
@@ -18,7 +19,7 @@ addIcons({lockClosed, ellipseOutline, addOutline, closeOutline, createOutline, e
   templateUrl: './syllabus.page.html',
   styleUrls: ['./syllabus.page.scss'],
   standalone: true,
-  imports: [IonBackButton, IonCardSubtitle, ProfileComponent, IonToast, IonButton, IonSelect, IonSelectOption, IonModal, IonCheckbox, IonInput, IonIcon, IonRow, IonGrid, IonChip, IonCardContent, IonItem, IonCardHeader, IonMenuButton, IonLabel, IonCard, IonCol, IonAccordion, IonAccordionGroup, IonButtons, IonButtons, IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule, VimeoPlayerComponent, IonSkeletonText, HeaderComponent],
+  imports: [IonBackButton,  TranslatePipe, IonCardSubtitle, ProfileComponent, IonToast, IonButton, IonSelect, IonSelectOption, IonModal, IonCheckbox, IonInput, IonIcon, IonRow, IonGrid, IonChip, IonCardContent, IonItem, IonCardHeader, IonMenuButton, IonLabel, IonCard, IonCol, IonAccordion, IonAccordionGroup, IonButtons, IonButtons, IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule, VimeoPlayerComponent, IonSkeletonText, HeaderComponent],
 })
 export class SyllabusPage implements OnInit {
   route = inject(ActivatedRoute)
@@ -77,8 +78,7 @@ export class SyllabusPage implements OnInit {
   is_placeholder_video = false
   _class_id_for_placeholder_video:number = 0
 
-  private grade = 0
-  
+  private grade = 0 
   constructor() {
       addIcons({ellipseOutline,addOutline,createOutline,closeOutline,ellipse,lockClosed});
      
@@ -93,6 +93,10 @@ export class SyllabusPage implements OnInit {
 
       this.getVideos(this.grade)
     }
+
+   removeNumberFromClass(className: string): string {
+     return className.replace(/\s*\d+$/, '');
+   }
 
    handleToast(message: string, color: string, duration: number) {
     this.toastBool = true;

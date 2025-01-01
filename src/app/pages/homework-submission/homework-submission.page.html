@@ -1,4 +1,4 @@
-<app-header [header]="'Homework Submissions'"></app-header>
+<app-header [header]="'Homework' | translate"></app-header>
 
   <ion-content [fullscreen]="true">
     <br>
@@ -14,7 +14,7 @@
           
           <ion-item>
             <ion-select [(ngModel)]="selectedClass">
-              <ion-select-option *ngFor="let item of numbers" [value]=" 'Class ' + item"> Class {{item}}</ion-select-option>
+              <ion-select-option *ngFor="let item of numbers" [value]=" 'Class ' + item"> {{'Class' | translate}} {{item}}</ion-select-option>
             </ion-select>
           </ion-item> 
       
@@ -27,7 +27,7 @@
               
                   <ion-item>
                     <ion-label>
-                      {{item.title}}
+                      {{ (auth.user_language === 'English') ? item.title : (auth._user.language === 'Portuguese') ? item.title_p : item.title_s}}
                     </ion-label>
                     
                     <ion-icon *ngIf="item.student_homework.length > 0" (click)="selectedHomework = item; modalBool = true; type = 'albums'"  name="albums" size="large" slot="end" color="primary" style="cursor: pointer" ></ion-icon>
@@ -61,7 +61,7 @@
             <ion-card>
                 <ion-card-header>
                     <ion-item lines="none">
-                      <ion-label>{{type === 'albums' ? 'Submissions' : 'Upload Video'}}</ion-label>
+                      <ion-label>{{type === 'albums' ? ('Submitted Homework' | translate) : ('Upload Video' | translate)}}</ion-label>
                     </ion-item>
                 </ion-card-header>
 
@@ -72,14 +72,14 @@
                             <ion-label>{{item.created_at | date:'medium'}}</ion-label>
 
                             <ion-chip slot="end" [color]="item.graded ? 'primary' : 'warning'">
-                              {{item.graded ? item.avg : 'Not Graded'}}
+                              {{item.graded ? item.avg : ('Not Graded' | translate)}}
                             </ion-chip>
                             <ion-icon name="chevron-forward" slot="end"></ion-icon>
                           </ion-item>
                         } @empty {
 
                           <ion-item>
-                            <ion-label>No submissions yet</ion-label>
+                            <ion-label>{{'No submissions yet' | translate}}</ion-label>
                           </ion-item>
 
                         }
@@ -88,7 +88,7 @@
                           <ion-input type="file" accept="video/*" (change)="onFileSelected($event)" />
                           <ion-button expand="block" (click)="uploadVideo()" [disabled]="!selectedFile">
                             <ion-icon name="cloud-upload" slot="start"></ion-icon>
-                            Upload Video
+                            {{'Upload Video' | translate}}
                           </ion-button>
                         </div>
                       } 
@@ -103,14 +103,14 @@
                   <ion-button fill="clear" slot="start" (click)="type = 'albums'">
                     <ion-icon name="arrow-back" slot="icon-only"></ion-icon>
                   </ion-button>
-                  <ion-label>Homework Details</ion-label>
+                  <ion-label>{{'Homework Details' | translate}}</ion-label>
                 </ion-item>
               </ion-card-header>
 
               <ion-card-content>
                 <ion-list>
                   <ion-item>
-                    <ion-label>Submission Date</ion-label>
+                    <ion-label>{{'Submission Date' | translate}}</ion-label>
                     <ion-note slot="end">{{selectedHomework_upload?.created_at | date:'medium'}}</ion-note>
                   </ion-item>
 

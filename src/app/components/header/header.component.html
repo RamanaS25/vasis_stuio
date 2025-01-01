@@ -3,32 +3,25 @@
     <ion-buttons slot="start">
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
-
-    <ion-title>{{header}}</ion-title>
+    @if(!isMobile()) {
+    <ion-title style="font-size: 18px; font-weight: 600; color: #ffffff;">{{header}}</ion-title>
+    }
     <ion-buttons slot="end">
       <ion-chip style="--background: rgba(255, 255, 255, 0)">
         <ion-select
           aria-label="Favorite Fruit"
-          value="ENG"
-          [(ngModel)]="selectLang"
-          (ionChange)="changeLang()"
+          value="English"
+          (ionChange)="changeLang($event.detail.value); changeLang_auth($event.detail.value)"
         >
-          <ion-select-option value="ENG">ENG</ion-select-option>
-          <ion-select-option value="SPN">SPN</ion-select-option>
-          <ion-select-option value="POR">POR</ion-select-option>
+          <ion-select-option value="English">ENG</ion-select-option>
+          <ion-select-option value="Spanish">SPN</ion-select-option>
+          <ion-select-option value="Portuguese">POR</ion-select-option>
         </ion-select>
       </ion-chip>
-      <!-- @if(auth._user?.is_admin) {
-      <ion-chip
-        style="--background: rgb(247, 219, 255)"
-        (click)="edit_text(); edit_open=true"
-        >Edit</ion-chip
-      >
-      } -->
 
       @if(!auth._logged_in) {
       <ion-chip style="--background: white" (click)="login_open=true">
-        Log In
+        {{'Log In' | translate}}
       </ion-chip>
       }@else {
       <ion-chip style="--background: white" (click)="user_profile=true">

@@ -9,6 +9,8 @@ import { LoginService } from 'src/app/services/auth/login.service';
 import { ProfileComponent } from 'src/app/components/profile/profile.component';
 import { SessionsComponent } from "../../components/sessions/sessions.component";
 import { HeaderComponent } from "../../components/header/header.component";
+import { TranslateService } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 
 addIcons({add, arrowBackOutline});
 @Component({
@@ -16,7 +18,7 @@ addIcons({add, arrowBackOutline});
   templateUrl: './course-dashboard.page.html',
   styleUrls: ['./course-dashboard.page.scss'],
   standalone: true,
-  imports: [IonToast, IonModal, ProfileComponent, IonList, IonCardTitle, IonSegmentButton, IonSegment, IonProgressBar, IonLabel, IonButton, IonIcon, IonItem, IonCardHeader, IonCard, IonCardContent, IonText, IonRow, IonCol, IonGrid, IonButtons, IonChip, IonContent, IonHeader, IonTitle, IonToolbar, IonMenuButton, CommonModule, FormsModule, SessionsComponent, HeaderComponent]
+  imports: [IonToast, TranslatePipe, IonModal, ProfileComponent, IonList, IonCardTitle, IonSegmentButton, IonSegment, IonProgressBar, IonLabel, IonButton, IonIcon, IonItem, IonCardHeader, IonCard, IonCardContent, IonText, IonRow, IonCol, IonGrid, IonButtons, IonChip, IonContent, IonHeader, IonTitle, IonToolbar, IonMenuButton, CommonModule, FormsModule, SessionsComponent, HeaderComponent]
 })
 export class CourseDashboardPage implements OnInit {
   course_selected = false
@@ -45,7 +47,7 @@ export class CourseDashboardPage implements OnInit {
     },
 
     {
-      title: 'Sessions',
+      title: 'Recorded Classes',
       components: ["Sessions"],
       link:'/notation'
     }
@@ -56,12 +58,18 @@ export class CourseDashboardPage implements OnInit {
   toastBool = false
   message = ''
   color = 'primary'
+  translate = inject(TranslateService);
   constructor() {
-      addIcons({arrowBackOutline, lockClosed}); }
+      addIcons({arrowBackOutline, lockClosed});
+      this.translate.setDefaultLang('English');
+      this.translate.use(this.auth.user_language);
+    } 
 
   ngOnInit() {
     console.log('course-dashboard')
   }
+
+ 
 
   getNavigationParam(comp:string){
     

@@ -44,6 +44,7 @@ export class ShortVideosService {
         .eq('syllabus_grades.grade', grade)
         .eq('syllabus_classes.syllabus_videos.voice_scale', this.auth._user.voice_scale)
         .eq('syllabus_classes.student_sessions.group_name', this.auth._user.student_groups.name)
+        .eq('syllabus_classes.syllabus_videos.student_video_progress.student_id', this.auth._user.id)
      
       // Handle any errors from the query
       if (error) throw error;

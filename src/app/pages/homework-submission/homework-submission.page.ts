@@ -9,6 +9,7 @@ import { closeOutline, albums, cloudUpload, chevronForward, arrowBack } from 'io
 import { MuxVideoPlayerComponent } from "../../components/mux-video-player/mux-video-player.component";
 import { ActivatedRoute } from '@angular/router';
 import { HeaderComponent } from "../../components/header/header.component";
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-homework-submission',
@@ -45,7 +46,8 @@ import { HeaderComponent } from "../../components/header/header.component";
     IonChip,
     IonBackButton,
     MuxVideoPlayerComponent,
-    HeaderComponent
+    HeaderComponent,
+    TranslatePipe
 ],
 
 })

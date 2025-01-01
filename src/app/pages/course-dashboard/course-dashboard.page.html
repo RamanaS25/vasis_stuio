@@ -1,7 +1,6 @@
-<app-header [header]="'Course Dashboard'"></app-header>
+<app-header [header]="'Course Dashboard' | translate"></app-header>
 
 <ion-content [fullscreen]="true" class="ion-padding">
-
     <ion-toast [color]="color" [isOpen]="toastBool" [message]="message" position="top" duration="5000" (didDismiss)="toastBool = false"></ion-toast>
 
       
@@ -25,23 +24,27 @@
             </div>
             
             }@else {
+
+              
               <ion-segment  [(ngModel)]="selectedModule" mode="ios">
                 @for (item of modules; track $index) {
                   <ion-segment-button [value]="item">  
-                    <ion-label   >{{item.title}}</ion-label>
+                    <ion-label   >{{item.title | translate}}</ion-label>
                   </ion-segment-button>
                 }
               </ion-segment>
-              @if (selectedModule.title != 'Sessions') {
+
+
+              @if (selectedModule.title != 'Recorded Classes') {
               <ion-card style="border-radius: 10px;">
                 <ion-card-header>
-                  <ion-card-title>{{selectedModule.title}}</ion-card-title>
+                  <ion-card-title>{{selectedModule.title | translate}}</ion-card-title>
                 </ion-card-header>
                 <ion-card-content>
             
                     @for (item of selectedModule.components; track $index) {
                       <ion-item detail="false" lines="none" style="border-radius: 10px; margin-bottom: 10px; --background:rgb(237, 213, 253);" (click)="navigateTo(selectedModule.link, item)" detail="true" button>
-                        <ion-label>{{item}}</ion-label>
+                        <ion-label>{{item | translate}}</ion-label>
 
                         @if (auth._user.grade < this.getNavigationParam(item) && !auth._user.is_admin) {  
                         <ion-icon slot="end" name="lock-closed" color="danger" ></ion-icon>
