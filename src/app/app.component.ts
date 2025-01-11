@@ -6,8 +6,6 @@ import { IonApp, IonSplitPane, IonMenu, IonContent, IonList, IonListHeader, IonN
 import { LoginService } from './services/auth/login.service';
 import { TranslateService } from '@ngx-translate/core';
 
-
-
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html',
@@ -34,11 +32,11 @@ export class AppComponent {
 
   auth = inject(LoginService);
   appPages = [
-    { title: 'Home', url: '/home', icon: 'home',access:'public' },
-    { title: 'Management', url: '/management-dashboard', icon: 'home',access:'admin' },
-    { title: 'Courses', url: '/course-dashboard', icon: 'home',access:'student' },
-    { title: 'Tutorial', url: '/tutorial', icon: 'information-circle',access:'public' },
-    { title: 'Contact', url: '/contact', icon: 'mail',access:'public' }
+    { title: 'Home', title_es: 'Inicio', title_por: 'Inicio', url: '/home', icon: 'home',access:'public' },
+    { title: 'Management', title_es: 'Gestion', title_por: 'Gestion', url: '/management-dashboard', icon: 'home',access:'admin' },
+    { title: 'Courses', title_es: 'Cursos', title_por: 'Cursos', url: '/course-dashboard', icon: 'home',access:'student' },
+    { title: 'Tutorial', title_es: 'Tutorial', title_por: 'Tutorial', url: '/tutorial', icon: 'information-circle',access:'public' },
+    { title: 'Contact', title_es: 'Contacto', title_por: 'Contacto', url: '/contact', icon: 'mail',access:'public' }
 
   ];
   translate = inject(TranslateService);

@@ -7,30 +7,35 @@
       @if(!isMobile()){   
         <ion-col size="9">
           @if (selectedClass?.pdf_link) {
-            <iframe [src]="selectedClass.pdf_link | safeUrl" width="100%" height="800" allow="autoplay"></iframe>
+            <iframe [src]=" (auth.user_language ===   'English' ? selectedClass.pdf_link : (auth.user_language === 'Spanish' ? selectedClass.pdf_link_s : selectedClass.pdf_link_por) ) | safeUrl" width="100%" height="800" allow="autoplay"></iframe>
+     
           }
         </ion-col>
       }
       <ion-col [size]="isMobile() ? '12' : '3'"> 
         <ion-card class="scrollable-container">
+
           @for (item of notations; track $index) {
             <ion-item (click)="handlePdfView(item)" [class.selected-class]="selectedClass === item" button>
              
                 {{ removeNumberFromName(item.name) | translate}} {{ $index + 1}}
+
                 @if (!auth._user.is_admin) {
 
                   @if(isPdfLocked(item.student_sessions[0])) {
                     <ion-icon name="eye-outline" slot="end" (click)="$event.stopPropagation(); modalBool = true; linkToPdf(id)"></ion-icon>
-                  } @else{
+                  } @else {
                     <ion-icon name="lock-closed" slot="end"></ion-icon>
                   }
               
                 }
+
                 @if(auth._user.is_admin) {
                   <ion-icon name="create-outline" slot="end" (click)="$event.stopPropagation(); selectedClass = item; editBool = true;"></ion-icon>
                 }
             </ion-item>
           }
+
         </ion-card>
       </ion-col>
     </ion-row>

@@ -1,5 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { SupabaseService } from '../api/supabase.service';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 
 @Injectable({
   providedIn: 'root'
@@ -7,6 +8,7 @@ import { SupabaseService } from '../api/supabase.service';
 export class NotationsService {
   api = inject(SupabaseService)
   supabase = this.api.getClient()
+  sanitizer = inject(DomSanitizer)
   constructor() { }
 
    async getNotations(grade:number, group_name:string) {
@@ -14,10 +16,11 @@ export class NotationsService {
     try {
       const { data, error } = await this.supabase
         .from('syllabus_classes')
-        .select('id, name, pdf_link, level_id!inner(grade_id!inner(grade)), student_sessions(session_date, group_name)')
+        .select('id, name, pdf_link, pdf_link_por, pdf_link_s, level_id!inner(grade_id!inner(grade)), student_sessions(session_date, group_name)')
         .eq('student_sessions.group_name', group_name)
         .eq('level_id.grade_id.grade', grade)
-        .order('id', { ascending: true });
+        .order('id', { ascending: true })
+        
 
         console.log(data)
       if (error) {
@@ -48,14 +51,17 @@ export class NotationsService {
   }
 
 
-
   async updateNotationLink(notationId: number, updatedNotation: any) {
     try {
       const { data, error } = await this.supabase
         .from('syllabus_classes')
-        .update(updatedNotation)
+        .update({
+            pdf_link: updatedNotation.pdf_link,
+            pdf_link_por: updatedNotation.pdf_link_por,
+            pdf_link_s: updatedNotation.pdf_link_s,
+        })
         .eq('id', notationId)
-        .select();
+        .select('id, pdf_link, pdf_link_por, pdf_link_s');
 
       if (error) {
         return {

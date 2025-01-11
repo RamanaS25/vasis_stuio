@@ -10,18 +10,18 @@
            @if(p.access === 'public' && !auth._logged_in){
             <ion-item routerDirection="root" style="--background: rgba(226, 121, 203, 0);" [routerLink]="[p.url]" lines="none" detail="false" routerLinkActive="selected">
              
-              <ion-label>{{ p.title }}</ion-label>
+              <ion-label>{{ (auth.user_language === 'English' ? p.title : (auth.user_language === 'Spanish' ? p.title_es : p.title_por)) }}</ion-label>
             </ion-item>
            } 
            @if(auth._logged_in && auth._user.is_registered){
               @if(p.access === 'admin' && auth._user.is_admin){  
               <ion-item routerDirection="root" style="--background: rgba(226, 121, 203, 0);" [routerLink]="[p.url]" lines="none" detail="false" routerLinkActive="selected">
-                <ion-label>{{ p.title }}</ion-label>
+                <ion-label>{{ (auth.user_language === 'English' ? p.title : (auth.user_language === 'Spanish' ? p.title_es : p.title_por)) }}</ion-label>
               </ion-item>
               }
               @if(p.access !== 'admin'){
                 <ion-item routerDirection="root" style="--background: rgba(226, 121, 203, 0);" [routerLink]="[p.url]" lines="none" detail="false" routerLinkActive="selected">
-                  <ion-label>{{ p.title }}</ion-label>
+                  <ion-label>{{ (auth.user_language === 'English' ? p.title : (auth.user_language === 'Spanish' ? p.title_es : p.title_por)) }}</ion-label>
                 </ion-item>
               }
            }   

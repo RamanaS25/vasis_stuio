@@ -6,15 +6,14 @@ import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 })
 export class SafeUrlPipe implements PipeTransform {
   sanitizer = inject(DomSanitizer)
-  transform(value: any, args?: any): any {
+  transform(value: any): any {
     // let url = value.replace("vimeo.com/", "player.vimeo.com/video/");
-    if (value) {
+       console.log('jo', value)
       let link = "https://drive.google.com/file/d/"
       let url = link + value + '/preview'
+      console.log(url)
       return this.sanitizer.bypassSecurityTrustResourceUrl(url);
-    } else {
-      value = "https://drive.google.com/file/d/1De6eNuOZgfe_7_aBn4G2UCAYu2QP-5h-/preview"
-    }
+    
  
 
     //return this.sanitizer.bypassSecurityTrustUrl(url);
