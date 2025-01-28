@@ -10,7 +10,8 @@ import {
   IonMenuButton,
   IonSelect,
   IonSelectOption,
-  IonToast } from '@ionic/angular/standalone';
+  IonToast,
+   IonIcon } from '@ionic/angular/standalone';
 import { ProfileComponent } from "../profile/profile.component";
 import { LoginComponent } from "../login/login.component";
 import { LoginService } from 'src/app/services/auth/login.service';
@@ -19,15 +20,18 @@ import { HomeService } from 'src/app/services/home/home.service';
 import {
   TranslateService,
   TranslatePipe,
-  TranslateDirective
 } from "@ngx-translate/core";
+
+import { addIcons } from 'ionicons';
+import { chevronBackOutline } from 'ionicons/icons';
+addIcons({ chevronBackOutline });
 
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss'],
   standalone: true,
-  imports: [
+  imports: [IonIcon,
     IonHeader,
     IonTitle,
     IonToolbar,
@@ -46,22 +50,29 @@ import {
 })
 export class HeaderComponent  implements OnInit {
   @Input() header: string = 'Vasis Studio';
+  @Input() isHeader: boolean = false;
+  @Input() isBackButton: boolean = false;
+
   @Output() changeLangEmitter = new EventEmitter<string>();
+  @Output() changeVoiceScaleEmitter = new EventEmitter<string>();
   private api = inject(HomeService);
   auth = inject(LoginService);
-
+  
   user_profile: boolean = false;
   login_open: boolean = false;
   message: string = '';
   color: string = '';
   toastBool: boolean = false;
+
   selectLang: string = 'English';
+  
   payment_notification: boolean = false;
   translate = inject(TranslateService);
   constructor() { 
     this.translate.setDefaultLang('English');
     
     this.translate.use(this.auth.user_language);
+    this.selectLang = this.auth.user_language;
   }
 
   handleNotification(message: string) {
@@ -74,7 +85,7 @@ export class HeaderComponent  implements OnInit {
 
   changeLang_auth(lang: string) {
     this.auth.user_language = lang;
-
+    this.selectLang = lang;
     this.translate.use(this.auth.user_language);
   }
 
@@ -94,6 +105,16 @@ export class HeaderComponent  implements OnInit {
 
   changeLang(lang: string) {
     this.changeLangEmitter.emit(lang);
+  }
+  
+
+  goBack() {
+    window.history.back();
+  }
+
+  changeVoiceScale(scale: string) {
+    this.auth._user.voice_scale = scale;
+    this.changeVoiceScaleEmitter.emit(scale);
   }
 
   ngOnInit() {}

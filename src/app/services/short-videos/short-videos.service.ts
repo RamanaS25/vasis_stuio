@@ -174,6 +174,8 @@ export class ShortVideosService {
            }))
          }))
      }));
+
+     console.log(structuredData)
  
      return { success: true, data: structuredData };
    }  catch (error: unknown) {

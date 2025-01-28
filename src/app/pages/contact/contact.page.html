@@ -1,0 +1,285 @@
+<ion-header [translucent]="true" class="ion-no-border">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title style="font-weight: bold; color: aliceblue;">Contact</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="ion-padding">
+  <ion-segment [(ngModel)]="selectedLanguage" class="language-segment" name="language">
+    <ion-segment-button value="en">
+      <ion-label>English</ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="pt">
+      <ion-label>Português</ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="es">
+      <ion-label>Español</ion-label>
+    </ion-segment-button>
+  </ion-segment>
+
+  <div [ngSwitch]="selectedLanguage">
+    <!-- English Content -->
+    <div *ngSwitchCase="'en'" class="contact-content">
+      <h1>Vasis Studio Important Contacts</h1>
+
+      <ion-card>
+        <ion-card-header>
+          <ion-card-title>Teacher and Academic Director</ion-card-title>
+          <ion-card-subtitle>Giri Govardhan</ion-card-subtitle>
+        </ion-card-header>
+        <ion-card-content>
+          <ion-list>
+            <ion-item href="https://wa.me/919831724320">
+              <ion-icon name="logo-whatsapp" slot="start" color="success"></ion-icon>
+              <div class="contact-info">
+                <span class="label-primary">WhatsApp</span>
+                <span class="label-secondary">+91 98317 24320</span>
+              </div>
+            </ion-item>
+            <ion-item href="mailto:girigovardana@gmail.com">
+              <ion-icon name="mail" slot="start" color="primary"></ion-icon>
+              <div class="contact-info">
+                <span class="label-primary">Email</span>
+                <span class="label-secondary">girigovardana&#64;gmail.com</span>
+              </div>
+            </ion-item>
+          </ion-list>
+          <p class="contact-description">Please contact Giri for all matters related to class attendance, academic progress, and anything concerning your learning experience.</p>
+        </ion-card-content>
+      </ion-card>
+
+      <ion-card>
+        <ion-card-header>
+          <ion-card-title>Marketing and Sales</ion-card-title>
+          <ion-card-subtitle>Nitya K</ion-card-subtitle>
+        </ion-card-header>
+        <ion-card-content>
+          <ion-list>
+            <ion-item href="https://wa.me/5511988643800">
+              <ion-icon name="logo-whatsapp" slot="start" color="success"></ion-icon>
+              <div class="contact-info">
+                <span class="label-primary">WhatsApp</span>
+                <span class="label-secondary">+55 11 98864 3800</span>
+              </div>
+            </ion-item>
+            <ion-item href="mailto:nityakishora@gmail.com">
+              <ion-icon name="mail" slot="start" color="primary"></ion-icon>
+              <div class="contact-info">
+                <span class="label-primary">Email</span>
+                <span class="label-secondary">nityakishora&#64;gmail.com</span>
+              </div>
+            </ion-item>
+          </ion-list>
+          <p class="contact-description">Reach out to Nitya for any issues related to payments, deadlines, feedback, partnerships, or if you know anyone interested in joining our courses.</p>
+        </ion-card-content>
+      </ion-card>
+
+      <ion-card>
+        <ion-card-header>
+          <ion-card-title>Platform Support</ion-card-title>
+          <ion-card-subtitle>Radha Raman</ion-card-subtitle>
+        </ion-card-header>
+        <ion-card-content>
+          <ion-list>
+            <ion-item href="https://wa.me/8005398363">
+              <ion-icon name="logo-whatsapp" slot="start" color="success"></ion-icon>
+              <div class="contact-info">
+                <span class="label-primary">WhatsApp</span>
+                <span class="label-secondary">+800 5398 363</span>
+              </div>
+            </ion-item>
+            <ion-item href="mailto:ramanas25n@gmail.com">
+              <ion-icon name="mail" slot="start" color="primary"></ion-icon>
+              <div class="contact-info">
+                <span class="label-primary">Email</span>
+                <span class="label-secondary">ramanas25n&#64;gmail.com</span>
+              </div>
+            </ion-item>
+          </ion-list>
+          <p class="contact-description">If you are unable to access the platform for any reason, please contact Radha as soon as possible. The platform should function smoothly, but he's here to resolve any technical issues you might face.</p>
+        </ion-card-content>
+      </ion-card>
+
+      <div class="timezone-note">
+        <ion-note>Please keep in mind the time zone difference, as Vasis Studio is based in Mayapur, India. We are here to serve you, so don't hesitate to drop us a message or call whenever needed.</ion-note>
+      </div>
+    </div>
+
+    <!-- Portuguese Content -->
+    <div *ngSwitchCase="'pt'" class="contact-content">
+      <h1>Contatos Importantes da Vasis Studio</h1>
+
+      <ion-card>
+        <ion-card-header>
+          <ion-card-title>Professor e Diretor Acadêmico</ion-card-title>
+          <ion-card-subtitle>Giri Govardhan</ion-card-subtitle>
+        </ion-card-header>
+        <ion-card-content>
+          <ion-list>
+            <ion-item href="https://wa.me/919831724320">
+              <ion-icon name="logo-whatsapp" slot="start" color="success"></ion-icon>
+              <div class="contact-info">
+                <span class="label-primary">WhatsApp</span>
+                <span class="label-secondary">+91 98317 24320</span>
+              </div>
+            </ion-item>
+            <ion-item href="mailto:girigovardana@gmail.com">
+              <ion-icon name="mail" slot="start" color="primary"></ion-icon>
+              <div class="contact-info">
+                <span class="label-primary">Email</span>
+                <span class="label-secondary">girigovardana&#64;gmail.com</span>
+              </div>
+            </ion-item>
+          </ion-list>
+          <p class="contact-description">Por favor, entre em contato com Giri para tudo relacionado à sua presença nas aulas, progresso acadêmico e questões ligadas ao seu aprendizado.</p>
+        </ion-card-content>
+      </ion-card>
+
+      <ion-card>
+        <ion-card-header>
+          <ion-card-title>Marketing e Vendas</ion-card-title>
+          <ion-card-subtitle>Nitya K</ion-card-subtitle>
+        </ion-card-header>
+        <ion-card-content>
+          <ion-list>
+            <ion-item href="https://wa.me/5511988643800">
+              <ion-icon name="logo-whatsapp" slot="start" color="success"></ion-icon>
+              <div class="contact-info">
+                <span class="label-primary">WhatsApp</span>
+                <span class="label-secondary">+55 11 98864 3800</span>
+              </div>
+            </ion-item>
+            <ion-item href="mailto:nityakishora@gmail.com">
+              <ion-icon name="mail" slot="start" color="primary"></ion-icon>
+              <div class="contact-info">
+                <span class="label-primary">Email</span>
+                <span class="label-secondary">nityakishora&#64;gmail.com</span>
+              </div>
+            </ion-item>
+          </ion-list>
+          <p class="contact-description">Entre em contato com Nitya para questões relacionadas a pagamentos, prazos, feedback, parcerias ou se conhecer alguém interessado em nossos cursos.</p>
+        </ion-card-content>
+      </ion-card>
+
+      <ion-card>
+        <ion-card-header>
+          <ion-card-title>Suporte Técnico à Plataforma</ion-card-title>
+          <ion-card-subtitle>Radha Raman</ion-card-subtitle>
+        </ion-card-header>
+        <ion-card-content>
+          <ion-list>
+            <ion-item href="https://wa.me/8005398363">
+              <ion-icon name="logo-whatsapp" slot="start" color="success"></ion-icon>
+              <div class="contact-info">
+                <span class="label-primary">WhatsApp</span>
+                <span class="label-secondary">+800 5398 363</span>
+              </div>
+            </ion-item>
+            <ion-item href="mailto:ramanas25n@gmail.com">
+              <ion-icon name="mail" slot="start" color="primary"></ion-icon>
+              <div class="contact-info">
+                <span class="label-primary">Email</span>
+                <span class="label-secondary">ramanas25n&#64;gmail.com</span>
+              </div>
+            </ion-item>
+          </ion-list>
+          <p class="contact-description">Caso você tenha algum problema para acessar a plataforma, entre em contato com Radha o mais rápido possível. A plataforma deve funcionar sem problemas, mas ele está à disposição para resolver qualquer questão técnica.</p>
+        </ion-card-content>
+      </ion-card>
+
+      <div class="timezone-note">
+        <ion-note>Por favor, leve em consideração a diferença de fuso horário, pois a Vasis Studio está localizada em Mayapur, Índia. Estamos aqui para servir você, então não hesite em nos enviar uma mensagem ou ligar sempre que necessário.</ion-note>
+      </div>
+    </div>
+
+    <!-- Spanish Content -->
+    <div *ngSwitchCase="'es'" class="contact-content">
+      <h1>Contactos Importantes de Vasis Studio</h1>
+
+      <ion-card>
+        <ion-card-header>
+          <ion-card-title>Profesor y Director Académico</ion-card-title>
+          <ion-card-subtitle>Giri Govardhan</ion-card-subtitle>
+        </ion-card-header>
+        <ion-card-content>
+          <ion-list>
+            <ion-item href="https://wa.me/919831724320">
+              <ion-icon name="logo-whatsapp" slot="start" color="success"></ion-icon>
+              <div class="contact-info">
+                <span class="label-primary">WhatsApp</span>
+                <span class="label-secondary">+91 98317 24320</span>
+              </div>
+            </ion-item>
+            <ion-item href="mailto:girigovardana@gmail.com">
+              <ion-icon name="mail" slot="start" color="primary"></ion-icon>
+              <div class="contact-info">
+                <span class="label-primary">Email</span>
+                <span class="label-secondary">girigovardana&#64;gmail.com</span>
+              </div>
+            </ion-item>
+          </ion-list>
+          <p class="contact-description">Por favor, contacta con Giri para cualquier cosa relacionada con la asistencia a tus clases, el progreso académico y todo lo relacionado con tu experiencia de aprendizaje.</p>
+        </ion-card-content>
+      </ion-card>
+
+      <ion-card>
+        <ion-card-header>
+          <ion-card-title>Marketing y Ventas</ion-card-title>
+          <ion-card-subtitle>Nitya K</ion-card-subtitle>
+        </ion-card-header>
+        <ion-card-content>
+          <ion-list>
+            <ion-item href="https://wa.me/5511988643800">
+              <ion-icon name="logo-whatsapp" slot="start" color="success"></ion-icon>
+              <div class="contact-info">
+                <span class="label-primary">WhatsApp</span>
+                <span class="label-secondary">+55 11 98864 3800</span>
+              </div>
+            </ion-item>
+            <ion-item href="mailto:nityakishora@gmail.com">
+              <ion-icon name="mail" slot="start" color="primary"></ion-icon>
+              <div class="contact-info">
+                <span class="label-primary">Email</span>
+                <span class="label-secondary">nityakishora&#64;gmail.com</span>
+              </div>
+            </ion-item>
+          </ion-list>
+          <p class="contact-description">Comunícate con Nitya para cualquier tema relacionado con pagos, plazos, comentarios, asociaciones o si conoces a alguien interesado en unirse a nuestros cursos.</p>
+        </ion-card-content>
+      </ion-card>
+
+      <ion-card>
+        <ion-card-header>
+          <ion-card-title>Soporte Técnico de la Plataforma</ion-card-title>
+          <ion-card-subtitle>Radha Raman</ion-card-subtitle>
+        </ion-card-header>
+        <ion-card-content>
+          <ion-list>
+            <ion-item href="https://wa.me/8005398363">
+              <ion-icon name="logo-whatsapp" slot="start" color="success"></ion-icon>
+              <div class="contact-info">
+                <span class="label-primary">WhatsApp</span>
+                <span class="label-secondary">+800 5398 363</span>
+              </div>
+            </ion-item>
+            <ion-item href="mailto:ramanas25n@gmail.com">
+              <ion-icon name="mail" slot="start" color="primary"></ion-icon>
+              <div class="contact-info">
+                <span class="label-primary">Email</span>
+                <span class="label-secondary">ramanas25n&#64;gmail.com</span>
+              </div>
+            </ion-item>
+          </ion-list>
+          <p class="contact-description">Si tienes problemas para acceder a la plataforma, por favor contacta a Radha lo antes posible. La plataforma debería funcionar sin problemas, pero él está aquí para resolver cualquier problema técnico que puedas tener.</p>
+        </ion-card-content>
+      </ion-card>
+
+      <div class="timezone-note">
+        <ion-note>Ten en cuenta la diferencia de zona horaria, ya que Vasis Studio se encuentra en Mayapur, India. Estamos aquí para servirte, así que no dudes en enviarnos un mensaje o llamarnos cuando sea necesario.</ion-note>
+      </div>
+    </div>
+  </div>
+</ion-content>

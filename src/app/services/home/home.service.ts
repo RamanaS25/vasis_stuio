@@ -1,5 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { SupabaseService } from '../api/supabase.service';
+
 @Injectable({
   providedIn: 'root',
 })
@@ -9,147 +10,44 @@ export class HomeService {
 
   constructor() {}
 
-  async getHome() {
-    try {
-      const { data, error } = await this.supabase
-        .from('home_text')
-        .select('*')
-        .order('id');
-      if (error) {
-        return { success: false, error };
-      } else {
-        return { success: true, data };
-      }
-    } catch (e) {
-      return { success: false, error: e };
-    }
-  }
+  async getHomeContent() {
+    const { data, error } = await this.supabase
+      .from('home_screen')
+      .select('*')
+      .eq('id', 1);
 
-  async editTextEng(
-    text: {
-      id: number;
-      message: string;
-      link: string;
-      video_title: string;
-      video_id: string;
-    }[]
-  ) {
-    try {
-      for (let item of text) {
-        const { data, error } = await this.supabase
-          .from('home_text')
-          .update({
-            message_e: item.message,
-            link: item.link,
-            video_title_e: item.video_title,
-            video_id: item.video_id,
-          })
-          .eq('id', item.id);
-        if (error) {
-          console.error('Ошибка при обновлении элемента с id:', item.id, error);
-          // Прерываем выполнение и возвращаем ошибку
-          return { success: false, error };
-        }
-
-        console.log('Успешное обновление элемента с id:', item.id);
-      }
-      return { success: true };
-    } catch (error) {
-      console.error('Произошла ошибка:', error);
+    if (error) {
       return { success: false, error };
+    } else {
+      return { success: true, data: data[0] };
     }
   }
-  async editTextSp(
-    text: {
-      id: number;
-      message: string;
-      link: string;
-      video_title: string;
-      video_id: string;
-    }[]
-  ) {
-    try {
-      for (let item of text) {
-        const { data, error } = await this.supabase
-          .from('home_text')
-          .update({
-            message_s: item.message,
-            link: item.link,
-            video_title_s: item.video_title,
-            video_id: item.video_id,
-          })
-          .eq('id', item.id);
-        if (error) {
-          console.error('Ошибка при обновлении элемента с id:', item.id, error);
-          // Прерываем выполнение и возвращаем ошибку
-          return { success: false, error };
-        }
 
-        console.log('Успешное обновление элемента с id:', item.id);
-      }
-      return { success: true };
-    } catch (error) {
-      console.error('Произошла ошибка:', error);
+  async updateHomeContent(home_content: any) {
+    const { data, error } = await this.supabase
+      .from('home_screen')
+      .update(home_content)
+      .eq('id', 1)
+      .select('*');
+    if (error) {
       return { success: false, error };
+    } else {
+      return { success: true, data: data[0] };
     }
   }
-  async editTextPor(
-    text: {
-      id: number;
-      message: string;
-      link: string;
-      video_title: string;
-      video_id: string;
-    }[]
-  ) {
-    try {
-      for (let item of text) {
-        const { data, error } = await this.supabase
-          .from('home_text')
-          .update({
-            message_p: item.message,
-            link: item.link,
-            video_title_p: item.video_title,
-            video_id: item.video_id,
-          })
-          .eq('id', item.id);
-        if (error) {
-          console.error('Ошибка при обновлении элемента с id:', item.id, error);
-          // Прерываем выполнение и возвращаем ошибку
-          return { success: false, error };
-        }
 
-        console.log('Успешное обновление элемента с id:', item.id);
-      }
-      return { success: true };
-    } catch (error) {
-      console.error('Произошла ошибка:', error);
+  async getImagesFromStorage() {
+    const { data, error } = await this.supabase.storage
+      .from('images')
+      .list('home_page/');
+    if (error) {
       return { success: false, error };
+    } else {
+      return { success: true, data: data };
     }
   }
-  async getImage(name: string) {
-    const { data } = this.supabase.storage
-      .from('images') // Название вашего бакета
-      .getPublicUrl(`home_page/${name}`); // Путь к файлу
 
-    if (!data.publicUrl) {
-      console.error('Не удалось получить URL изображения');
-      return null;
-    }
-
-    // Возвращаем публичный URL
-    console.log('service', data.publicUrl);
-    return data.publicUrl;
-  }
-
-  async uploadImage(
-    file: any,
-    id: number
-  ): Promise<{
-    success: boolean;
-    data?: string;
-    error?: string;
-  }> {
+  async uploadImage(file: File): Promise<{ success: boolean; data?: string; error?: string }> {
     try {
       const { data, error } = await this.supabase.storage
         .from('images')
@@ -167,7 +65,6 @@ export class HomeService {
         .getPublicUrl(`home_page/${file.name}`);
 
       if (publicUrlData?.publicUrl) {
-        await this.editImg(publicUrlData.publicUrl, id);
         return {
           success: true,
           data: publicUrlData.publicUrl,
@@ -185,26 +82,6 @@ export class HomeService {
           error instanceof Error ? error.message : String(error)
         }`,
       };
-    }
-  }
-
-  async editImg(name: string, id: number) {
-    try {
-      const { data, error } = await this.supabase
-        .from('home_text')
-        .update({ img: name })
-        .eq('id', id);
-      if (error) {
-        console.error('Ошибка при обновлении элемента с id:', id, error);
-        // Прерываем выполнение и возвращаем ошибку
-        return { success: false, error };
-      } else {
-        console.log('Успешное обновление элемента с id:', id);
-        return { success: true };
-      }
-    } catch (error) {
-      console.error('Произошла ошибка:', error);
-      return { success: false, error };
     }
   }
 }

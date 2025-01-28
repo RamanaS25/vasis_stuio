@@ -1,7 +1,4 @@
-
-
-   
-  <ion-modal
+<ion-modal
   [isOpen]="user_profile"
   (didDismiss)="user_profile = false"
   style="
@@ -10,7 +7,6 @@
     --background: linear-gradient(to bottom, #9290ff, #ff93fa);
   "
 >
-
   <ng-template>
     <app-profile
       (profileOutput)="user_profile = false"
@@ -21,76 +17,92 @@
 
 <ion-toast [isOpen]="showToast" [message]="message" [color]="color" (didDismiss)="showToast = false" duration="1000" position="top"></ion-toast>
 
-<ion-grid>
-   <ion-row>
-     <ion-col>
+<ion-grid class="ion-padding">
+  <ion-row>
+    <ion-col>
       <div class="session-card">
-      <ion-card style="border-radius: 16px; --background:rgba(255, 255, 255, 0.678);">
-        <ion-card-header>
-           {{auth._user.student_groups.name}}
-        </ion-card-header>
-        <ion-card-content>
+        <ion-card>
+          <ion-card-header>
+            <h2 class="course-title">{{auth._user.student_groups.name}}</h2>
+          </ion-card-header>
+          
+          <ion-card-content>
+            <div class="table-container">
+              <!-- Table Header -->
+              <div class="table-header">
+                <div class="header-cell main-cell">{{'Class Details' | translate}}</div>
+                <div class="header-cell action-cell">{{'Recorded Classes' | translate}}</div>
+                <div class="header-cell action-cell">{{'Zoom Link' | translate}}</div>
+              </div>
 
-          @for (item of auth._user.student_groups.student_sessions; track $index) {
-            <ion-item lines="none"  [ngClass]="checkDateStatus(item.session_date)"  style="cursor: pointer; border-radius: 26px;" button>
-
-              <ion-text slot="start">
-                 {{item.week_num}}
-              </ion-text>
-
-             <ion-chip style="--background:white;">
-              {{ item.session_date | date: 'dd/MM/yy, h:mm a' }}
-             </ion-chip>
-             
-              @if(item.recorded_class === null) {
-
-                <ion-icon name="play" slot="end"  [color]="'warning'" ></ion-icon>
-                
-              } @else {
-                
-                 <ion-icon name="play" slot="end" (click)="watchVideo = true; selectedSession = item;"  [color]="(item.recorded_class !== null) ? 'success' : 'dark'" ></ion-icon>
-             
+              <!-- Table Content -->
+              @for (item of auth._user.student_groups.student_sessions; track $index) {
+                <div class="table-row" [ngClass]="checkDateStatus(item.session_date)">
+                  <div class="table-cell main-cell">
+                    <div class="class-info">
+                      <span class="week-num">{{'Class' | translate}} {{item.week_num}}</span>
+                      <span class="session-date">{{ item.session_date | date: 'EEE, MMM d, y • h:mm a' }}</span>
+                    </div>
+                  </div>
+                  
+                  <div class="table-cell action-cell">
+                    @if(item.recorded_class === null) {
+                      <ion-button color="medium" disabled>
+                        <ion-icon name="play-circle-outline" slot="icon-only"></ion-icon>
+                      </ion-button>
+                    } @else {
+                      <ion-button  color="success" (click)="watchVideo = true; selectedSession = item;">
+                        <ion-icon name="play-circle-outline" slot="icon-only" color="light"></ion-icon>
+                      </ion-button>
+                    }
+                  </div>
+                  
+                  <div class="table-cell action-cell">
+                    <ion-button  color="primary" (click)="openLink(auth._user.student_groups.zoom_link)">
+                      <ion-icon name="videocam" slot="icon-only"></ion-icon>
+                    </ion-button>
+                  </div>
+                </div>
+              } @empty {
+                <div class="empty-state">
+                  <ion-text>No sessions found</ion-text>
+                </div>
               }
-              <ion-icon name="link" slot="end" (click)="openLink(auth._user.student_groups.zoom_link)"  [color]="'primary'"></ion-icon>
-
-            </ion-item>
-            
-          } @empty {
-            <ion-text>No sessions found</ion-text>
-          }
-
-        </ion-card-content>
-      </ion-card>
+            </div>
+          </ion-card-content>
+        </ion-card>
       </div>
-     </ion-col>
-   </ion-row>
+    </ion-col>
+  </ion-row>
 </ion-grid>
 
+<!-- Video Modal -->
 <ion-modal [isOpen]="watchVideo" (didDismiss)="watchVideo = false" style="--width:100%; --height:100%;">
-
   <ng-template>
-     <ion-item>
-      <ion-label slot="start">
-        Recorded Video for Class {{selectedSession.week_num}}
-     </ion-label>
-       <ion-icon name="close" (click)="watchVideo = false" slot="end" style="cursor: pointer;"></ion-icon>
-     </ion-item>
+    <ion-header>
+      <ion-toolbar>
+        <ion-title>
+          Recorded Video for Week {{selectedSession?.week_num}}
+        </ion-title>
+        <ion-buttons slot="end">
+          <ion-button (click)="watchVideo = false">
+            <ion-icon name="close"></ion-icon>
+          </ion-button>
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-header>
 
-     <ion-content>
-       <ion-grid fixed="true">
-         <ion-row>
-           <ion-col>
-              <app-youtube-player 
-                [videoUrl]="selectedSession.recorded_class">
-              </app-youtube-player>
-           </ion-col>
-         </ion-row>
-       </ion-grid>
-     
-
-     </ion-content>
+    <ion-content>
+      <ion-grid fixed="true">
+        <ion-row>
+          <ion-col>
+            <app-youtube-player [videoUrl]="selectedSession.recorded_class">
+            </app-youtube-player>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-content>
   </ng-template>
-
 </ion-modal>
 
 

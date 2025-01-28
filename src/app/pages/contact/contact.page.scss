@@ -1,0 +1,196 @@
+:host {
+  --page-padding: 16px;
+  --card-border-radius: 12px;
+  --card-spacing: 16px;
+}
+
+.language-segment {
+  margin: var(--page-padding) auto;
+  max-width: 400px;
+  background: var(--ion-color-light);
+  border-radius: 9999px;
+  padding: 4px;
+  
+  ion-segment-button {
+    --background: var(--ion-color-light);
+    --background-checked: var(--ion-color-primary);
+    --color: var(--ion-color-dark);
+    --color-checked: #ffffff;
+    --indicator-color: transparent;
+    border-radius: 9999px;
+    text-transform: none;
+    min-height: 36px;
+    font-weight: 500;
+    opacity: 1;
+    font-size: 13px;
+    min-width: 100px;
+    padding: 0 8px;
+    
+    &::part(indicator) {
+      display: none;
+    }
+
+    &.segment-button-checked {
+      font-weight: 600;
+    }
+
+    ion-label {
+      margin: 0;
+      white-space: nowrap;
+    }
+  }
+}
+
+.contact-content {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 0 var(--page-padding);
+
+  h1 {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--ion-color-dark);
+    margin-bottom: 32px;
+    text-align: center;
+  }
+
+  ion-card {
+    margin: 0 0 var(--card-spacing);
+    border-radius: var(--card-border-radius);
+    background: #ffffff;
+    box-shadow: none;
+    border: 1px solid var(--ion-color-light);
+
+    ion-card-header {
+      padding: var(--card-spacing);
+      border-bottom: 1px solid var(--ion-color-light);
+      background: var(--ion-color-light);
+      
+      ion-card-title {
+        font-size: 18px;
+        font-weight: 600;
+        color: var(--ion-color-dark);
+        margin-bottom: 4px;
+      }
+
+      ion-card-subtitle {
+        font-size: 14px;
+        color: var(--ion-color-medium);
+        margin: 0;
+      }
+    }
+
+    ion-list {
+      padding: 0;
+      background: #ffffff;
+    }
+
+    ion-item {
+      --background: #ffffff;
+      --padding-start: var(--card-spacing);
+      --padding-end: var(--card-spacing);
+      --padding-top: 12px;
+      --padding-bottom: 12px;
+      --border-color: var(--ion-color-light);
+      --ripple-color: var(--ion-color-light);
+
+      &:hover {
+        --background: var(--ion-color-light);
+      }
+
+      ion-icon {
+        font-size: 20px;
+        margin-right: 16px;
+      }
+
+      .contact-info {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+
+        .label-primary {
+          font-size: 14px;
+          font-weight: 500;
+          color: var(--ion-color-dark);
+        }
+
+        .label-secondary {
+          font-size: 13px;
+          color: var(--ion-color-medium);
+        }
+      }
+    }
+
+    .contact-description {
+      margin: var(--card-spacing);
+      color: var(--ion-color-medium);
+      font-size: 13px;
+      line-height: 1.5;
+    }
+  }
+
+  .timezone-note {
+    margin: 32px 0;
+    padding: var(--card-spacing);
+    text-align: center;
+    background: var(--ion-color-light);
+    border-radius: var(--card-border-radius);
+    
+    ion-note {
+      color: var(--ion-color-medium);
+      font-size: 13px;
+      line-height: 1.5;
+    }
+  }
+}
+
+// Dark mode adjustments
+:host-context(.dark) {
+  ion-card {
+    background: var(--ion-color-dark);
+    border-color: var(--ion-color-medium);
+    
+    ion-card-header {
+      background: var(--ion-color-medium);
+      border-color: var(--ion-color-medium);
+    }
+    
+    ion-list {
+      background: var(--ion-color-dark);
+    }
+    
+    ion-item {
+      --background: var(--ion-color-dark);
+      --border-color: var(--ion-color-medium);
+      
+      &:hover {
+        --background: var(--ion-color-medium);
+      }
+    }
+  }
+
+  .timezone-note {
+    background: var(--ion-color-medium);
+  }
+
+  .language-segment {
+    background: var(--ion-color-medium);
+    
+    ion-segment-button {
+      --background: var(--ion-color-medium);
+      --color: var(--ion-color-light);
+      --color-checked: #ffffff;
+    }
+  }
+}
+
+@media (min-width: 768px) {
+  :host {
+    --page-padding: 32px;
+    --card-spacing: 24px;
+  }
+
+  .contact-content {
+    padding: 0 var(--page-padding);
+  }
+}

@@ -101,6 +101,8 @@ export class GroupmPage implements OnInit {
   }
   addGroupBool = false
 
+  editZoomLink = false
+
   constructor() { 
      this.getGroups()
      this.getClasses()
@@ -384,6 +386,18 @@ export class GroupmPage implements OnInit {
     let x = await this.api.deleteGroup(group)
     if(x.success){
       this.toast('Group Deleted', 'success', 3000)
+      this.getGroups()
+    }else{
+      this.toast('Error In Operation', 'danger', 3000)
+      console.error(x.error)
+    }
+  }
+
+  async updateZoomLink(){
+    let x = await this.api.updateZoomLink(this.selectedItem, this.selectedItem.zoom_link)
+    if(x.success){
+      this.toast('Zoom Link Updated', 'success', 3000)
+      this.editZoomLink = false
       this.getGroups()
     }else{
       this.toast('Error In Operation', 'danger', 3000)

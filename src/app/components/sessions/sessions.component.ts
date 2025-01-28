@@ -1,20 +1,22 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IonContent, IonMenuButton, IonHeader, IonTitle, IonToolbar, IonGrid, IonCol, IonRow, IonCard, IonText, IonChip, IonIcon, IonItem, IonLabel, IonModal, IonToast, IonCardContent, IonButtons, IonCardHeader } from '@ionic/angular/standalone';
+import { IonContent, IonMenuButton, IonHeader, IonTitle, IonToolbar, IonGrid, IonCol, IonRow, IonCard, IonText, IonChip, IonIcon, IonItem, IonLabel, IonModal, IonToast, IonCardContent, IonButtons, IonCardHeader, IonButton } from '@ionic/angular/standalone';
 import { YoutubePlayerComponent } from 'src/app/components/youtube-player/youtube-player.component';
 import { SessionsService } from 'src/app/services/student-sessions/sessions.service';
 import { LoginService } from 'src/app/services/auth/login.service';
 import { ProfileComponent } from 'src/app/components/profile/profile.component';
 import { addIcons } from 'ionicons';
-import { play, link, playOutline, close } from 'ionicons/icons';
-addIcons({play,link});
+import { play, link, playOutline, close, playCircleOutline, videocam } from 'ionicons/icons';
+
+import { TranslatePipe } from '@ngx-translate/core';
+addIcons({play,link,playOutline,close,playCircleOutline,videocam});
 @Component({
   selector: 'app-sessions',
   templateUrl: './sessions.component.html',
   styleUrls: ['./sessions.component.scss'],
   standalone: true,
-  imports: [IonCardHeader, IonButtons,ProfileComponent, IonCardContent, IonToast,IonMenuButton, IonModal, YoutubePlayerComponent, IonLabel, IonItem, IonIcon, IonChip, IonText, IonCard, IonRow, IonCol, IonGrid, IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule]
+  imports: [IonButton, TranslatePipe, IonCardHeader, IonButtons,ProfileComponent, IonCardContent, IonToast,IonMenuButton, IonModal, YoutubePlayerComponent, IonLabel, IonItem, IonIcon, IonChip, IonText, IonCard, IonRow, IonCol, IonGrid, IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule]
 })
 export class SessionsComponent implements OnInit {
 auth = inject(LoginService)

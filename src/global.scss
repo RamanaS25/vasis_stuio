@@ -70,13 +70,22 @@ ion-header {
 
 
 
-  
-ion-content{
-    /* From Pink to Blue */
-  --background: linear-gradient(135deg, #ee54b3 0%, #5B8DEF 100%);
-  
+ion-content {
+    /* From Pink to Blue with dark overlay */
+  --background: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)),
+                linear-gradient(135deg, #ee54b3 0%, #5B8DEF 100%);
+}
+
+/* Only show background image on desktop */
+@media (min-width: 768px) {
+  ion-content {
+    /* Add background image and dark overlay on top of gradient */
+    --background: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)),
+                  url('./assets/back_.png') no-repeat center center fixed,
+                  linear-gradient(135deg, #ee54b3 0%, #5B8DEF 100%);
+    background-size: cover;
   }
-  
+}
 
   .scrollable-content {
     height: 85vh; /* 70% of the viewport height */

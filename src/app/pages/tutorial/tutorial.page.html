@@ -1,4 +1,4 @@
-<ion-header [translucent]="true" class="ion-no-border">
+ <ion-header [translucent]="true" class="ion-no-border">
   <ion-toolbar>
     <ion-buttons slot="start" style="color: white">
       <ion-menu-button></ion-menu-button>
@@ -76,7 +76,7 @@
                     button
                   >
                         <ion-label>{{ name.title}}</ion-label>
-
+                       @if(user._user?.role == 'admin'){
                         <ion-icon
                           style="margin-right: 10px"
                           name="add-outline"
@@ -89,6 +89,7 @@
                         ></ion-icon>
                         <ion-icon name="close-outline" (click)="selectVideo(name.id)">
                         </ion-icon>
+                        }
                   </ion-item>
 
                 } 

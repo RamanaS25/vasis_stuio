@@ -1,4 +1,4 @@
-<app-header [header]="'Homework Grading'"></app-header>
+<app-header [header]="'Homework Grading'" [isBackButton]="true"></app-header>
 
 <ion-content [fullscreen]="true">
   <ion-toast [isOpen]="toast.isOpen" position="top" [message]="toast.message" [color]="toast.color" (didDismiss)="toast.isOpen = false" duration="3000"></ion-toast>

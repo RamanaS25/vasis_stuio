@@ -21,6 +21,11 @@ export class LoginService {
   get _logged_in() {
     return this.logged_in;
   }
+
+  private change_lang(lang: any) {
+    this.user_language = lang;
+    this.translate.use(lang);
+  }
   
   async login(user: any) {
     console.log(user.user_name, user.password)
@@ -93,6 +98,7 @@ export class LoginService {
 
           this.logged_in = true
           this.user_language = data[0].language
+          this.change_lang(this.user_language)
           return {
             success: true,
             message: 'Logged in successfully'

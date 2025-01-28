@@ -1,4 +1,4 @@
-<app-header [header]="'Student Management'"></app-header>
+<app-header [header]="'Student Management'" [isBackButton]="true"></app-header>
 
 <ion-toast
   [isOpen]="isToastOpen"
@@ -76,34 +76,34 @@
         <ion-card class="cardStudent">
           <ion-item lines="none" class="itemSelect">
             <ion-input
-              placeholder="Email"
+              label="Email"
               type="email"
               [(ngModel)]="user.email"
             ></ion-input>
           </ion-item>
           <ion-item lines="none" class="itemSelect">
             <ion-input
-              placeholder="Phone Number"
+              label="Phone Number"
               type="tel"
               [(ngModel)]="user.phone"
             ></ion-input>
           </ion-item>
           <ion-item lines="none" class="itemSelect">
-            <ion-input placeholder="Level" [(ngModel)]="user.grade"></ion-input>
+            <ion-input label="Level" [(ngModel)]="user.grade"></ion-input>
           </ion-item>
           <ion-item lines="none" class="itemSelect">
             <ion-select
-              placeholder="Voice Scale"
+              label="Voice Scale"
               [(ngModel)]="user.voice_scale"
             >
               <ion-select-option value="W1">W1</ion-select-option>
-              <ion-select-option value="B1">B2</ion-select-option>
+              <ion-select-option value="B1">B1</ion-select-option>
               <ion-select-option value="B4">B4</ion-select-option>
               <ion-select-option value="B5">B5</ion-select-option>
             </ion-select>
           </ion-item>
           <ion-item lines="none" class="itemSelect" class="itemSelect">
-            <ion-select placeholder="Language" [(ngModel)]="user.language">
+            <ion-select label="Language" [(ngModel)]="user.language">
               <ion-select-option value="English">English</ion-select-option>
               <ion-select-option value="Spanish">Spanish</ion-select-option>
               <ion-select-option value="Portuguese"
@@ -112,7 +112,7 @@
             </ion-select>
           </ion-item>
           <ion-item lines="none" class="itemSelect">
-            <ion-select placeholder="Group" [(ngModel)]="user.group_name">
+            <ion-select label="Group" [(ngModel)]="user.group_name">
               @for (item of allGroups; track $index) {
               <ion-select-option [value]="item.name"
                 >{{item.name}}</ion-select-option

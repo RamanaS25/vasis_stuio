@@ -24,7 +24,11 @@ import {
   IonSegment,
   IonInput,
   IonToast,
-  IonText, IonFab, IonFabButton } from '@ionic/angular/standalone';
+  IonText, IonFab, IonFabButton,
+  IonItemGroup,
+  IonItemDivider,
+  IonCardTitle
+} from '@ionic/angular/standalone';
 import { register } from 'swiper/element/bundle';
 import { addIcons } from 'ionicons';
 
@@ -37,7 +41,7 @@ import {
   logoGoogle,
   closeOutline,
   createOutline,
-  personCircleOutline, add } from 'ionicons/icons';
+  personCircleOutline, add, checkmarkCircle } from 'ionicons/icons';
 import { LoginService } from 'src/app/services/auth/login.service';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { HeaderComponent } from "../../components/header/header.component";
@@ -82,7 +86,10 @@ register();
     IonModal,
     SwiperComponent,
     HeaderComponent,
-    TranslatePipe
+    TranslatePipe,
+    IonItemGroup,
+    IonItemDivider,
+    IonCardTitle
   ],
 })
 export class HomePage implements OnInit {
@@ -90,50 +97,78 @@ export class HomePage implements OnInit {
   auth = inject(LoginService);
   private sanitizer = inject(DomSanitizer);
 
-  img: string = 'banner0802.jpg';
-
-  text: any;
-
-  _images = [
-    { link: '../../../assets/img/banner0802.jpg', id: 1 },
-    { link: '../../../assets/img/banner0802.jpg', id: 2 },
-    { link: '../../../assets/img/banner0802.jpg', id: 3 },
-  ];
-
-  textForEdit: any;
-  displayedMessages: any;
-  video_id: string = 'https://www.youtube.com/watch?v=QCO9VSj4h18';
-  link: string = 'https://vasisstudio.com/kirtan-school';
+  home_content: any;
+  banner_images: any[] = [];
+  banner_img: string = '';
+  messages: any[] = [];
+  videos: any[] = [];
+  firstTwoVideos: any[] = [];
+  lastTwoVideos: any[] = [];
 
   toastBool = false;
   message: string = '';
   color: string = 'danger';
-  login_open: boolean = false;
-  edit_open: boolean = false;
   edit_img_open: boolean = false;
   selectedFile: File | null = null;
-  user_profile: boolean = false;
+  selectedImageId!: number;
   payment_notification: boolean = false;
 
-  selectedImageId!: number;
-
-  stored_ids = {}
-
-  video_url1: SafeResourceUrl = '';
-  video_url2: SafeResourceUrl = '';
-  video_url3: SafeResourceUrl = '';
-  video_url4: SafeResourceUrl = '';
-
   selectLang: string = 'English';
-
   translate = inject(TranslateService);
-  constructor() {
-    addIcons({close,closeOutline,add,logoInstagram,logoFacebook,logoGoogle,logoWhatsapp,createOutline,personCircleOutline,pencil,});
-    this.getText();
 
-    this.translate.setDefaultLang('English');
+  edit_content_open: boolean = false;
+  editableContent: any = {
+    data: [
+      {
+        type: 'videos',
+        data: []
+      },
+      {
+        type: 'messages',
+        data: []
+      }
+    ]
+  };
+
+  stored_images: any[] = [];
+  selected_stored_image: string | null = null;
+
+  constructor() {
+    addIcons({createOutline,logoInstagram,logoFacebook,logoGoogle,logoWhatsapp,close,closeOutline,checkmarkCircle,add,personCircleOutline,pencil,});
     
+    this.getHomeContent();
+    
+    this.translate.setDefaultLang('English');
     this.translate.use(this.auth.user_language);
+  }
+
+  async getHomeContent() {
+    try {
+      const response = await this.api.getHomeContent();
+      this.home_content = response.data;
+
+      // Process videos
+      const videoSection = this.home_content.data.find((section: any) => section.type === 'videos');
+      this.videos = videoSection?.data.map((video: any) => ({
+        ...video,
+        safeUrl: this.sanitizeUrl('https://www.youtube-nocookie.com/embed/' + video.link)
+      })) || [];
+
+      // Split videos into two groups
+      this.firstTwoVideos = this.videos.slice(0, 2);
+      this.lastTwoVideos = this.videos.slice(2, 4);
+
+      // Process messages
+      const messageSection = this.home_content.data.find((section: any) => section.type === 'messages');
+      this.messages = messageSection?.data || [];
+
+      // Process images
+      this.banner_images = this.home_content.images || [];
+      this.banner_img = this.home_content.banner_img;
+
+    } catch (error) {
+      console.error('Error fetching home content:', error);
+    }
   }
 
   handleNotification(message: string) {
@@ -150,120 +185,13 @@ export class HomePage implements OnInit {
     this.toastBool = true;
   }
 
-  open(x: any) {
-    this.login_open = false;
-  }
-
-  async getText() {
-    try {
-      const x = await this.api.getHome();
-      this.text = x.data;
-      this._images = this.text.slice(0, -1).map((element: any) => {
-        return { link: element.img, id: element.id };
-      });
-      console.warn(this._images);
-      console.warn(this.text);
-      if (this.text?.[3]?.img) {
-        this.img = this.text[3].img;
-      }
-
-      if (this.text?.[0]?.link) {
-        this.link = this.text[0].link;
-      }
-      this.sanitize_all_videos();
-    } catch (error) {
-      console.error('Error fetching home data:', error);
-    }
-  }
-
-
-  edit_text() {
-    if (!this.text) return;
-
-    switch (this.selectLang) {
-      case 'English':
-        this.textForEdit = this.text.map((element: any) => ({
-          id: element.id,
-          message: element.message_e,
-          video_title: element.video_title_e,
-          video_id: this.extractUrl(element.video_id),
-          link: element.link,
-        }));
-        break;
-      case 'Spanish':
-        this.textForEdit = this.text.map((element: any) => ({
-          id: element.id,
-          message: element.message_s,
-          video_title: element.video_title_s,
-          video_id: this.extractUrl(element.video_id),
-          link: element.link,
-        }));
-        break;
-      case 'Portuguese':
-        this.textForEdit = this.text.map((element: any) => ({
-          id: element.id,
-          message: element.message_p,
-          video_title: element.video_title_p,
-          video_id: this.extractUrl(element.video_id),
-          link: element.link,
-        }));
-        break;
-    }
-
-  }
-  
-  sanitize_all_videos() {
-    this.text[0].video_id = this.sanitizeUrl('https://www.youtube-nocookie.com/embed/' + this.text[0].video_id);
-    this.text[1].video_id = this.sanitizeUrl('https://www.youtube-nocookie.com/embed/' + this.text[1].video_id);
-    this.text[2].video_id = this.sanitizeUrl('https://www.youtube-nocookie.com/embed/' + this.text[2].video_id);
-    this.text[3].video_id = this.sanitizeUrl('https://www.youtube-nocookie.com/embed/' + this.text[3].video_id);
-    console.log('sanitized videos', this.video_url1, this.video_url2, this.video_url3, this.video_url4);
-  }
-
-  extractUrl(safeUrl: SafeResourceUrl): string {
-    // Get the sanitized URL string from the SafeResourceUrl object
-    const urlString = this.sanitizer.sanitize(SecurityContext.URL, safeUrl) || '';
-    
-    // Remove the YouTube embed prefix to get back the video ID
-    return urlString.replace('https://www.youtube-nocookie.com/embed/', '');
-  }
-
   change_lang(lang: any) {
-     this.auth.user_language = lang;
-    this.edit_text();
+    this.auth.user_language = lang;
     this.translate.use(lang);
   }
 
-  async saveEdit(
-    pageText: {
-      id: number;
-      message: string;
-      video_title: string;
-      video_id: string;
-      link: string;
-    }[]
-  ) {
-    try {
-      switch (this.selectLang) {
-        case 'ENG':
-          await this.api.editTextEng(pageText);
-          this.getText();
-          this.edit_open = false;
-          break;
-        case 'SPN':
-          await this.api.editTextSp(pageText);
-          this.getText();
-          this.edit_open = false;
-          break;
-        case 'POR':
-          await this.api.editTextPor(pageText);
-          this.getText();
-          this.edit_open = false;
-          break;
-      }
-    } catch (error) {
-      console.error('Error saving text:', error);
-    }
+  sanitizeUrl(url: string): SafeResourceUrl {
+    return this.sanitizer.bypassSecurityTrustResourceUrl(url);
   }
 
   onFileSelected(event: any) {
@@ -277,32 +205,119 @@ export class HomePage implements OnInit {
     try {
       if (!this.selectedFile) return;
 
-      const result = await this.api.uploadImage(
-        this.selectedFile,
-        this.selectedImageId
-      );
-      if (result.success) {
-        this.getText();
-        console.warn('img uploaded');
-        this.edit_img_open = false;
-      }
-
-      if (result.error) {
-        console.log('Error uploading image:', result.error);
-        this.toast('Error Uploading Image', 'danger');
+      const result = await this.api.uploadImage(this.selectedFile);
+      if (result.success && result.data) {
+        // After successful upload, update the content using the new image URL
+        this.selected_stored_image = result.data;
+        await this.useStoredImage();
+      } else {
+        this.toast('Error uploading image', 'danger');
       }
     } catch (error) {
       console.error('Error uploading image:', error);
+      this.toast('Error uploading image', 'danger');
     }
   }
 
-  sanitizeUrl(url: string): SafeResourceUrl {
-    
-    return this.sanitizer.bypassSecurityTrustResourceUrl(url);
+  async useStoredImage() {
+    if (!this.selected_stored_image) {
+      this.toast('Please select an image first', 'warning');
+      return;
+    }
+
+    try {
+      // Create a copy of the current home content
+      const updatedContent = { ...this.home_content };
+
+      // Update either banner image or slider images based on selectedImageId
+      if (this.selectedImageId === 4) { // Banner image
+        updatedContent.banner_img = this.selected_stored_image;
+      } else { // Slider images
+        const imageIndex = updatedContent.images.findIndex((img: any) => img.id === this.selectedImageId);
+        if (imageIndex !== -1) {
+          updatedContent.images[imageIndex].link = this.selected_stored_image;
+        }
+      }
+
+      // Update the content in the database
+      const result = await this.api.updateHomeContent(updatedContent);
+      if (result.success) {
+        await this.getHomeContent();
+        this.edit_img_open = false;
+        this.toast('Image updated successfully', 'success');
+      } else {
+        this.toast('Error updating image', 'danger');
+      }
+    } catch (error) {
+      console.error('Error updating image:', error);
+      this.toast('Error updating image', 'danger');
+    }
+  }
+
+  prepareContentForEdit() {
+    this.editableContent = {
+      data: [
+        {
+          type: 'videos',
+          data: this.videos.map(video => ({
+            link: video.link,
+            title: video.title,
+            title_p: video.title_p,
+            title_s: video.title_s,
+            sequence: video.sequence
+          }))
+        },
+        {
+          type: 'messages',
+          data: this.messages.map(msg => ({
+            link: msg.link,
+            title: msg.title,
+            title_p: msg.title_p,
+            title_s: msg.title_s
+          }))
+        }
+      ]
+    };
+    this.edit_content_open = true;
+  }
+
+  async saveContentEdit() {
+    try {
+      const result = await this.api.updateHomeContent(this.editableContent);
+      if (result.success) {
+        this.toast('Content updated successfully', 'success');
+        this.edit_content_open = false;
+        await this.getHomeContent();
+      } else {
+        this.toast('Error updating content', 'danger');
+      }
+    } catch (error) {
+      console.error('Error saving content:', error);
+      this.toast('Error updating content', 'danger');
+    }
+  }
+
+  async open_edit_img() {
+    if(this.auth._user.is_admin === true) {
+      try {
+        const result = await this.api.getImagesFromStorage();
+        if (result.success) {
+          this.stored_images = result.data?.map((file: any) => ({
+            name: file.name,
+            url: this.api.supabase.storage
+              .from('images')
+              .getPublicUrl(`home_page/${file.name}`).data.publicUrl
+          })) || [];
+        }
+        this.edit_img_open = true;
+      } catch (error) {
+        console.error('Error loading stored images:', error);
+        this.toast('Error loading image library', 'danger');
+      }
+    }
   }
 
   ngOnInit() {
-
     console.log('HomePage initialized');
   }
 }

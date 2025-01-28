@@ -1,7 +1,7 @@
 import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IonContent, IonHeader, IonTitle, IonToolbar, IonButton, IonInput, IonGrid, IonRow, IonCol, IonCard, IonToast, IonItem, IonSelect, IonSelectOption, IonModal, IonBackButton, IonLoading, IonChip, IonLabel, IonBadge, IonNote, IonList, IonCardContent, IonIcon, IonCardHeader, IonButtons } from '@ionic/angular/standalone';
+import { IonContent, IonHeader, IonTitle, IonToolbar, IonButton, IonInput, IonGrid, IonRow, IonCol, IonCard, IonToast, IonItem, IonSelect, IonSelectOption, IonModal, IonBackButton, IonLoading, IonChip, IonLabel, IonBadge, IonNote, IonList, IonCardContent, IonIcon, IonCardHeader, IonButtons, IonItemDivider } from '@ionic/angular/standalone';
 import { Homework, MuxVideoService } from 'src/app/services/mux/mux-video.service';
 import { LoginService } from '../../services/auth/login.service';
 import { addIcons } from 'ionicons';
@@ -16,7 +16,7 @@ import { TranslatePipe } from '@ngx-translate/core';
   templateUrl: './homework-submission.page.html',
   styleUrls: ['./homework-submission.page.scss'],
   standalone: true,
-  imports: [
+  imports: [IonItemDivider, 
     IonButtons,
     IonCardHeader,
     IonIcon,

@@ -1,4 +1,4 @@
-<app-header (changeLangEmitter)="change_lang($event)" [header]="'Menu' | translate"></app-header>
+<app-header (changeLangEmitter)="change_lang($event)" [header]="'Menu' | translate" [isHeader]="true"></app-header>
 
 <ion-toast
   [message]="message"
@@ -9,14 +9,10 @@
   position="top"
 ></ion-toast>
 
-
-
-
-
 <ion-content [fullscreen]="true" [scrollY]="true">
  @if(auth._logged_in && auth._user.is_admin){
   <ion-fab horizontal="end" vertical="bottom" slot="fixed">
-    <ion-fab-button (click)="edit_text(); edit_open=true" >
+    <ion-fab-button (click)="prepareContentForEdit()">
       <ion-icon name="create-outline"></ion-icon>
     </ion-fab-button>
   </ion-fab>
@@ -45,8 +41,8 @@
     <ion-row>
       <ion-col>
         <app-swiper
-          [_images]="_images"
-          (selectImg)="selectedImageId = $event.id; edit_img_open = true"
+          [_images]="banner_images"
+          (selectImg)="selectedImageId = $event.id; open_edit_img()"
         ></app-swiper>
       </ion-col>
     </ion-row>
@@ -76,27 +72,28 @@
       </ion-col>
     </ion-row>
 
+    <!-- First two videos -->
     <ion-row>
-      @for (item of text?.slice(0, 2); track $index) {
+      @for (video of firstTwoVideos; track $index) {
       <ion-col sizeLg="6" sizeMd="12" sizeSm="12" sizeXs="12">
         <div class="video-container">
           <iframe
             width="100%"
             height="100%"
-            [src]="item.video_id"
+            [src]="video.safeUrl"
             frameborder="0"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
             allowfullscreen
           ></iframe>
         </div>
         <ion-item>
-          {{auth.user_language === 'English' ? item.video_title_e : auth.user_language === 'Portuguese' ?
-          item.video_title_p : item.video_title_s }}
+          {{auth.user_language === 'English' ? video.title : 
+            auth.user_language === 'Portuguese' ? video.title_p : video.title_s }}
         </ion-item>
       </ion-col>
       }
     </ion-row>
 
+    <!-- Messages section -->
     <ion-row>
       <ion-col>
         <ion-card class="messages">
@@ -104,53 +101,51 @@
             <ion-title> {{'Latest Messages' | translate}} </ion-title>
           </ion-card-header>
           <ion-card-content>
-            @for (message of text; track $index ) { @if(message.message_e !==
-            null){
+            @for (msg of messages; track $index) {
             <br />
             <ion-item lines="full" style="--background: transparent">
               <ion-label>
-                {{auth.user_language === 'English' ? message.message_e : auth.user_language ===
-                'Portuguese' ? message.message_p : message.message_s }}
+                {{auth.user_language === 'English' ? msg.title : 
+                  auth.user_language === 'Portuguese' ? msg.title_p : msg.title_s }}
               </ion-label>
-              <a href="{{link}}" target="_blank">
+              <a [href]="msg.link" target="_blank">
                 <ion-button slot="end"> {{'Click Now' | translate}} </ion-button>
               </a>
             </ion-item>
             <br />
-            } }
+            }
           </ion-card-content>
         </ion-card>
       </ion-col>
     </ion-row>
 
+    <!-- Banner image -->
     <ion-row>
       <ion-card
         class="image-card-background1"
-        (click)="edit_img_open = true; selectedImageId = 4"
+        (click)="open_edit_img(); selectedImageId = 4"
       >
-        <img src="{{img}}" />
+        <img [src]="banner_img" />
       </ion-card>
     </ion-row>
 
+    <!-- Last two videos -->
     <ion-row>
-      @for (item of text?.slice(-2); track $index) {
+      @for (video of lastTwoVideos; track $index) {
       <ion-col sizeLg="6" sizeMd="12" sizeSm="12" sizeXs="12">
         <div class="video-container">
           <iframe
             width="100%"
             height="100%"
-            [src]="item.video_id"
+            [src]="video.safeUrl"
             frameborder="0"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
             allowfullscreen
           ></iframe>
         </div>
-        <ion-card style="border-radius: 10px;">
-          <ion-card-content>
-            {{auth.user_language === 'English' ? item.video_title_e : auth.user_language === 'Portuguese' ?
-          item.video_title_p : item.video_title_s }}
-          </ion-card-content>
-        </ion-card>
+        <ion-item>
+          {{auth.user_language === 'English' ? video.title : 
+            auth.user_language === 'Portuguese' ? video.title_p : video.title_s }}
+        </ion-item>
       </ion-col>
       }
     </ion-row>
@@ -197,116 +192,225 @@
 </ion-modal>
 
 <!-- edit -->
-<ion-modal
-  [isOpen]="edit_open"
-  (didDismiss)="edit_open = false"
-  style="--height: 100%; --width: 100%;"
->
 
-
-  <ng-template>
-
-    <ion-header>
-      <ion-toolbar>
-        <ion-segment
-          [(ngModel)]="selectLang"
-          (ionChange)="change_lang(selectLang)"
-          mode="ios"
-          value="English"
-        >
-
-          <ion-segment-button value="English">
-            <ion-label>English</ion-label>
-          </ion-segment-button>
-          <ion-segment-button value="Spanish">
-            <ion-label>Spanish</ion-label>
-          </ion-segment-button>
-          <ion-segment-button value="Portuguese">
-            <ion-label>Portuguese</ion-label>
-          </ion-segment-button>
-        </ion-segment>
-        <ion-buttons slot="end">
-          <ion-icon name="close-outline" (click)="edit_open = false" size="large" style="cursor: pointer"></ion-icon>
-        </ion-buttons>
-      </ion-toolbar>
-    </ion-header>
-
-    <ion-content>
-
-        <ion-grid fixed="true"> 
-           <ion-row>
-             <ion-col>
-              @for (item of textForEdit; track $index) {
-                @if(item.link !== null){
-                  <ion-card>
-                    <ion-card-header>
-                       {{'Message ' + ($index + 1)}}
-                    </ion-card-header>
-                    <ion-card-content>
-                      <ion-item lines="none" class="itemModal">
-                        <ion-input [(ngModel)]="item.message"> </ion-input>
-                      </ion-item>
-                      
-                      <ion-item lines="none" class="itemModal">
-                        <ion-input [(ngModel)]="item.link"> </ion-input>
-                      </ion-item>
-                    </ion-card-content>
-                  </ion-card>
-                }
-              }
-        
-              @for(item of textForEdit; track $index){ 
-                 <ion-card>
-                  <ion-card-header>
-                    {{'Video ' + ($index + 1)}}
-                 </ion-card-header>
-                    <ion-card-content>
-                      <ion-item lines="none" class="itemModal">
-                        <ion-input [(ngModel)]="item.video_title"> </ion-input>
-                      </ion-item>
-        
-                      <ion-item lines="none" class="itemModal">
-                        <ion-input  [(ngModel)]="item.video_id"></ion-input>
-                      </ion-item>
-                    </ion-card-content>
-                 </ion-card>
-        
-              }
-                <ion-item>
-                  <ion-button (click)="saveEdit(textForEdit)" slot="end">Save</ion-button>
-                </ion-item>
-             </ion-col>
-           </ion-row>
-        </ion-grid>
-    
-    </ion-content>
-
-  </ng-template>
-</ion-modal>
 
 <!-- img -->
 <ion-modal
   [isOpen]="edit_img_open"
   (didDismiss)="edit_img_open = false"
-  style="
-    --background: linear-gradient(to bottom, #9290ff, #ff93fa);
-  "
+  style="--height: 90%; --width: 90%;"
 >
   <ng-template>
-    <ion-item>
-      <ion-icon name="close-outline" slot="end" (click)="edit_img_open = false" style="cursor: pointer"></ion-icon>
-    </ion-item>
+    <ion-header>
+      <ion-toolbar>
+        <ion-title>Image Library</ion-title>
+        <ion-buttons slot="end">
+          <ion-button (click)="edit_img_open = false">
+            <ion-icon name="close-outline" size="large"></ion-icon>
+          </ion-button>
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-header>
+
     <ion-content>
-      <ion-card>
-        <ion-card-content>
-          <ion-input type="file"  (change)="onFileSelected($event)">
-          </ion-input>
-  
-          <ion-button (click)="uploadImage()">Upload file</ion-button>
-        </ion-card-content>
-  
-      </ion-card>
+      <ion-grid>
+        <!-- Upload New Image Section -->
+        <ion-row>
+          <ion-col>
+            <ion-card>
+              <ion-card-header>
+                <ion-card-title>Upload New Image</ion-card-title>
+              </ion-card-header>
+              <ion-card-content>
+                <ion-item lines="none">
+                  <ion-input type="file" (change)="onFileSelected($event)"></ion-input>
+                </ion-item>
+                <ion-button expand="block" (click)="uploadImage()">
+                  Upload New Image
+                </ion-button>
+              </ion-card-content>
+            </ion-card>
+          </ion-col>
+        </ion-row>
+
+        <!-- Image Library Section -->
+        <ion-row>
+          <ion-col>
+            <ion-card>
+              <ion-card-header>
+                <ion-card-title>Select from Library</ion-card-title>
+              </ion-card-header>
+              <ion-card-content>
+                <ion-grid>
+                  <ion-row>
+                    @for (image of stored_images; track $index) {
+                    <ion-col size="6" sizeMd="4" sizeLg="3">
+                      <ion-card 
+                        [class.selected-image]="selected_stored_image === image.url"
+                        (click)="selected_stored_image = image.url"
+                        style="cursor: pointer; position: relative;"
+                      >
+                        <img [src]="image.url" style="width: 100%; height: 200px; object-fit: cover;"/>
+                        @if (selected_stored_image === image.url) {
+                        <div class="selected-overlay">
+                          <ion-icon name="checkmark-circle" color="success" size="large"></ion-icon>
+                        </div>
+                        }
+                      </ion-card>
+                    </ion-col>
+                    }
+                  </ion-row>
+                </ion-grid>
+
+                <ion-button 
+                  expand="block" 
+                  (click)="useStoredImage()"
+                  [disabled]="!selected_stored_image"
+                >
+                  Use Selected Image
+                </ion-button>
+              </ion-card-content>
+            </ion-card>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
     </ion-content>
- 
+  </ng-template>
+</ion-modal>
+
+<!-- Add the edit content modal -->
+<ion-modal 
+  [isOpen]="edit_content_open" 
+  (didDismiss)="edit_content_open = false"
+  style="--height: 90%; --width: 90%;"
+>
+  <ng-template>
+    <ion-header>
+      <ion-toolbar>
+        <ion-title>Edit Content</ion-title>
+        <ion-buttons slot="end">
+          <ion-button (click)="edit_content_open = false">
+            <ion-icon name="close-outline" size="large"></ion-icon>
+          </ion-button>
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-header>
+
+    <ion-content>
+      <ion-grid>
+        <!-- Videos Section -->
+        <ion-row>
+          <ion-col>
+            <ion-card>
+              <ion-card-header>
+                <ion-card-title>Videos</ion-card-title>
+              </ion-card-header>
+              <ion-card-content>
+                @for (video of editableContent.data[0].data; track $index) {
+                  <ion-item-group>
+                    <ion-item-divider>
+                      <ion-label>Video {{$index + 1}}</ion-label>
+                    </ion-item-divider>
+                    
+                    <ion-item>
+                      <ion-input 
+                        label="YouTube Link" 
+                        labelPlacement="stacked"
+                        [(ngModel)]="video.link"
+                      ></ion-input>
+                    </ion-item>
+                    
+                    <ion-item>
+                      <ion-input 
+                        label="Title (English)" 
+                        labelPlacement="stacked"
+                        [(ngModel)]="video.title"
+                      ></ion-input>
+                    </ion-item>
+                    
+                    <ion-item>
+                      <ion-input 
+                        label="Title (Portuguese)" 
+                        labelPlacement="stacked"
+                        [(ngModel)]="video.title_p"
+                      ></ion-input>
+                    </ion-item>
+                    
+                    <ion-item>
+                      <ion-input 
+                        label="Title (Spanish)" 
+                        labelPlacement="stacked"
+                        [(ngModel)]="video.title_s"
+                      ></ion-input>
+                    </ion-item>
+                  </ion-item-group>
+                }
+              </ion-card-content>
+            </ion-card>
+          </ion-col>
+        </ion-row>
+
+        <!-- Messages Section -->
+        <ion-row>
+          <ion-col>
+            <ion-card>
+              <ion-card-header>
+                <ion-card-title>Messages</ion-card-title>
+              </ion-card-header>
+              <ion-card-content>
+                @for (message of editableContent.data[1].data; track $index) {
+                  <ion-item-group>
+                    <ion-item-divider>
+                      <ion-label>Message {{$index + 1}}</ion-label>
+                    </ion-item-divider>
+                    
+                    <ion-item>
+                      <ion-input 
+                        label="Link" 
+                        labelPlacement="stacked"
+                        [(ngModel)]="message.link"
+                      ></ion-input>
+                    </ion-item>
+                    
+                    <ion-item>
+                      <ion-input 
+                        label="Message (English)" 
+                        labelPlacement="stacked"
+                        [(ngModel)]="message.title"
+                      ></ion-input>
+                    </ion-item>
+                    
+                    <ion-item>
+                      <ion-input 
+                        label="Message (Portuguese)" 
+                        labelPlacement="stacked"
+                        [(ngModel)]="message.title_p"
+                      ></ion-input>
+                    </ion-item>
+                    
+                    <ion-item>
+                      <ion-input 
+                        label="Message (Spanish)" 
+                        labelPlacement="stacked"
+                        [(ngModel)]="message.title_s"
+                      ></ion-input>
+                    </ion-item>
+                  </ion-item-group>
+                }
+              </ion-card-content>
+            </ion-card>
+          </ion-col>
+        </ion-row>
+
+        <!-- Save Button -->
+        <ion-row>
+          <ion-col>
+            <ion-button expand="block" (click)="saveContentEdit()">
+              Save Changes
+            </ion-button>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-content>
   </ng-template>
 </ion-modal>

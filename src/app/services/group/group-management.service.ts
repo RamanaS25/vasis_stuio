@@ -15,7 +15,11 @@ export class GroupManagementService {
 
   async getGroups(): Promise<{ success: boolean; data?: Group[]; error?: string }> {
     try {
-      const { data, error } = await this.supabase.from('student_groups').select('*, student_sessions (*), syllabus_grades(grade)').order('week_num', { referencedTable: 'student_sessions', ascending: true });;
+      const { data, error } = await this.supabase
+      .from('student_groups')
+      .select('*, student_sessions (*), syllabus_grades(grade)')
+      .order('week_num', { referencedTable: 'student_sessions', ascending: true })
+      .order('start_date', { ascending: true });
       
       if (error) {
         console.log(error)
@@ -175,9 +179,7 @@ export class GroupManagementService {
   }
 
   async updateGroupSessions(group: { name: string, start_date: string, end_date: string, weeks: number }, classes: any): Promise<{ success: boolean; data?: any; error?: string }> {
-    const { name, start_date, weeks } = group;
-
-    // Convert start_date to a Date object
+    const { name, start_date, end_date, weeks } = group;
     let currentDate = new Date(start_date);
 
     try {
@@ -193,10 +195,31 @@ export class GroupManagementService {
             return { success: false, error: 'Error fetching existing sessions' };
         }
 
+        // If no existing sessions, create new ones
         if (!existingSessions || existingSessions.length === 0) {
-            console.error('No existing sessions found for the group:', name);
-            return { success: false, error: 'No existing sessions found for the group' };
+            // Create new sessions array
+            const newSessions = Array.from({ length: weeks }, (_, index) => ({
+                session_date: new Date(currentDate.getTime() + (index * 7 * 24 * 60 * 60 * 1000)).toISOString(),
+                week_num: index + 1,
+                group_name: name,
+                class_id: this.returnClassId(classes, index + 1)
+            }));
+
+            // Insert new sessions
+            const { data: insertedData, error: insertError } = await this.supabase
+                .from('student_sessions')
+                .insert(newSessions);
+
+            if (insertError) {
+                console.error('Error creating new sessions:', insertError);
+                return { success: false, error: 'Error creating new sessions' };
+            }
+
+            return { success: true, data: insertedData };
         }
+
+        // Rest of the existing update logic
+        // ... existing code for updating sessions remains the same ...
 
         // Array to hold the updated session data
         const updatedSessions = existingSessions.map((session, index) => {
@@ -219,13 +242,22 @@ export class GroupManagementService {
             .from('student_sessions')
             .upsert(updatedSessions);
 
+
+
         if (updateError) {
             console.error('Error updating group sessions:', updateError);
             return { success: false, error: 'Error updating group sessions' };
         }
 
-        console.log('Updated group sessions:', updatedData);
-        return { success: true, data: updatedData };
+        let update_start_date_end_date = await this.insertStartandEndDates({name: name, start_date: start_date, end_date: end_date, weeks: weeks})
+        if(update_start_date_end_date.success){
+          console.log('Updated group sessions:', updatedData);
+          return { success: true, data: updatedData };
+        }else{
+          console.log('Error updating start and end dates:', update_start_date_end_date.error);
+          return { success: false, error: 'Error updating start and end dates' };
+        }
+        
     } catch (err) {
         console.error('An unexpected error occurred while updating sessions:', err);
         return { success: false, error: 'An unexpected error occurred while updating sessions' };
@@ -335,5 +367,30 @@ export class GroupManagementService {
       data: data
     };
   } 
+
+  async updateZoomLink(group: any, zoom_link: string) {
+
+    try {
+      const { data, error } = await this.supabase
+      .from('student_groups')
+      .update({ zoom_link: zoom_link })
+      .eq('id', group.id);
+    if (error) {
+      return {
+        success: false,
+        error: error.message
+      };
+    }
+    return {
+      success: true,
+      data: data
+    };
+  } catch (err) {
+    return {
+      success: false,
+      error: 'An unexpected error occurred: ' + err
+    };
+  }
+}
 
 }

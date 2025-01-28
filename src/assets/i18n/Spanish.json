@@ -7,7 +7,7 @@
 "Password": "Contrasena",
 "Zoom Classes": " Zoom / Clases grabadas", 
 "Homework": " Tarea",
-"Class": "Clases",
+"Class": "Clase",
 "Link": "Enlace",
 "Zoom Links": "Zoom Enlace",
 "Recorded Classes": "Clases Grabadas",
@@ -64,6 +64,11 @@
  "Not Graded": "No calificado",
  "Homework Details": "Detalles de la tarea",
  "Submission Date": "Fecha de entrega",
- "No submissions yet": "No hay tareas enviadas aún"
-
+ "No submissions yet": "No hay tareas enviadas aún",
+ "Change Language": "Cambiar idioma",
+ "Class Details": "Detalles de la clase",
+ "Zoom Link": "Link del Zoom",
+ "Teacher Comment": "Comentario del profesor",
+ "Average Score": "Nota media",
+ "Scores": "Notas"
 }

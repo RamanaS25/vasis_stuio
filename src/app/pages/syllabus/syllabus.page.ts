@@ -19,13 +19,39 @@ addIcons({lockClosed, ellipseOutline, addOutline, closeOutline, createOutline, e
   templateUrl: './syllabus.page.html',
   styleUrls: ['./syllabus.page.scss'],
   standalone: true,
-  imports: [IonBackButton,  TranslatePipe, IonCardSubtitle, ProfileComponent, IonToast, IonButton, IonSelect, IonSelectOption, IonModal, IonCheckbox, IonInput, IonIcon, IonRow, IonGrid, IonChip, IonCardContent, IonItem, IonCardHeader, IonMenuButton, IonLabel, IonCard, IonCol, IonAccordion, IonAccordionGroup, IonButtons, IonButtons, IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule, VimeoPlayerComponent, IonSkeletonText, HeaderComponent],
+  imports: [
+    TranslatePipe,
+    ProfileComponent,
+    IonToast,
+    IonButton,
+    IonModal,
+    IonCheckbox,
+    IonInput,
+    IonIcon,
+    IonRow,
+    IonGrid,
+    IonCardContent,
+    IonItem,
+    IonCardHeader,
+    IonLabel,
+    IonCard,
+    IonCol,
+    IonAccordion,
+    IonAccordionGroup,
+    IonContent,
+    CommonModule,
+    FormsModule,
+    VimeoPlayerComponent,
+    IonSkeletonText,
+    HeaderComponent
+  ],
 })
 export class SyllabusPage implements OnInit {
   route = inject(ActivatedRoute)
   auth = inject(LoginService)
   profile_open = false
   videoId = '1011746589?h=f3d1ddc97e'
+
   video = {
     id: 0,
     video_id: '1011746589?h=f3d1ddc97e',
@@ -88,7 +114,7 @@ export class SyllabusPage implements OnInit {
     
       this.route.queryParams.subscribe(params => {
        this.grade = params['grade']; // Retrieve the passed parameter
-        console.log(this.grade);
+       
       });
 
       this.getVideos(this.grade)
@@ -98,15 +124,15 @@ export class SyllabusPage implements OnInit {
      return className.replace(/\s*\d+$/, '');
    }
 
-   handleToast(message: string, color: string, duration: number) {
+  handleToast(message: string, color: string, duration: number) {
     this.toastBool = true;
     this.message = message;
     this.color = color;
     this.duration = duration;
   }
 
-  voiceScaleChange(event: any) {
-    this.auth._user.voice_scale = event.detail.value;
+  voiceScaleChange() {
+    console.log('voiceScaleChange', this.auth._user.voice_scale)
     this.videos = [];
     this.getVideos(this.grade)
   }
@@ -138,7 +164,7 @@ export class SyllabusPage implements OnInit {
 
   }
 
-   isWithinTwoDaysOrPast(dateTimeString: string): boolean {
+  isWithinTwoDaysOrPast(dateTimeString: string): boolean {
     // Parse the input string to a Date object
     const inputDate = new Date(dateTimeString);
     
@@ -165,7 +191,7 @@ export class SyllabusPage implements OnInit {
   addVideoFromPlaceholder(_class:any){
     this.newVid.class_id = _class.class_id
     this.newVid.auto_play_id = this.getLastVideoFromPreviousClass(this.videos, _class.class_id).auto_play_id + 1
-    console.log(this.newVid.auto_play_id)
+
     this.newVid.voice_scale = this.selectedVideo.voice_scale
     this.newVid.duration = 0
     this.editModal = true
@@ -173,7 +199,7 @@ export class SyllabusPage implements OnInit {
   }
 
   getLastVideoFromPreviousClass(levels: any, targetClassId: number) {
-    console.log(levels, targetClassId);
+
   
     for (let x = 0; x < levels.length; x++) {
       for (let i = 0; i < levels[x].classes.length; i++) {
@@ -213,10 +239,13 @@ export class SyllabusPage implements OnInit {
   }
 
 
-   async getVideos(grade:number){
+  async getVideos(grade:number){
+    console.log('getting videosss' , grade, this.auth._user.grade)
     let result:{success:boolean, data?:any, error?:any}
-    if(grade < this.auth._user.grade){
+    if(Number(grade) < Number(this.auth._user.grade) || this.auth._user.is_admin){
+
       console.log('getting videos')
+  
        result = await this.api.getVideos();
     }
     else{
@@ -226,19 +255,20 @@ export class SyllabusPage implements OnInit {
     if (result.success) {
       // Use result.data
       this.videos = result.data;
-      console.log(this.videos)
+
       this.selectedVideo = this.videos[0].classes[0].videos[0]
 
        
     } else {
 
       // Handle the error
-      console.error(result.error);
+     this.handleToast('Error getting videos', 'danger', 3000)
     }
   
-    }
+  }
 
-    async addVideo(video:any){
+  //crud
+  async addVideo(video:any){
 
       
       
@@ -246,7 +276,7 @@ export class SyllabusPage implements OnInit {
       video.voice_scale = this.selectedVideo.voice_scale
       video.class_id = (this.is_placeholder_video? this._class_id_for_placeholder_video : this.selectedVideo.class_id)
 
-      console.log(video)
+      
 
       const result = await this.api.addVideo(video);
 
@@ -266,16 +296,16 @@ export class SyllabusPage implements OnInit {
 
         this.editModal = false;
         this.is_placeholder_video = false;
-        console.log('Video added successfully');
+
       } else {
         // Handle the error
         this.handleToast('Video not added', 'danger', 3000)
-        console.error(result.error);
+      
       }
-    }
+  }
 
-    async updateVideo(video:any){
-      console.log(video)
+  async updateVideo(video:any){
+   
       let updated_video = {
         id: video.id,
         video_id: video.video_id,
@@ -286,7 +316,7 @@ export class SyllabusPage implements OnInit {
      
       }
       let result = await this.api.updateVideo(updated_video);
-      console.warn(result)
+  
       if (result.success) {
         // Use result.data
         this.getVideos(this.grade)
@@ -300,16 +330,16 @@ export class SyllabusPage implements OnInit {
         }
         this.editModal = false;
         this.is_edit = false;
-        console.log('Video updated successfully');
+      
       } else {
         // Handle the error
         this.handleToast('Video not updated', 'danger', 3000)
-        console.error(result.error);
+     
       }
-    }
+  }
 
-   async deleteVideo(video:any){
-    console.log(video)
+  async deleteVideo(video:any){
+   
       const result = await this.api.deleteVideo(video);
       if (result.success) {
         // Use result.data
@@ -325,13 +355,13 @@ export class SyllabusPage implements OnInit {
          this.handleToast('Video deleted successfully', 'success', 3000)
         this.editModal = false;
         this.is_delete = false;
-        console.log('Video deleted successfully');
+    
       } else {
         // Handle the error
         this.handleToast('Video not deleted', 'danger', 3000)
-        console.error(result.error);
+      
       }
-    }
+  }
 
 
 

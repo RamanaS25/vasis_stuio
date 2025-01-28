@@ -1,16 +1,29 @@
 <ion-header [translucent]="true" class="ion-no-border" >
   <ion-toolbar>
+
+
+
     <ion-buttons slot="start">
-      <ion-menu-button></ion-menu-button>
+      @if(isBackButton) {
+
+        <ion-icon  name="chevron-back-outline" (click)="goBack()" style="cursor: pointer" size="large"></ion-icon>
+
+      }@else {
+        <ion-menu-button></ion-menu-button>
+      }
     </ion-buttons>
     @if(!isMobile()) {
-    <ion-title style="font-size: 18px; font-weight: 600; color: #ffffff;">{{header}}</ion-title>
+    <ion-title style="font-size: 18px; font-weight: 600; color: #ffffff;">
+      
+      {{header}} {{auth._user?.student_groups?.name ? ' | ' + auth._user?.student_groups?.name : ''}}
+   
+    </ion-title>
     }
     <ion-buttons slot="end">
       <ion-chip style="--background: rgba(255, 255, 255, 0)">
         <ion-select
           aria-label="Favorite Fruit"
-          value="English"
+          [placeholder]="auth.user_language === 'English' ? 'ENG' : auth.user_language === 'Spanish' ? 'SPN' : 'POR'"
           (ionChange)="changeLang($event.detail.value); changeLang_auth($event.detail.value)"
         >
           <ion-select-option value="English">ENG</ion-select-option>
@@ -18,6 +31,24 @@
           <ion-select-option value="Portuguese">POR</ion-select-option>
         </ion-select>
       </ion-chip>
+
+      @if(auth._user?.is_admin) {
+        <ion-buttons slot="end">
+          <ion-chip style="--background: rgba(255, 255, 255, 0)">
+            <ion-select
+              aria-label="Favorite Fruit"
+              [placeholder]="auth._user.voice_scale"
+              (ionChange)="changeVoiceScale($event.detail.value)"
+            >
+              <ion-select-option value="W1">W1</ion-select-option>
+              <ion-select-option value="B1">B1</ion-select-option>
+              <ion-select-option value="B4">B4</ion-select-option>
+              <ion-select-option value="B5">B5</ion-select-option>
+
+            </ion-select>
+          </ion-chip>
+          </ion-buttons>
+      }
 
       @if(!auth._logged_in) {
       <ion-chip style="--background: white" (click)="login_open=true">
