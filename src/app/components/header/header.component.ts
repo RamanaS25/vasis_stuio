@@ -24,6 +24,8 @@ import {
 
 import { addIcons } from 'ionicons';
 import { chevronBackOutline } from 'ionicons/icons';
+import { Router } from '@angular/router';
+import { Location } from '@angular/common';
 addIcons({ chevronBackOutline });
 
 @Component({
@@ -52,6 +54,8 @@ export class HeaderComponent  implements OnInit {
   @Input() header: string = 'Vasis Studio';
   @Input() isHeader: boolean = false;
   @Input() isBackButton: boolean = false;
+  router = inject(Router);
+  location = inject(Location);  
 
   @Output() changeLangEmitter = new EventEmitter<string>();
   @Output() changeVoiceScaleEmitter = new EventEmitter<string>();
@@ -109,7 +113,17 @@ export class HeaderComponent  implements OnInit {
   
 
   goBack() {
-    window.history.back();
+    // Get the previous URL from router state
+    const currentNavigation = this.router.getCurrentNavigation();
+    const previousUrl = currentNavigation?.previousNavigation?.finalUrl?.toString();
+
+    if (previousUrl) {
+      // If we have a previous URL in router state, navigate to it
+      this.router.navigateByUrl(previousUrl);
+    } else {
+      // Fallback to location service
+      this.location.back();
+    }
   }
 
   changeVoiceScale(scale: string) {
