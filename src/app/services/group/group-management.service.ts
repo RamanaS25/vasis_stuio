@@ -19,8 +19,10 @@ export class GroupManagementService {
       .from('student_groups')
       .select('*, student_sessions (*), syllabus_grades(grade)')
       .order('week_num', { referencedTable: 'student_sessions', ascending: true })
-      .order('start_date', { ascending: true });
+      .order('start_date', { ascending: true })
+      .eq('is_active', true);
       
+
       if (error) {
         console.log(error)
         return {
@@ -335,8 +337,6 @@ export class GroupManagementService {
         }
        }
 
-       
-
       return {
         success: true,
         data: data
@@ -354,8 +354,12 @@ export class GroupManagementService {
   }
 
   async deleteGroup(group: any) : Promise<{ success: boolean; data?: any; error?: string }>  {
-    const { data, error } = await this.supabase.from('student_groups').delete().eq('id', group.id);
+    const { data, error } = await this.supabase
+    .from('student_groups')
+    .update({is_active: false})
+    .eq('id', group.id);
     if (error) {
+      console.log("error",error)
       return {
         success: false,
         error: error.message
@@ -391,6 +395,6 @@ export class GroupManagementService {
       error: 'An unexpected error occurred: ' + err
     };
   }
-}
+  }
 
 }

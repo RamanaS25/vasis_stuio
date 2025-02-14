@@ -36,6 +36,9 @@
               </ion-button>
   
               @for (item of _groups; track $index) {
+                @if (item.name != 'No Group' &&  item.name != '0') {
+                  
+                
                 <ion-item detail="true" lines="none" (click)="selectedItem = item" [ngClass]="(item === selectedItem)? 'selected' : 'groupItem'" button>
                   <ion-label>
                      {{item.name}}
@@ -49,6 +52,7 @@
                   
                   
                 </ion-item>
+              }
               }
   
              </ion-card-content>
@@ -316,11 +320,20 @@
               </ion-label>
               <ion-datetime-button datetime="datetimeadd" ></ion-datetime-button>
            </ion-item>
-           <ion-item> 
-            <ion-input [(ngModel)]="new_group.grade_id" label="Enter Module" type="number"></ion-input>
-           </ion-item>
+   
            <ion-item> 
             <ion-input [(ngModel)]="new_group.zoom_link" placeholder="Enter Zoom Link"></ion-input>
+           </ion-item>
+
+           <ion-item>
+          
+             <ion-select [(ngModel)]="new_group.grade_id" label="Select Module">
+               <ion-select-option value="1">1</ion-select-option>
+               <ion-select-option value="2">2</ion-select-option>
+               <ion-select-option value="3">3</ion-select-option>
+
+
+             </ion-select>
            </ion-item>
          </ion-card>
        </ion-content>

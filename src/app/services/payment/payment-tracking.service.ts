@@ -51,10 +51,12 @@ export class PaymentTrackingService {
     try {
       const { data, error } = await this.supabase
         .from('student_groups')
-        .select('name, start_date, end_date, student_sessions!inner(*), user_table( id, is_banned, legal_name, is_registered, initiated_name, email, phone, is_admin, student_payment_history( id, student_sessions(session_date, week_num)))')
-        // .eq('user_table.is_admin', false)
-        .eq('user_table.is_registered', true);
-      
+        .select('name, start_date, end_date, is_active, student_sessions!inner(*), user_table( id, is_banned, legal_name, is_registered, initiated_name, email, phone, is_admin, student_payment_history( id, student_sessions(session_date, week_num)))')
+        .eq('user_table.is_registered', true)
+        .eq('user_table.is_banned', false)
+        .eq('user_table.is_admin', false)
+        .eq('is_active', true)
+
       if (error) {
         return {
           success: false,

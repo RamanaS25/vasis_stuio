@@ -11,7 +11,7 @@
               <app-vimeo-player [video]="selectedVideo" (videoId)="changeVideoProgressStatus($event)"></app-vimeo-player>
               <ion-item lines="none">
                 <ion-label>
-                   {{selectedVideo?.title}}
+                   {{ (auth.user_language === 'English') ? selectedVideo?.title : (auth._user.language === 'Portuguese') ? selectedVideo?.title_p : selectedVideo?.title_s }}
                 </ion-label>
     
                 <ion-icon name="ellipse-outline" slot="end"></ion-icon>
@@ -48,7 +48,7 @@
                         }
                       
                         @for (video of class.videos; track $index) {
-                           <ion-item lines="none" (click)="selectedVideo = video;" [ngClass]="(selectedVideo === video) ? 'selectedClass': 'ion-item-ns'"
+                           <ion-item lines="none" (click)="setSelectedVideo(video);" [ngClass]="(selectedVideo === video) ? 'selectedClass': 'ion-item-ns'"
                            [disabled]="videoLocked(class.session_date, class.locked, video.is_melody)"
                             >
                              <ion-label>{{(auth.user_language === 'English') ? video.title : (auth._user.language === 'Portuguese') ? video.title_p : video.title_s}}</ion-label>
@@ -84,12 +84,16 @@
                              
                            </ion-item>
                         } @empty {
-                          <ion-item lines="none" (click)=" is_placeholder_video = true; _class_id_for_placeholder_video = class.class_id; editModal = true; is_edit = false;" button>
+                          @if(auth._user.is_admin) {
+                          <ion-item lines="none" (click)=" selectedVideo.class_id = class.class_id; editModal = true; is_edit = false;" button>
                             <ion-label>
                               Add Video
                             </ion-label>
                           </ion-item>
+                          }
+
                             
+
                         }
 
                       </div>

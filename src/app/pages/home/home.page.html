@@ -149,6 +149,34 @@
       </ion-col>
       }
     </ion-row>
+
+    <!-- Bottom centered video -->
+    <ion-row class="ion-justify-content-center">
+      @if (bottomVideo) {
+        <ion-col 
+          sizeLg="6" 
+          sizeMd="12" 
+          sizeSm="12" 
+          sizeXs="12" 
+          class="ion-margin-auto"
+          style="max-width: 600px;"
+        >
+          <div class="video-container">
+            <iframe
+              width="100%"
+              height="100%"
+              [src]="bottomVideo.safeUrl"
+              frameborder="0"
+              allowfullscreen
+            ></iframe>
+          </div>
+          <ion-item>
+            {{auth.user_language === 'English' ? bottomVideo.title : 
+              auth.user_language === 'Portuguese' ? bottomVideo.title_p : bottomVideo.title_s }}
+          </ion-item>
+        </ion-col>
+      }
+    </ion-row>
   </ion-grid>
 </ion-content>
 
@@ -282,12 +310,12 @@
 <ion-modal 
   [isOpen]="edit_content_open" 
   (didDismiss)="edit_content_open = false"
-  style="--height: 90%; --width: 90%;"
+  style="--height: 100%; --width: 100%;"
 >
   <ng-template>
-    <ion-header>
-      <ion-toolbar>
-        <ion-title>Edit Content</ion-title>
+    <ion-header class="ion-no-border">
+      <ion-toolbar color="light">
+        <ion-title class="ion-text-center">Content Editor</ion-title>
         <ion-buttons slot="end">
           <ion-button (click)="edit_content_open = false">
             <ion-icon name="close-outline" size="large"></ion-icon>
@@ -296,54 +324,70 @@
       </ion-toolbar>
     </ion-header>
 
-    <ion-content>
+    <ion-content class="ion-padding">
       <ion-grid>
         <!-- Videos Section -->
         <ion-row>
           <ion-col>
-            <ion-card>
-              <ion-card-header>
-                <ion-card-title>Videos</ion-card-title>
+            <ion-card class="editor-card">
+              <ion-card-header color="primary">
+                <ion-card-title>
+                  <ion-icon name="videocam-outline"></ion-icon>
+                  Videos
+                </ion-card-title>
               </ion-card-header>
               <ion-card-content>
                 @for (video of editableContent.data[0].data; track $index) {
-                  <ion-item-group>
-                    <ion-item-divider>
-                      <ion-label>Video {{$index + 1}}</ion-label>
-                    </ion-item-divider>
-                    
-                    <ion-item>
-                      <ion-input 
-                        label="YouTube Link" 
-                        labelPlacement="stacked"
-                        [(ngModel)]="video.link"
-                      ></ion-input>
-                    </ion-item>
-                    
-                    <ion-item>
-                      <ion-input 
-                        label="Title (English)" 
-                        labelPlacement="stacked"
-                        [(ngModel)]="video.title"
-                      ></ion-input>
-                    </ion-item>
-                    
-                    <ion-item>
-                      <ion-input 
-                        label="Title (Portuguese)" 
-                        labelPlacement="stacked"
-                        [(ngModel)]="video.title_p"
-                      ></ion-input>
-                    </ion-item>
-                    
-                    <ion-item>
-                      <ion-input 
-                        label="Title (Spanish)" 
-                        labelPlacement="stacked"
-                        [(ngModel)]="video.title_s"
-                      ></ion-input>
-                    </ion-item>
-                  </ion-item-group>
+                  <ion-accordion-group>
+                    <ion-accordion value="video{{$index}}">
+                      <ion-item slot="header">
+                        <ion-label>Video {{$index + 1}}</ion-label>
+                        <ion-note slot="end" color="medium">{{video.title | slice:0:30}}...</ion-note>
+                      </ion-item>
+                      
+                      <div slot="content" class="ion-padding">
+                        <ion-item class="input-item">
+                          <ion-input 
+                            label="YouTube Link" 
+                            labelPlacement="fixed"
+                            [(ngModel)]="video.link"
+                            placeholder="Enter YouTube video ID"
+                            class="custom-input"
+                          ></ion-input>
+                        </ion-item>
+                        
+                        <ion-item class="input-item">
+                          <ion-input 
+                            label="Title (English)" 
+                            labelPlacement="fixed"
+                            [(ngModel)]="video.title"
+                            placeholder="Enter English title"
+                            class="custom-input"
+                          ></ion-input>
+                        </ion-item>
+                        
+                        <ion-item class="input-item">
+                          <ion-input 
+                            label="Title (Portuguese)" 
+                            labelPlacement="fixed"
+                            [(ngModel)]="video.title_p"
+                            placeholder="Enter Portuguese title"
+                            class="custom-input"
+                          ></ion-input>
+                        </ion-item>
+                        
+                        <ion-item class="input-item">
+                          <ion-input 
+                            label="Title (Spanish)" 
+                            labelPlacement="fixed"
+                            [(ngModel)]="video.title_s"
+                            placeholder="Enter Spanish title"
+                            class="custom-input"
+                          ></ion-input>
+                        </ion-item>
+                      </div>
+                    </ion-accordion>
+                  </ion-accordion-group>
                 }
               </ion-card-content>
             </ion-card>
@@ -353,49 +397,65 @@
         <!-- Messages Section -->
         <ion-row>
           <ion-col>
-            <ion-card>
-              <ion-card-header>
-                <ion-card-title>Messages</ion-card-title>
+            <ion-card class="editor-card">
+              <ion-card-header color="tertiary">
+                <ion-card-title>
+                  <ion-icon name="chatbox-outline"></ion-icon>
+                  Messages
+                </ion-card-title>
               </ion-card-header>
               <ion-card-content>
                 @for (message of editableContent.data[1].data; track $index) {
-                  <ion-item-group>
-                    <ion-item-divider>
-                      <ion-label>Message {{$index + 1}}</ion-label>
-                    </ion-item-divider>
-                    
-                    <ion-item>
-                      <ion-input 
-                        label="Link" 
-                        labelPlacement="stacked"
-                        [(ngModel)]="message.link"
-                      ></ion-input>
-                    </ion-item>
-                    
-                    <ion-item>
-                      <ion-input 
-                        label="Message (English)" 
-                        labelPlacement="stacked"
-                        [(ngModel)]="message.title"
-                      ></ion-input>
-                    </ion-item>
-                    
-                    <ion-item>
-                      <ion-input 
-                        label="Message (Portuguese)" 
-                        labelPlacement="stacked"
-                        [(ngModel)]="message.title_p"
-                      ></ion-input>
-                    </ion-item>
-                    
-                    <ion-item>
-                      <ion-input 
-                        label="Message (Spanish)" 
-                        labelPlacement="stacked"
-                        [(ngModel)]="message.title_s"
-                      ></ion-input>
-                    </ion-item>
-                  </ion-item-group>
+                  <ion-accordion-group>
+                    <ion-accordion value="message{{$index}}">
+                      <ion-item slot="header">
+                        <ion-label>Message {{$index + 1}}</ion-label>
+                        <ion-note slot="end" color="medium">{{message.title | slice:0:30}}...</ion-note>
+                      </ion-item>
+                      
+                      <div slot="content" class="ion-padding">
+                        <ion-item class="input-item">
+                          <ion-input 
+                            label="Link" 
+                            labelPlacement="fixed"
+                            [(ngModel)]="message.link"
+                            placeholder="Enter message link"
+                            class="custom-input"
+                          ></ion-input>
+                        </ion-item>
+                        
+                        <ion-item class="input-item">
+                          <ion-input 
+                            label="English" 
+                            labelPlacement="fixed"
+                            [(ngModel)]="message.title"
+                            placeholder="Enter English message"
+                            class="custom-input"
+                          ></ion-input>
+                        </ion-item>
+                        
+                        <ion-item class="input-item">
+                          <ion-input 
+                            label="Portuguese" 
+                            labelPlacement="fixed"
+                            [(ngModel)]="message.title_p"
+                            placeholder="Enter Portuguese message"
+                            class="custom-input"
+                          ></ion-input>
+                        </ion-item>
+                        
+                        <ion-item class="input-item">
+                          <ion-input 
+                            label="Spanish" 
+                            labelPlacement="fixed"
+                            [(ngModel)]="message.title_s"
+                            placeholder="Enter Spanish message"
+                            class="custom-input"
+                          ></ion-input>
+                        </ion-item>
+                      </div>
+                    </ion-accordion>
+                  </ion-accordion-group>
                 }
               </ion-card-content>
             </ion-card>
@@ -405,7 +465,8 @@
         <!-- Save Button -->
         <ion-row>
           <ion-col>
-            <ion-button expand="block" (click)="saveContentEdit()">
+            <ion-button expand="block" class="save-button" (click)="saveContentEdit()">
+              <ion-icon name="save-outline" slot="start"></ion-icon>
               Save Changes
             </ion-button>
           </ion-col>

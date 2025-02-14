@@ -8,10 +8,10 @@
 ></ion-toast>
 
 <ion-content [fullscreen]="true">
-  <ion-grid fixed="true">
+  <ion-grid>
     <ion-row>
-      <ion-col size="4"
-        ><ion-card class="cardStudent">
+      <ion-col size="3">
+        <ion-card class="cardStudent">
           <ion-searchbar
             mode="ios"
             animated="true"
@@ -21,58 +21,68 @@
 
           <div class="scrollable">
             <ion-list class="listStudent">
-              <ion-item class="itemSelect" lines="none" >
-                <ion-select
-                  interface="popover"
-                  placeholder="Select group"
-                  [(ngModel)]="selectedGroup"
-                >
-                  @for (item of allGroups; track $index) {
-                  <ion-select-option [value]="item.name"
-                    >{{item.name}}</ion-select-option
+              <ion-item class="itemSelect" lines="none">
+                <div class="filters-container">
+                  <ion-select
+                    class="group-select"
+                    interface="popover"
+                    placeholder="Select group"
+                    [(ngModel)]="selectedGroup"
                   >
-                  }
-                </ion-select>
-                <ion-toggle
-                  [enableOnOffLabels]="true"
-                  [(ngModel)]="onlyRegistered"
-                  >Verified</ion-toggle
-                >
+                    <ion-select-option value="">All Groups</ion-select-option>
+                    @for (item of allGroups; track $index) {
+                    <ion-select-option [value]="item.name"
+                      >{{item.name}}</ion-select-option
+                    >
+                    }
+                  </ion-select>
+                  <div class="toggles-container">
+                    <ion-checkbox
+                      class="status-checkbox"
+                      [(ngModel)]="onlyRegistered"
+                    >
+                      Registered
+                    </ion-checkbox>
+                    <ion-checkbox
+                      class="group-checkbox"
+                      [(ngModel)]="showNoGroup"
+                    >
+                      No Group
+                    </ion-checkbox>
+                  </div>
+                </div>
               </ion-item>
               <div style="border: 1px solid #fcf9f9; border-radius: 15px">
                 @for (item of filteredUsers; track $index) {
                 <ion-item
                   lines="none"
                   [class]="(user === item) ? 'selectStudent' : 'itemStudent'"
-                  
                   button
-                  (click)="user = item"
+                  (click)="selectUser(item)"
                 >
                   <ul class="custom-list">
-                    <li>{{item?.legal_name === "No Legal Name" ? "" :
-                      item?.legal_name}}</li>
+                    <li>{{item?.legal_name === "No Legal Name" ? "" : item?.legal_name}}</li>
                     <small>
-                      {{item?.initiated_name === "No Initiated Name" ? "" :
-                      item?.initiated_name}}
+                      {{item?.initiated_name === "No Initiated Name" ? "" : item?.initiated_name}}
                     </small>
                   </ul>
                 </ion-item>
-                } @empty { @for (x of [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]; track
-                $index) {
+                } @empty {
+                @for (x of [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]; track $index) {
                 <ion-item lines="none" class="itemSelect">
                   <ion-skeleton-text
                     style="width: 100%; border-radius: 10px"
                     animated="true"
                   ></ion-skeleton-text>
                 </ion-item>
-
-                } }
+                }
+                }
               </div>
             </ion-list>
           </div>
         </ion-card>
       </ion-col>
-      <ion-col size="8">
+      <ion-col size="9">
         <ion-card class="cardStudent">
           <ion-item lines="none" class="itemSelect">
             <ion-input
@@ -102,13 +112,11 @@
               <ion-select-option value="B5">B5</ion-select-option>
             </ion-select>
           </ion-item>
-          <ion-item lines="none" class="itemSelect" class="itemSelect">
+          <ion-item lines="none" class="itemSelect">
             <ion-select label="Language" [(ngModel)]="user.language">
               <ion-select-option value="English">English</ion-select-option>
               <ion-select-option value="Spanish">Spanish</ion-select-option>
-              <ion-select-option value="Portuguese"
-                >Portuguese</ion-select-option
-              >
+              <ion-select-option value="Portuguese">Portuguese</ion-select-option>
             </ion-select>
           </ion-item>
           <ion-item lines="none" class="itemSelect">
@@ -121,20 +129,19 @@
             </ion-select>
           </ion-item>
           <ion-item lines="none" class="itemSelect">
-            <ion-toggle
-              [enableOnOffLabels]="true"
-              [(ngModel)]="user.is_registered"
-            >
-              Verified</ion-toggle
-            >
+            <ion-checkbox
+              [checked]="true"
+              [(ngModel)]="user.is_registered">
+              Verified
+            </ion-checkbox>
           </ion-item>
           <ion-item lines="none" class="itemSelect">
-            <ion-button (click)="editUser(user)" class="buttons"
-              >Save changes</ion-button
-            >
-            <ion-button slot="end" (click)="deleteUser(user)" class="buttons"
-              >Delete</ion-button
-            >
+            <ion-button (click)="editUser(user)" class="buttons">
+              Save changes
+            </ion-button>
+            <ion-button slot="end" (click)="deleteUser(user)" class="buttons">
+              Delete
+            </ion-button>
           </ion-item>
         </ion-card>
       </ion-col>

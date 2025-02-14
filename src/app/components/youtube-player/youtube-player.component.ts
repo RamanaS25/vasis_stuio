@@ -5,7 +5,7 @@ import { IonItem, IonLabel, IonCard, IonIcon } from '@ionic/angular/standalone';
 import { Subject } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 import { addIcons } from 'ionicons';
-import { playOutline, pauseOutline, volumeHighOutline, volumeLowOutline, chevronBackOutline, chevronForwardOutline } from 'ionicons/icons';
+import { playOutline, pauseOutline, volumeHighOutline, volumeLowOutline, chevronBackOutline, chevronForwardOutline, expandOutline } from 'ionicons/icons';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
@@ -34,9 +34,10 @@ export class YoutubePlayerComponent implements OnInit, OnDestroy, AfterViewInit 
   currentVolume: number = 50;
   isPlaying: boolean = false;
   seekSubject = new Subject<number>();
+  isMuted: boolean = false;
 
   constructor(private sanitizer: DomSanitizer) {
-    addIcons({chevronBackOutline,playOutline,pauseOutline,chevronForwardOutline,volumeHighOutline,volumeLowOutline});
+    addIcons({chevronBackOutline,chevronForwardOutline,expandOutline,playOutline,pauseOutline,volumeHighOutline,volumeLowOutline});
   }
 
   ngOnInit() {
@@ -167,6 +168,14 @@ export class YoutubePlayerComponent implements OnInit, OnDestroy, AfterViewInit 
     }
   }
 
+  toggleMute(): void {
+    if (this.player) {
+      this.isMuted = !this.isMuted;
+      this.player.setVolume(this.isMuted ? 0 : this.currentVolume);
+    }
+  }
+
+
   private extractVideoId(url: string): string | null {
     const regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?v=)|(shorts\/)|(\?feature=share\&v=))([^#&?]*).*/;
     const match = url?.match(regExp);
@@ -180,5 +189,11 @@ export class YoutubePlayerComponent implements OnInit, OnDestroy, AfterViewInit 
     if (this.player) {
       this.player.destroy();
     }
+  }
+
+  formatTime(seconds: number): string {
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = Math.floor(seconds % 60);
+    return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
   }
 }

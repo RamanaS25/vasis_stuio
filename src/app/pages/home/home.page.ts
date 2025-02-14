@@ -27,10 +27,14 @@ import {
   IonText, IonFab, IonFabButton,
   IonItemGroup,
   IonItemDivider,
-  IonCardTitle
+  IonCardTitle,
+  IonAccordionGroup,
+  IonAccordion,
+  IonNote
 } from '@ionic/angular/standalone';
 import { register } from 'swiper/element/bundle';
 import { addIcons } from 'ionicons';
+import { SlicePipe } from '@angular/common';
 
 import {
   logoInstagram,
@@ -41,7 +45,7 @@ import {
   logoGoogle,
   closeOutline,
   createOutline,
-  personCircleOutline, add, checkmarkCircle } from 'ionicons/icons';
+  personCircleOutline, add, checkmarkCircle, videocamOutline, chatboxOutline, saveOutline } from 'ionicons/icons';
 import { LoginService } from 'src/app/services/auth/login.service';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { HeaderComponent } from "../../components/header/header.component";
@@ -64,8 +68,6 @@ register();
   imports: [IonFabButton, IonFab, 
     IonToast,
     IonInput,
-    IonSegmentButton,
-    IonSegment,
     IonLabel,
     IonCardContent,
     IonCardHeader,
@@ -87,9 +89,11 @@ register();
     SwiperComponent,
     HeaderComponent,
     TranslatePipe,
-    IonItemGroup,
-    IonItemDivider,
-    IonCardTitle
+    IonCardTitle,
+    IonAccordionGroup,
+    IonAccordion,
+    IonNote,
+    SlicePipe
   ],
 })
 export class HomePage implements OnInit {
@@ -104,6 +108,7 @@ export class HomePage implements OnInit {
   videos: any[] = [];
   firstTwoVideos: any[] = [];
   lastTwoVideos: any[] = [];
+  bottomVideo: any;
 
   toastBool = false;
   message: string = '';
@@ -134,7 +139,7 @@ export class HomePage implements OnInit {
   selected_stored_image: string | null = null;
 
   constructor() {
-    addIcons({createOutline,logoInstagram,logoFacebook,logoGoogle,logoWhatsapp,close,closeOutline,checkmarkCircle,add,personCircleOutline,pencil,});
+    addIcons({createOutline,logoInstagram,logoFacebook,logoGoogle,logoWhatsapp,close,closeOutline,checkmarkCircle,videocamOutline,chatboxOutline,saveOutline,add,personCircleOutline,pencil,});
     
     this.getHomeContent();
     
@@ -154,9 +159,10 @@ export class HomePage implements OnInit {
         safeUrl: this.sanitizeUrl('https://www.youtube-nocookie.com/embed/' + video.link)
       })) || [];
 
-      // Split videos into two groups
+      // Split videos into three groups
       this.firstTwoVideos = this.videos.slice(0, 2);
       this.lastTwoVideos = this.videos.slice(2, 4);
+      this.bottomVideo = this.videos[4]; // Get the fifth video
 
       // Process messages
       const messageSection = this.home_content.data.find((section: any) => section.type === 'messages');

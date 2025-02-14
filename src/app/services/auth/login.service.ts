@@ -59,7 +59,9 @@ export class LoginService {
                      'Please complete your payment to access this level'
             };
           }
+
           this.user = data[0]
+
           if(data[0].is_admin) {
             this.logged_in = true
             this.translate.use(this.user_language);
@@ -77,7 +79,8 @@ export class LoginService {
 
           if(this.user.payment_status.some((x: { is_paid: string; }) => x.is_paid === 'warning')) {
             this.logged_in = true
-            this.translate.use(this.user_language);
+             this.user_language = data[0].language
+             this.change_lang(this.user_language)
             return {
               success: true,
             message: data[0].language === 'English' ? 'Please Complete your Payment for this level' :

@@ -1,7 +1,7 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IonContent, IonMenuButton, IonHeader, IonTitle, IonToolbar, IonCol, IonRow, IonGrid, IonItem, IonSkeletonText, IonList, IonSelect, IonSelectOption, IonCardContent, IonCard, IonSearchbar, IonCardHeader, IonToggle, IonCardTitle, IonCardSubtitle, IonLabel, IonChip, IonCheckbox, IonBadge, IonButtons, IonText, IonToast, IonIcon } from '@ionic/angular/standalone';
+import { IonContent,  IonHeader, IonTitle, IonToolbar, IonCol, IonRow, IonGrid, IonItem, IonSkeletonText, IonList, IonSelect, IonSelectOption, IonCardContent, IonCard, IonSearchbar, IonCardHeader, IonToggle, IonCardTitle, IonCardSubtitle, IonLabel, IonChip, IonCheckbox, IonBadge, IonButtons, IonText, IonToast, IonIcon } from '@ionic/angular/standalone';
 import { PaymentTrackingService } from 'src/app/services/payment/payment-tracking.service';
 import { add, arrowForwardOutline, ellipse } from 'ionicons/icons';
 import { addIcons } from 'ionicons';
@@ -13,7 +13,7 @@ addIcons({ellipse,add, arrowForwardOutline})
   templateUrl: './payment-tracking.page.html',
   styleUrls: ['./payment-tracking.page.scss'],
   standalone: true,
-  imports: [IonIcon, IonToast, IonText, IonButtons, IonMenuButton, IonBadge, IonCheckbox, IonChip, IonLabel, IonCardSubtitle, IonCardTitle, IonToggle, IonCardHeader, IonSearchbar, IonCard, IonCardContent, IonList, IonSkeletonText, IonItem, IonGrid, IonRow, IonCol, IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule, IonSelectOption, IonSelect, HeaderComponent]
+  imports: [IonIcon, IonToast, IonText, IonCheckbox, IonChip, IonLabel, IonCardSubtitle, IonCardTitle, IonToggle, IonCardHeader, IonSearchbar, IonCard, IonCardContent, IonList, IonSkeletonText, IonItem, IonGrid, IonRow, IonCol, IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule, IonSelectOption, IonSelect, HeaderComponent]
 })
 export class PaymentTrackingPage implements OnInit {
   api = inject(PaymentTrackingService)
@@ -120,40 +120,67 @@ toastBool = false;
     
 
     get filteredUsers() {
-      let filteredStudents = this.students;
-    
-      // Trim spaces from search input to handle extra spaces.
+      if (!this.students) return [];
+
+      // First, create a map of students to their groups
+      const studentsWithGroups = this.students.map((group: any) => {
+        return group.user_table.map((user: any) => ({
+          ...group,
+          user_table: [{ ...user, groupName: group.name }]
+        }));
+      }).flat();
+
+      let filteredStudents = studentsWithGroups;
+
+      // Apply search filter
       const searchQuery = this.searchInput.trim().toLowerCase();
-    
-      // If no search input, filter by selected group
-      if (searchQuery === '') {
-        filteredStudents = this.selectedGroup === 'All Groups' 
-          ? filteredStudents 
-          : filteredStudents?.filter((group: any) => group.name === this.selectedGroup);
-      } else {
-        // If search input exists, filter the users by name (first name or legal name)
-        filteredStudents = filteredStudents.map((group: any) => {
-          const matchingUsers = group.user_table?.filter((user: any) => 
-            (user.legal_name?.toLowerCase().includes(searchQuery) || 
-             user.initiated_name?.toLowerCase().includes(searchQuery))
-          );
-    
-          // Return only groups with matching users
-          return { ...group, user_table: matchingUsers };
-        })?.filter((group: any) => group.user_table.length > 0); // Filter out groups with no matching users
+      if (searchQuery) {
+        filteredStudents = filteredStudents.filter((group: any) =>
+          group.user_table[0].legal_name?.toLowerCase().includes(searchQuery) ||
+          group.user_table[0].initiated_name?.toLowerCase().includes(searchQuery)
+        );
       }
-    
-      // Further filter by selected group if not "All Groups"
+
+      // Apply group filter
       if (this.selectedGroup !== 'All Groups') {
-        filteredStudents = filteredStudents?.filter((group: any) => group.name === this.selectedGroup);
+        filteredStudents = filteredStudents.filter((group: any) => 
+          group.name === this.selectedGroup
+        );
       }
-    
-      // Apply filtering for finished groups
+
+      // Apply finished filter
       if (typeof this.finished === 'boolean') {
-        filteredStudents = filteredStudents?.filter((group: any) => group.finished === this.finished);
+        filteredStudents = filteredStudents.filter((group: any) => 
+          group.finished === this.finished
+        );
       }
-    
-      return filteredStudents;
+
+      // Sort by payment status
+      filteredStudents.sort((a: any, b: any) => {
+        const statusPriority: Record<string, number> = {
+          'banned': 0,   // First (unpaid/banned)
+          'warning': 1,  // Second
+          'paid': 2      // Last
+        };
+        
+        const statusA = a.user_table[0].payment_status || 'paid';
+        const statusB = b.user_table[0].payment_status || 'paid';
+        
+        return (statusPriority[statusA] ?? 3) - (statusPriority[statusB] ?? 3);
+      });
+
+      // Group back by group name
+      const groupedBack = filteredStudents.reduce((acc: any, curr: any) => {
+        const groupIndex = acc.findIndex((g: any) => g.name === curr.name);
+        if (groupIndex === -1) {
+          acc.push({ ...curr });
+        } else {
+          acc[groupIndex].user_table.push(curr.user_table[0]);
+        }
+        return acc;
+      }, []);
+
+      return groupedBack;
     }
 
     get _group() {

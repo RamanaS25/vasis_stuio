@@ -1,27 +1,48 @@
 .listStudent {
-    border-radius: 15px;
-    background-color: rgba(253, 253, 253, 0);
+    border-radius: 20px;
+    background-color: #ffffff;
+    padding: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
   }
   
   .itemStudent {
-    --background: rgba(233, 230, 255, 0.158);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.432);
+    --background: #f8f9fa;
+    border-bottom: 1px solid #eee;
+    margin-bottom: 8px;
+    border-radius: 12px;
+    --padding-start: 16px;
+    --padding-end: 16px;
+    transition: all 0.3s ease;
+
+    &:hover {
+      --background: #f1f3f5;
+      transform: translateX(5px);
+    }
   }
 
   .itemStudentSelected {
-    --background: rgba(95, 81, 202, 0.158);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.432);
+    --background: #e7f5ff;
+    border-bottom: 1px solid #eee;
+    margin-bottom: 8px;
+    border-radius: 12px;
+    --padding-start: 16px;
+    --padding-end: 16px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
   }
   
   .itemSelect {
-    --background: rgba(233, 230, 255, 0.411);
-    margin: 10px;
+    --background: #ffffff;
+    margin: 10px 0;
     border-radius: 15px;
+    --padding-start: 16px;
+    --padding-end: 16px;
+    border: 1px solid #eee;
   }
   .scrollable {
     height: 90vh;
     overflow-y: auto;
     overflow-x: hidden;
+    padding: 10px;
   }
   
 
@@ -31,29 +52,113 @@
 }
 
 .scrollable::-webkit-scrollbar-track {
-  background: transparent;
+  background: #f1f1f1;
 }
 
 .scrollable::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.521);
-  border-radius: 2px;
+  background: #ccc;
+  border-radius: 4px;
   transition: background 0.3s ease;
 }
 
 .scrollable::-webkit-scrollbar-thumb:hover {
-  background: rgba(248, 248, 248, 0.699);
+  background: #999;
 }
 
 .payment-item-past{
-  border-radius: 10px;
-  margin-bottom:10px;
-  --background: rgba(193, 146, 255, 0.521);
+  border-radius: 12px;
+  margin-bottom:12px;
+  --background: #f3f0ff;
+  transition: all 0.3s ease;
   
+  &:hover {
+    --background: #e5dbff;
+    transform: translateX(5px);
+  }
 }
 
 .payment-item-future{
-  border-radius: 10px;
-  margin-bottom:10px;
-  --background: rgba(193, 146, 255, 0.521);
-  --background: rgba(245, 188, 221, 0.904);
+  border-radius: 12px;
+  margin-bottom:12px;
+  --background: #fff0f6;
+  transition: all 0.3s ease;
+  
+  &:hover {
+    --background: #ffe3ef;
+    transform: translateX(5px);
+  }
 }
+
+.custom-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  
+  li {
+    font-size: 1rem;
+    font-weight: 500;
+    margin-bottom: 4px;
+    color: #343a40;
+  }
+  
+  small {
+    color: #868e96;
+    font-size: 0.85rem;
+  }
+}
+
+ion-card {
+  background: #ffffff;
+  border: 1px solid #eee;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  border-radius: 20px;
+  
+  ion-card-header {
+    padding: 20px;
+    
+    ion-card-title {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: #343a40;
+    }
+    
+    ion-card-subtitle {
+      color: #868e96;
+    }
+  }
+}
+
+ion-chip {
+  --background: #f8f9fa;
+  --color: #495057;
+  border: 1px solid #e9ecef;
+}
+
+ion-searchbar {
+  --box-shadow: none;
+  --background: #f8f9fa;
+  --border-radius: 12px;
+  --placeholder-color: #adb5bd;
+  --color: #495057;
+  margin-bottom: 16px;
+  border: 1px solid #eee;
+}
+
+ion-item {
+  --border-color: #eee;
+}
+
+ion-toggle {
+  --background: #e9ecef;
+  --background-checked: #339af0;
+  --handle-background: #ffffff;
+  --handle-background-checked: #ffffff;
+}
+
+ion-checkbox {
+  --border-color: #ced4da;
+  --border-color-checked: #339af0;
+  --background-checked: #339af0;
+  --checkmark-color: #ffffff;
+}
+

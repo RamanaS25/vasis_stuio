@@ -2,85 +2,79 @@
 
 <ion-content [fullscreen]="true">
   <ion-toast [message]="message" [color]="color" [duration]="3000" [isOpen]="toastBool" (didDismiss)="toastBool = false" position="top"></ion-toast>
-  <ion-grid fixed="false">
-     <ion-row>
-       <ion-col size="3">
-   
-        
-            <div class="scrollable">
-              <ion-list class="listStudent">
-                <ion-searchbar placeholder="Search For Students" mode="ios" [(ngModel)]="searchInput" animated></ion-searchbar>
+  <ion-grid>
+    <ion-row>
+      <ion-col size="3" class="ion-no-padding">
+        <div class="scrollable">
+          <ion-list class="listStudent">
+            <ion-searchbar placeholder="Search For Students" mode="ios" [(ngModel)]="searchInput" animated></ion-searchbar>
 
-                <ion-item class="itemSelect" lines="none" >
-                  <ion-select
-                  interface="popover"
-                  placeholder="Select group"
-                  [(ngModel)]="selectedGroup"
-                >
-                
-                   <ion-select-option value="All Groups">
-                    All Groups
-                   </ion-select-option>
-                    @for (item of _group; track $index) {
-                       
-                    <ion-select-option [value]="item.name"
-                      >{{item.name}}
-                      
-                    </ion-select-option>
-                    }
-    
-    
-                  </ion-select>
-
-                  <ion-toggle slot="end" (click)="finished = !finished">
+            <ion-item class="itemSelect" lines="none" >
+              <ion-select
+              interface="popover"
+              placeholder="Select group"
+              [(ngModel)]="selectedGroup"
+            >
+            
+               <ion-select-option value="All Groups">
+                All Groups
+               </ion-select-option>
+                @for (item of _group; track $index) {
+                   
+                <ion-select-option [value]="item.name"
+                  >{{item.name}}
                   
-                  </ion-toggle>
-           
+                </ion-select-option>
+                }
+
+
+              </ion-select>
+
+              <ion-toggle slot="end" (click)="finished = !finished">
+              
+              </ion-toggle>
+       
+            </ion-item>
+            <div style="border: 1px solid #fcf9f9; border-radius: 15px">
+              @for (item of filteredUsers; track $index) {
+                 @for(student of item.user_table; track $index) { 
+                  <ion-item
+                  lines="none"
+                  [class]=" (selected_user === student) ? 'itemStudentSelected' : 'itemStudent'"
+                  detail="true"
+                  button
+                  (click)="selected_user = student; processPaymentDates(paymentDates, student.student_payment_history, getGroupForStudent(student).start_date)"
+                >
+                  <ul class="custom-list">
+                    <li>{{student.legal_name}}</li>
+                    <small>
+                      {{student.initiated_name === "undefined" ? "" :
+                      student.initiated_name}}
+                    </small>
+                  </ul>
+                  
+                    @if(!finished) {
+                      <ion-icon slot="end" name="ellipse" [color]="(student.payment_status === 'paid') ? 'success' : (student.payment_status === 'warning') ? 'warning' : 'danger'"></ion-icon>
+                    }
                 </ion-item>
-                <div style="border: 1px solid #fcf9f9; border-radius: 15px">
-                  @for (item of filteredUsers; track $index) {
-                     @for(student of item.user_table; track $index) { 
-                      <ion-item
-                      lines="none"
-                      [class]=" (selected_user === student) ? 'itemStudentSelected' : 'itemStudent'"
-                      detail="true"
-                      button
-                      (click)="selected_user = student; processPaymentDates(paymentDates, student.student_payment_history, getGroupForStudent(student).start_date)"
-                    >
-                      <ul class="custom-list">
-                        <li>{{student.legal_name}}</li>
-                        <small>
-                          {{student.initiated_name === "undefined" ? "" :
-                          student.initiated_name}}
-                        </small>
-                      </ul>
-                      
-                        @if(!finished) {
-                          <ion-icon slot="end" name="ellipse" [color]="(student.payment_status === 'paid') ? 'success' : (student.payment_status === 'warning') ? 'warning' : 'danger'"></ion-icon>
-                        }
-                    </ion-item>
-                     }
-               
-                  } @empty { @for (x of [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]; track $index) {
-                  <ion-item lines="none" class="itemSelect">
-                    <ion-skeleton-text
-                      style="width: 100%; border-radius: 10px"
-                      animated="true"
-                    ></ion-skeleton-text>
-                  </ion-item>
-    
-                  } }
-                </div>
-              </ion-list>
+                 }
+           
+              } @empty { @for (x of [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]; track $index) {
+              <ion-item lines="none" class="itemSelect">
+                <ion-skeleton-text
+                  style="width: 100%; border-radius: 10px"
+                  animated="true"
+                ></ion-skeleton-text>
+              </ion-item>
+
+              } }
             </div>
-    
- 
-     
+          </ion-list>
+        </div>
+      </ion-col>
 
-       </ion-col>
-
-       <ion-col size="9">
-        <ion-card style="border-radius: 15px;">
+      <ion-col size="9" class="ion-padding-start">
+        <ion-card>
           <ion-card-header>
             <ion-card-title>{{(selected_user) ? ( ( selected_user.legal_name) ? selected_user.legal_name : selected_user.initiated_name) : "Please Select a User"}}</ion-card-title>
             <ion-card-subtitle>{{ (selected_user) ? (getGroupForStudent(selected_user).name) : "" }}</ion-card-subtitle>
@@ -148,9 +142,8 @@
            </ion-card-content>
           }
         
-           
         </ion-card>
-       </ion-col>
-     </ion-row>
+      </ion-col>
+    </ion-row>
   </ion-grid>
 </ion-content>

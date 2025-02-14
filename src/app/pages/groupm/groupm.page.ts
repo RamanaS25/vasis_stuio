@@ -1,9 +1,34 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IonContent, IonHeader, IonTitle, IonToolbar, IonButtons,IonMenuButton, IonCol, IonRow, IonGrid, IonCard, IonText, IonCardContent, IonCardHeader, IonItem, IonLabel, IonIcon, IonButton, IonBadge, IonChip, IonSegmentButton, IonSegment, IonModal, IonDatetime, IonDatetimeButton, IonToast, IonSearchbar, IonInput, IonBackButton } from '@ionic/angular/standalone';
+import {
+  IonButton,
+  IonCard,
+  IonCardContent, 
+  IonCardHeader,
+  IonChip,
+  IonCol,
+  IonContent,
+  IonDatetime,
+  IonDatetimeButton,
+  IonGrid,
+  IonIcon,
+  IonInput,
+  IonItem,
+  IonLabel,
+  IonModal,
+  IonRow,
+  IonSearchbar,
+  IonSegment,
+  IonSegmentButton,
+  IonText,
+  IonToast,
+  IonSelect,
+  IonSelectOption
+} from '@ionic/angular/standalone';
 import { GroupManagementService } from 'src/app/services/group/group-management.service';
 import { Group, StudentSession } from './types';
+
 
 import { addIcons } from 'ionicons';
 import { ellipse, playOutline, createOutline, close } from 'ionicons/icons';
@@ -20,9 +45,40 @@ addIcons({ellipse, playOutline, createOutline, close});
   templateUrl: './groupm.page.html',
   styleUrls: ['./groupm.page.scss'],
   standalone: true,
-  imports: [IonBackButton, IonInput, ProfileComponent, IonDatetime, YoutubePlayerComponent, IonSearchbar, IonToast, IonDatetimeButton, IonDatetime, IonModal, IonSegment, IonSegmentButton, IonChip, IonBadge, IonButton, IonIcon, IonLabel, IonItem, IonCardHeader, IonCardContent, IonText, IonCard, IonGrid, IonRow, IonCol, IonButtons, IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, IonMenuButton, FormsModule, HeaderComponent],
+  imports: [
+    IonInput,
+    ProfileComponent,
+    IonDatetime,
+    YoutubePlayerComponent,
+    IonSearchbar,
+    IonToast,
+    IonDatetimeButton,
+    IonDatetime,
+    IonModal,
+    IonSegment,
+    IonSegmentButton,
+    IonChip,
+    IonButton,
+    IonIcon,
+    IonLabel,
+    IonItem,
+    IonCardHeader,
+    IonCardContent,
+    IonText,
+    IonCard,
+    IonGrid,
+    IonRow,
+    IonCol,
+    IonContent,
+    CommonModule,
+    FormsModule,
+    HeaderComponent,
+    IonSelect,
+    IonSelectOption
+  ],
   providers: [DatePipe] 
 })
+
 export class GroupmPage implements OnInit {
   api = inject(GroupManagementService);
   datePipe = inject(DatePipe)
@@ -169,7 +225,7 @@ export class GroupmPage implements OnInit {
   getClassesForInsert(grade:number){
     console.warn(this.classes, grade)
     return this.classes.filter((c) => {
-      return c.syllabus_levels.syllabus_grades.grade === grade
+      return c.syllabus_levels.syllabus_grades.grade == grade
     })  
   }
   
@@ -239,36 +295,6 @@ export class GroupmPage implements OnInit {
     console.log(this.groups)
     
    }
-  }
-
-  async insertSessionsIntoGroup(group:any) {
-  console.log('jii',group)
-      let class_list = this.getClassesForInsert(group.syllabus_grades.grade)
-    console.log(group)
-   let x =  await this.api.insertGroupSessions(group, class_list);
-
-   if(x){
-    this.toast('Start Date Updated', 'success', 3000)
-    this.isOpenGroup = false;
-    this.groups = []
-    this.selectedItem = {
-      name: '',
-      syllabus_grades: {
-        grade: 0
-      },
-      start_date: '',
-      end_date: '',
-      weeks: 0,
-      id: 0,
-      course_id: 0,
-      status: false,
-      zoom_link: '',
-      student_sessions: []
-    }
-    this.getGroups()
-   }
-
-
   }
 
   formatToISOWithoutMilliseconds(dateString: string): string {
@@ -357,6 +383,7 @@ export class GroupmPage implements OnInit {
     this.new_group.end_date = end_date.toISOString()
 
     console.log(this.new_group)
+    console.log(classes)
     let x = await this.api.addGroup(this.new_group, classes)
  
     if(x.success){
@@ -374,6 +401,8 @@ export class GroupmPage implements OnInit {
         status: false,
       }
 
+      
+
       this.getGroups()
     }else{
       this.addGroupBool = true
@@ -386,7 +415,7 @@ export class GroupmPage implements OnInit {
     let x = await this.api.deleteGroup(group)
     if(x.success){
       this.toast('Group Deleted', 'success', 3000)
-      this.getGroups()
+       this.groups = this.groups.filter((g) => g.id !== group.id)
     }else{
       this.toast('Error In Operation', 'danger', 3000)
       console.error(x.error)

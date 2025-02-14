@@ -80,6 +80,31 @@
   &:hover {
     background-color: var(--ion-color-light);
   }
+
+  &.future-session {
+    opacity: 0.9;
+    background-color: rgba(0, 0, 0, 0.03);
+
+    &:hover {
+      background-color: rgba(0, 0, 0, 0.05);
+    }
+  }
+
+  &.next-session {
+    opacity: 1;
+    background-color: rgba(var(--ion-color-success-rgb), 0.1);
+    border-left: 4px solid var(--ion-color-success);
+
+    &:hover {
+      background-color: rgba(var(--ion-color-success-rgb), 0.15);
+    }
+
+    .class-info {
+      .week-num {
+        color: var(--ion-color-success-shade);
+      }
+    }
+  }
 }
 
 .table-cell {
@@ -165,5 +190,30 @@
         }
       }
     }
+  }
+}
+
+.past-session {
+  opacity: 0.7;
+  background-color: rgba(0, 0, 0, 0.12);
+
+  .table-cell {
+    color: var(--ion-color-medium);
+  }
+
+  .class-info {
+    .week-num, .session-date {
+      color: var(--ion-color-medium);
+    }
+  }
+
+  ion-button[disabled] {
+    --opacity: 0.5;
+    pointer-events: none;
+    --background: var(--ion-color-medium);
+  }
+
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.15);
   }
 }

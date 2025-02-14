@@ -169,6 +169,132 @@ ion-chip {
   padding: 5px;
 }
 
+/* Editor Modal Styles */
+.editor-card {
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  margin-bottom: 16px;
+  background: #ffffff;
+  
+  ion-card-header {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    padding: 12px 16px;
+    
+    ion-card-title {
+      display: flex;
+      align-items: center;
+      font-size: 1rem;
+      font-weight: 500;
+      
+      ion-icon {
+        margin-right: 8px;
+        font-size: 1.2rem;
+      }
+    }
+  }
+}
+
+ion-accordion {
+  margin: 4px 0;
+  
+  ion-item.input-item {
+    --background: #f8f9fa;
+    --border-color: transparent;
+    --border-radius: 6px;
+    margin: 6px 0;
+    --min-height: 48px;
+    
+    &:hover {
+      --background: #f1f3f5;
+    }
+  }
+
+  ion-item::part(native) {
+    padding-inline-start: 8px;
+    padding-inline-end: 8px;
+  }
+}
+
+.custom-input {
+  --padding-start: 8px;
+  --padding-end: 8px;
+  --padding-top: 8px;
+  --padding-bottom: 8px;
+  --border-radius: 4px;
+  --background: transparent;
+  --color: #333;
+  --placeholder-color: #adb5bd;
+  
+  &::part(native) {
+    padding: 0;
+  }
+
+  &::part(label) {
+    color: #495057;
+    font-size: 0.9rem;
+    margin-right: 12px;
+  }
+}
+
+.save-button {
+  margin-top: 16px;
+  --border-radius: 6px;
+  --box-shadow: none;
+  font-weight: 500;
+  letter-spacing: 0.3px;
+  height: 44px;
+  
+  &:hover {
+    --box-shadow: 0 2px 4px rgba(var(--ion-color-primary-rgb), 0.2);
+    opacity: 0.9;
+  }
+}
+
+ion-note {
+  font-size: 0.8rem;
+  opacity: 0.7;
+  color: #6c757d;
+}
+
+ion-accordion-group {
+  background: transparent;
+}
+
+ion-accordion {
+  background: white;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  border-radius: 6px;
+  margin-bottom: 8px;
+  overflow: hidden;
+
+  &::part(header) {
+    background: #f8f9fa;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  }
+
+  &::part(content) {
+    background: white;
+  }
+}
+
+/* Style the modal header */
+ion-header.ion-no-border {
+  ion-toolbar {
+    --background: white;
+    --border-style: none;
+    
+    ion-title {
+      font-size: 1.1rem;
+      font-weight: 500;
+    }
+  }
+}
+
+/* Add smooth transitions */
+.input-item, .custom-input, .save-button {
+  transition: all 0.2s ease;
+}
+
 
 
 

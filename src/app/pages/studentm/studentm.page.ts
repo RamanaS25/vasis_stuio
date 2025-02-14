@@ -1,12 +1,8 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {
   IonContent,
-  IonHeader,
-  IonTitle,
-  IonToolbar,
-  IonButtons,
   IonGrid,
   IonRow,
   IonCol,
@@ -18,9 +14,10 @@ import {
   IonSearchbar,
   IonInput,
   IonButton,
-  IonToggle,
   IonSkeletonText,
-  IonToast, IonChip, IonBackButton } from '@ionic/angular/standalone';
+  IonToast,
+  IonCheckbox
+} from '@ionic/angular/standalone';
 import { StudentManagementService } from 'src/app/services/student/student-management.service';
 import { LoginService } from 'src/app/services/auth/login.service';
 import { HeaderComponent } from "../../components/header/header.component";
@@ -30,35 +27,33 @@ import { HeaderComponent } from "../../components/header/header.component";
   templateUrl: './studentm.page.html',
   styleUrls: ['./studentm.page.scss'],
   standalone: true,
-  imports: [IonBackButton, IonChip,
-    IonToast,
-    IonSkeletonText,
-    IonToggle,
-    IonButton,
-    IonInput,
-    IonSearchbar,
-    IonSelect,
-    IonSelectOption,
-    IonItem,
-    IonList,
-    IonCard,
-    IonCol,
-    IonRow,
-    IonGrid,
-    IonButtons,
-    IonContent,
-    IonHeader,
-    IonTitle,
-    IonToolbar,
+  imports: [
     CommonModule,
     FormsModule,
-    IonBackButton, HeaderComponent],
+    IonContent,
+    IonGrid,
+    IonRow,
+    IonCol,
+    IonCard,
+    IonList,
+    IonItem,
+    IonSelect,
+    IonSelectOption,
+    IonSearchbar,
+    IonInput,
+    IonButton,
+    IonSkeletonText,
+    IonToast,
+    IonCheckbox,
+    HeaderComponent,
+  ],
 })
-export class StudentmPage implements OnInit {
+export class StudentmPage {
   studentApi = inject(StudentManagementService);
   allUsers: any;
   allGroups: any;
   auth = inject(LoginService);
+
   user = {
     banned_payment: null,
     created_at: '',
@@ -77,9 +72,11 @@ export class StudentmPage implements OnInit {
     user_name: '',
     voice_scale: '',
   };
+
   onlyRegistered = true;
   selectedGroup: string = '';
   searchInput: string = '';
+  showNoGroup = false;
 
   isToastOpen = false;
   message: string = '';
@@ -89,30 +86,39 @@ export class StudentmPage implements OnInit {
     this.getAllGrops();
   }
 
-  ngOnInit() {
-    console.log('studentm');
-  }
-
   async getAllStudents() {
     let x = await this.studentApi.getAllStudents();
-
     if (x.success) {
-      console.log(x.data);
       this.allUsers = x.data;
     }
-
-    console.log(x);
   }
 
   async getAllGrops() {
     let x = await this.studentApi.getAllGrops();
-
     if (x.success) {
-      console.log(x.data);
       this.allGroups = x.data;
     }
+  }
 
-    console.log(x);
+  selectUser(user: any) {
+    this.user = {
+      id: user.id,
+      email: user.email,
+      phone: user.phone,
+      grade: user.grade,
+      voice_scale: user.voice_scale,
+      language: user.language,
+      group_name: user.group_name,
+      is_registered: user.is_registered,
+      legal_name: user.legal_name,
+      initiated_name: user.initiated_name,
+      is_admin: user.is_admin,
+      banned_payment: user.banned_payment,
+      password: user.password,
+      user_name: user.user_name,
+      created_at: user.created_at,
+      currency: user.currency
+    };
   }
 
   get filteredUsers() {
@@ -121,7 +127,7 @@ export class StudentmPage implements OnInit {
     let x = this.allUsers?.filter((user: any) => {
       return (
         user.legal_name?.toLowerCase().includes(searchValue) ||
-        user.initiated_name?.toLowerCase().includes(searchValue) // Check for initiated_name
+        user.initiated_name?.toLowerCase().includes(searchValue)
       );
     });
 
@@ -130,35 +136,32 @@ export class StudentmPage implements OnInit {
         user?.is_registered === this.onlyRegistered
     );
 
-    // If no group is selected, return the filtered users without group filtering
-    if (this.selectedGroup === '') {
-      return x;
+    if (this.showNoGroup) {
+      x = x?.filter((user: any) => user.group_name === '0');
+    } else if (this.selectedGroup) {
+      x = x?.filter((user: any) => user.group_name === this.selectedGroup);
     }
 
-    // Further filter the users based on the selected group
-    return x.filter(
-      (user: { group_name: string }) => user.group_name === this.selectedGroup
-    );
+    return x;
   }
 
   async editUser(user: any) {
-    let x = await this.studentApi.editUser(
-      user.id,
-      user.email,
-      user.phone,
-      user.grade,
-      user.voice_scale,
-      user.language,
-      user.group_name,
-      user.is_registered
-    );
+    let x = await this.studentApi.editUser(user);
     if (x.success) {
-      this.toast('User updated successfully');
+      this.message = 'User edited successfully';
+      this.isToastOpen = true;
+      this.getAllStudents();
+    } else {
+      console.log('error')
+      console.log(x.error)
     }
   }
+
   async deleteUser(user: any) {
     let x = await this.studentApi.deleteUser(user.id);
     if (x.success) {
+      this.message = 'User deleted successfully';
+      this.isToastOpen = true;
       this.getAllStudents();
       this.user = {
         banned_payment: null,
@@ -178,12 +181,6 @@ export class StudentmPage implements OnInit {
         user_name: '',
         voice_scale: '',
       };
-      this.toast('User deleted successfully');
     }
-  }
-
-  toast(message: string) {
-    this.isToastOpen = true;
-    this.message = message;
   }
 }

@@ -13,7 +13,8 @@ export class StudentManagementService {
     try {
       const { data, error } = await this.supabase
         .from('user_table')
-        .select('*');
+        .select('*')
+        .eq('is_admin', false);
 
       if (error) {
         return {
@@ -45,7 +46,8 @@ export class StudentManagementService {
     try {
       const { data, error } = await this.supabase
         .from('student_groups')
-        .select('*');
+        .select('*')
+        .eq('is_active', true);
 
       if (error) {
         return {
@@ -74,28 +76,13 @@ export class StudentManagementService {
   }
 
   async editUser(
-    id: number,
-    email: string,
-    phone: string,
-    level: string,
-    voiceScale: string,
-    language: string,
-    groupName: string,
-    is_registered: boolean
+   user:any
   ) {
     try {
       const { data, error } = await this.supabase
         .from('user_table')
-        .update({
-          email: email,
-          phone: phone,
-          grade: level,
-          voice_scale: voiceScale,
-          language: language,
-          group_name: groupName,
-          is_registered: is_registered,
-        })
-        .eq('id', id);
+        .update(user)
+        .eq('id', user.id);
 
       if (error) {
         return {

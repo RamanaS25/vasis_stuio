@@ -37,7 +37,12 @@
 
               <!-- Table Content -->
               @for (item of auth._user.student_groups.student_sessions; track $index) {
-                <div class="table-row" [ngClass]="checkDateStatus(item.session_date)">
+                <div class="table-row" 
+                     [ngClass]="{
+                       'past-session': checkDateStatus(item.session_date) === 'past',
+                       'next-session': checkDateStatus(item.session_date) === 'next',
+                       'future-session': checkDateStatus(item.session_date) === 'future'
+                     }">
                   <div class="table-cell main-cell">
                     <div class="class-info">
                       <span class="week-num">{{'Class' | translate}} {{item.week_num}}</span>
@@ -51,14 +56,17 @@
                         <ion-icon name="play-circle-outline" slot="icon-only"></ion-icon>
                       </ion-button>
                     } @else {
-                      <ion-button  color="success" (click)="watchVideo = true; selectedSession = item;">
+                      <ion-button color="success" (click)="watchVideo = true; selectedSession = item;">
                         <ion-icon name="play-circle-outline" slot="icon-only" color="light"></ion-icon>
                       </ion-button>
                     }
                   </div>
                   
                   <div class="table-cell action-cell">
-                    <ion-button  color="primary" (click)="openLink(auth._user.student_groups.zoom_link)">
+                    <ion-button 
+                      color="primary" 
+                      [disabled]="checkDateStatus(item.session_date) === 'past'"
+                      (click)="openLink(auth._user.student_groups.zoom_link)">
                       <ion-icon name="videocam" slot="icon-only"></ion-icon>
                     </ion-button>
                   </div>

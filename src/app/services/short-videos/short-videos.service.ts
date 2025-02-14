@@ -12,8 +12,6 @@ export class ShortVideosService {
  
   constructor() { }
 
-
-
   async getGradeData(grade:number) {
 
     console.warn(grade)
@@ -45,7 +43,7 @@ export class ShortVideosService {
         .eq('syllabus_classes.syllabus_videos.voice_scale', this.auth._user.voice_scale)
         .eq('syllabus_classes.student_sessions.group_name', this.auth._user.student_groups.name)
         .eq('syllabus_classes.syllabus_videos.student_video_progress.student_id', this.auth._user.id)
-     
+        console.log(levels)
       // Handle any errors from the query
       if (error) throw error;
   
@@ -102,12 +100,85 @@ export class ShortVideosService {
     }
   }
 
-  async getVideos(): Promise<{success:boolean, data?:any, error?:any}> {
+  async getFilteredVideos(grade: number, voiceScale: string, studentId: number, courseId: number, groupName: string) {
+    try {
+      console.log('grade', grade, voiceScale, studentId, courseId, groupName)
+      let { data, error } = await this.supabase
+        .rpc('get_filtered_videos', {
+          p_course_id: courseId,
+          p_grade: grade,
+          p_group_name: groupName,
+          p_student_id: studentId,
+          p_voice_scale: voiceScale,
+          
+
+
+        })
+
+        console.log('data', data, error)
+
+        if (data && !error) {
+
+          data.forEach((level:any) => {
+            level.syllabus_classes.forEach((syllabusClass:any) => {
+              syllabusClass.syllabus_videos?.sort((a:any, b:any) => a.auto_play_id - b.auto_play_id); // Ascending order
+            });
+
+          });
+        }
+
+        console.log('data', data)
+
+        const structuredData = data.map((level: any) => ({
+          level_name: level.name,
+          grade: level.grade, // Add this line to include the grade
+          classes: level.syllabus_classes
+            ?.sort((a: any, b: any) => {
+              // Extract numbers from class names (e.g. "Class 1" -> 1)
+              const aNum = parseInt(a.name.match(/\d+/)?.[0] || '0');
+              const bNum = parseInt(b.name.match(/\d+/)?.[0] || '0');
+              return aNum - bNum;
+            })
+            .map((classItem: any) => ({
+              class_id: classItem.id,
+              class_name: classItem.name,
+              pdf_link: classItem.pdf_link, // Add these PDF links if you need them
+              pdf_link_por: classItem.pdf_link_por,
+              pdf_link_s: classItem.pdf_link_s,
+              locked: classItem.student_sessions ? this.isDateInFuture(classItem.student_sessions[0]?.session_date) : false,
+              session_date: classItem.student_sessions?.[0]?.session_date,
+              videos: classItem.syllabus_videos?.map((video: any) => ({
+                id: video.id,
+                video_id: video.video_id,
+                class_id: video.class_id,
+                title: video.title,
+                title_s: video.title_s,
+                title_p: video.title_p,
+                duration: video.duration,
+                auto_play_id: video.auto_play_id,
+                voice_scale: video.voice_scale,
+                is_melody: video.is_melody,
+                student_video_progress: video.progress?.length > 0 // Note: in your data it's 'progress' not 'student_video_progress'
+              })) || []
+            })) || []
+        }));
+
+
+  
+
+      if (error) throw error;
+      return { success: true, data: structuredData, error: null };
+    } catch (error) {
+      console.error('Error fetching filtered videos:', error);
+      return { success: false, data: null, error };
+    }
+  }
+
+  async getVideos(grade:number): Promise<{success:boolean, data?:any, error?:any}> {
     let { data: levels, error } = await this.supabase
         .from('syllabus_levels')
         .select(`
           name,
-          syllabus_grades!inner(grade),
           
           syllabus_classes(
             name,
@@ -117,15 +188,29 @@ export class ShortVideosService {
               session_date,
               group_name
             ),
-            syllabus_videos(
+
+            
+
+            syllabus_videos!inner(
               *,
+                class_id!inner(
+                  level_id!inner(
+                    grade_id(
+                    grade
+                    )
+                  )
+              ),
+
               student_video_progress(*)
             )
           )
         `)
-        .eq('syllabus_grades.grade', 1)
+        .eq('syllabus_classes.syllabus_videos.class_id.level_id.grade_id.grade', grade)
         .eq('syllabus_classes.syllabus_videos.voice_scale', this.auth._user.voice_scale)
         .eq('syllabus_classes.student_sessions.group_name', 'No Group')
+        .eq('syllabus_classes.syllabus_videos.student_video_progress.student_id', this.auth._user.id)
+
+
      // Handle any errors from the query
      if (error) throw error;
   
@@ -192,6 +277,7 @@ export class ShortVideosService {
   }
 
   async addVideo(video: any) {
+    console.log('video', video)
     let { data, error } = await this.supabase.from('syllabus_videos').insert(video);
     console.log(data,error)
     if (error) {

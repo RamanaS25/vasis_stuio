@@ -5,10 +5,9 @@
 }
 
 
-
 .listStudent {
   border-radius: 10px;
-  background-color: rgba(253, 253, 253, 0);
+  background-color: rgba(255, 255, 255, 0.938);
 }
 
 .itemStudent {
@@ -27,24 +26,52 @@
   --background: rgba(233, 230, 255, 0.411);
   margin: 10px;
   border-radius: 15px;
+
+  .filters-container {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+
+    .group-select {
+      width: 100%;
+    }
+
+    .toggles-container {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+
+      ion-toggle {
+        min-width: 120px;
+      }
+      ion-checkbox {
+        --size: 20px;
+        --checkbox-background-checked: #8684f5;
+        --border-radius: 4px;
+        --border-color: #8684f5;
+        --border-color-checked: #8684f5;
+        margin-right: 5px;
+        padding: 5px;
+      }
+    }
+  }
 }
 
 .custom-list {
   list-style-type: circle;
   padding-left: 20px;
+  margin-top: 10px;
 }
 ion-toast {
   --background: #ffffffc5;
   font-size: 16px;
-  --color: rgb(0, 0, 0);
-
-  text-align: center;
+  --border-radius: 10px;
+  --button-color: #8684f5;
 }
 
 ion-toggle {
-  --track-background: #ddd;
-  --track-background-checked: #ddd;
-
+  padding: 12px;
   --handle-background: #8684f5;
   --handle-background-checked: #dd30ec;
 }
@@ -62,18 +89,4 @@ ion-toggle {
 /* Sleek and modern scrollbar styles */
 .scrollable::-webkit-scrollbar {
   width: 4px;
-}
-
-.scrollable::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-.scrollable::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.521);
-  border-radius: 2px;
-  transition: background 0.3s ease;
-}
-
-.scrollable::-webkit-scrollbar-thumb:hover {
-  background: rgba(248, 248, 248, 0.699);
 }

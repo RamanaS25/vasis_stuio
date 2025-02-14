@@ -124,11 +124,17 @@ export class SyllabusPage implements OnInit {
      return className.replace(/\s*\d+$/, '');
    }
 
+   setSelectedVideo(video:any){
+    console.log('video', video)
+    this.selectedVideo = video
+   }
+
   handleToast(message: string, color: string, duration: number) {
     this.toastBool = true;
     this.message = message;
     this.color = color;
     this.duration = duration;
+
   }
 
   voiceScaleChange() {
@@ -242,19 +248,14 @@ export class SyllabusPage implements OnInit {
   async getVideos(grade:number){
     console.log('getting videosss' , grade, this.auth._user.grade)
     let result:{success:boolean, data?:any, error?:any}
-    if(Number(grade) < Number(this.auth._user.grade) || this.auth._user.is_admin){
-
-      console.log('getting videos')
   
-       result = await this.api.getVideos();
-    }
-    else{
-       result = await this.api.getGradeData(grade);
-    }
-
+       result = await this.api.getFilteredVideos(grade, this.auth._user.voice_scale, this.auth._user.id, 1, this.auth._user.student_groups.name);
+    
     if (result.success) {
       // Use result.data
       this.videos = result.data;
+
+      console.log('videos', this.videos)
 
       this.selectedVideo = this.videos[0].classes[0].videos[0]
 
@@ -274,12 +275,12 @@ export class SyllabusPage implements OnInit {
       
       video.auto_play_id =  (this.is_placeholder_video? this.getLastVideoFromPreviousClass(this.videos, this._class_id_for_placeholder_video).auto_play_id + 1 : this.selectedVideo.auto_play_id + 1)
       video.voice_scale = this.selectedVideo.voice_scale
-      video.class_id = (this.is_placeholder_video? this._class_id_for_placeholder_video : this.selectedVideo.class_id)
-
+      video.class_id =  this.selectedVideo.class_id
+      console.log('video', this.selectedVideo)
       
 
       const result = await this.api.addVideo(video);
-
+      console.log('result', result)
       if (result.success) {
         // Use result.data
         this.handleToast('Video added successfully', 'success', 3000)

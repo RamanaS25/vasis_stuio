@@ -1,51 +1,68 @@
-<div class="youtube-video-wrapper">
-  <div class="youtube-video-container">
-    <div #youtubeVideoContainer></div>
-  </div>
-  <div class="transparent-overlay"></div>
-</div>
-
-<div class="controls-wrapper">
-  <!-- Progress bar -->
-  <div class="progress-container">
-    <input
-      type="range"
-      class="progress-bar"
-      min="0"
-      [max]="videoDuration"
-      [(ngModel)]="currentTime"
-      (input)="seekSubject.next(currentTime)"
-    />
+<div class="youtube-player">
+  <div class="youtube-video-wrapper">
+    <div class="youtube-video-container">
+      <div #youtubeVideoContainer></div>
+    </div>
+    <div class="transparent-overlay"></div>
   </div>
 
-  <!-- Control buttons -->
-  <div class="control-panel">
-    <div class="left-controls">
-      <button class="control-btn" (click)="skipBehind()">
-        <ion-icon name="chevron-back-outline"></ion-icon>
-      </button>
-
-      <button class="control-btn play-pause" (click)="isPlaying ? pauseVideo() : playVideo()">
-        <ion-icon [name]="isPlaying ? 'pause-outline' : 'play-outline'"></ion-icon>
-      </button>
-
-      <button class="control-btn" (click)="skipAhead()">
-        <ion-icon name="chevron-forward-outline"></ion-icon>
-      </button>
+  <div class="controls-wrapper">
+    <!-- Time display -->
+    <div class="time-display">
+      <span class="current-time">{{ formatTime(currentTime) }}</span>
+      <span class="time-separator">/</span>
+      <span class="total-time">{{ formatTime(videoDuration) }}</span>
     </div>
 
-    <div class="right-controls">
-      <div class="volume-controls">
-        <ion-icon name="volume-low-outline" class="volume-icon"></ion-icon>
-        <input 
-          type="range" 
-          class="volume-slider"
-          min="0" 
-          max="100" 
-          [(ngModel)]="currentVolume" 
-          (input)="setVolume(currentVolume)" 
+    <!-- Progress bar -->
+    <div class="progress-container">
+      <div class="progress-bar-wrapper">
+        <input
+          type="range"
+          class="progress-bar"
+          min="0"
+          [max]="videoDuration"
+          [(ngModel)]="currentTime"
+          (input)="seekSubject.next(currentTime)"
         />
-        <ion-icon name="volume-high-outline" class="volume-icon"></ion-icon>
+        <div class="progress-bar-fill" [style.width]="(currentTime / videoDuration * 100) + '%'"></div>
+      </div>
+    </div>
+
+    <!-- Control buttons -->
+    <div class="control-panel">
+      <div class="left-controls">
+        <button class="control-btn" (click)="skipBehind()">
+          <ion-icon name="chevron-back-outline"></ion-icon>
+        </button>
+
+        <button class="control-btn play-pause" (click)="isPlaying ? pauseVideo() : playVideo()">
+          <ion-icon [name]="isPlaying ? 'pause-outline' : 'play-outline'"></ion-icon>
+        </button>
+
+        <button class="control-btn" (click)="skipAhead()">
+          <ion-icon name="chevron-forward-outline"></ion-icon>
+        </button>
+      </div>
+
+      <div class="right-controls">
+        <div class="volume-controls">
+          <ion-icon name="volume-low-outline" class="volume-icon"></ion-icon>
+          <div class="volume-slider-wrapper">
+            <input 
+              type="range" 
+              class="volume-slider"
+              min="0" 
+              max="100" 
+              [(ngModel)]="currentVolume" 
+              (input)="setVolume(currentVolume)" 
+            />
+            <div class="volume-slider-fill" [style.width]="currentVolume + '%'"></div>
+          </div>
+          <ion-icon name="volume-high-outline" class="volume-icon"></ion-icon>
+        </div>
+
+  
       </div>
     </div>
   </div>
