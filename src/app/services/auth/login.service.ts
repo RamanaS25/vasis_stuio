@@ -28,7 +28,7 @@ export class LoginService {
   }
   
   async login(user: any) {
-    console.log(user.user_name, user.password)
+
      try {
        const { data, error } = await this.supabase
        .from('user_table')
