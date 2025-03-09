@@ -97,7 +97,7 @@
                 <ion-row>
 
                   <ion-col size="12" size-lg="6">
-                    <app-mux-video-player [video_link]="selectedStudent?.student_homework[0].video_link"></app-mux-video-player>
+                    <app-mux-video-player [video_link]="selectedHomework.video_link"></app-mux-video-player>
 
                     <ion-item lines="none" color="success" button (click)="navigateToWhatsApp(selectedStudent?.phone, 'Haribol, I have graded your homework for ' + selectedHomework.syllabus_homework.title + ' Here is the feedback: ' + homework_graded_object.comment)">
                       <ion-label start="start">

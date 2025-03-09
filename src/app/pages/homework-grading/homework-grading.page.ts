@@ -116,6 +116,7 @@ is_graded = false
     this.homework_graded_object.audio_url = this.audio_url
     console.log(this.homework_graded_object)
     const res = await this.api.submit_homework_grades(this.homework_graded_object)
+
     if(res.success){
       this.toastHandler('Grades submitted successfully', 'success')
       this.selectedHomework = false
@@ -124,6 +125,7 @@ is_graded = false
     } else {
       this.toastHandler(res.error || 'Error submitting grades', 'danger')
     }
+    
   }
 
 }
