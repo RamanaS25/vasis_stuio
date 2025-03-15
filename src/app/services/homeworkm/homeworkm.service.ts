@@ -144,5 +144,24 @@ export class HomeworkmService {
     }
   }
 
+  async delete_homework_from_student(student_id:string, homework_id:string):Promise<{success:boolean, data?:any, error?:string}>{
+    try {
+      const {data, error} = await this.api.getClient()
+        .from('student_homework')
+        .delete()
+        .eq('id', homework_id)
+        .eq('student_id', student_id)
+
+      if (error) {
+        console.warn(error)
+        return { success: false, error: error.message || 'Error deleting homework from student' }
+      }
+
+      return { success: true, data }
+    } catch (error) {
+      console.warn(error)
+      return { success: false, error: 'Unexpected error deleting homework from student' }
+    }
+  }
 
 }

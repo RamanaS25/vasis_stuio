@@ -5,7 +5,7 @@ import { IonContent, IonHeader, IonTitle, IonToolbar, IonCol, IonRow, IonGrid, I
 import { HomeworkmService } from 'src/app/services/homeworkm/homeworkm.service';
 import { MuxVideoPlayerComponent } from "../../components/mux-video-player/mux-video-player.component";
 import { addIcons } from 'ionicons';
-import { arrowBackOutline, documentText, checkmarkCircle,arrowBack, logoWhatsapp } from 'ionicons/icons';
+import { arrowBackOutline, documentText, checkmarkCircle,arrowBack, logoWhatsapp, trash } from 'ionicons/icons';
 import { AudioRecorderComponent } from "../../components/audio-recorder/audio-recorder.component";
 import { HeaderComponent } from "../../components/header/header.component";
 
@@ -43,7 +43,7 @@ homework_graded_object:any = {
 }
 is_graded = false
   constructor() {
-      addIcons({arrowBack,documentText,logoWhatsapp,checkmarkCircle,arrowBackOutline}); }
+      addIcons({arrowBack,documentText,logoWhatsapp,checkmarkCircle,trash,arrowBackOutline}); }
 
   ngOnInit() {
     this.fetchGroups(this.is_graded)
@@ -92,6 +92,8 @@ is_graded = false
 
   selectGroup(group:any){
     this.selectedGroup = group
+    this.selectedHomework = false
+    this.student_selected = false
   }
 
   selectStudent(student:any){
@@ -110,6 +112,16 @@ is_graded = false
     this.homework_graded_object.avg = (this.homework_graded_object.val_1 + this.homework_graded_object.val_2 + this.homework_graded_object.val_3 + this.homework_graded_object.val_4) / 4;
   }
 
+  async deleteHomework(){
+    const res = await this.api.delete_homework_from_student(this.selectedStudent.id, this.selectedHomework.id)
+    if(res.success){
+
+      this.selectedStudent.student_homework = this.selectedStudent.student_homework.filter((item:any) => item.id !== this.selectedHomework.id)
+      this.selectedHomework = false
+      this.toastHandler('Homework deleted successfully', 'success')
+    }
+  }
+
   async submitGrades(){
     this.homework_graded_object.id = this.selectedHomework.id
     this.homework_graded_object.graded = true
@@ -119,13 +131,41 @@ is_graded = false
 
     if(res.success){
       this.toastHandler('Grades submitted successfully', 'success')
-      this.selectedHomework = false
-      this.student_selected = false
-      this.fetchGroups(false)
+      
+      // Remove the graded homework from the student's homework array
+      if (this.selectedStudent && this.selectedStudent.student_homework) {
+        this.selectedStudent.student_homework = this.selectedStudent.student_homework.filter((item:any) => item.id !== this.selectedHomework.id)
+        
+        // If this was the last homework for this student, they might need to be removed from the view
+        if (this.selectedStudent.student_homework.length === 0 && this.selectedGroup) {
+          // Update the group's students array to remove students with no homework
+          this.selectedGroup.students = this.selectedGroup.students.filter((student:any) => 
+            student.id !== this.selectedStudent.id || student.student_homework.length > 0
+          );
+        }
+      }
+      
+      // Reset the homework graded object
+      this.homework_graded_object = {
+        id: 0,
+        val_1: 0,
+        val_2: 0,
+        val_3: 0,
+        val_4: 0,
+        avg: 0,
+        comment: '',
+        audio_url: '',
+        graded: true
+      }
+      
+      this.selectedHomework = null;
+      this.student_selected = false;
+      
+      // Refresh the groups with the updated data
+      this.fetchGroups(this.is_graded);
     } else {
       this.toastHandler(res.error || 'Error submitting grades', 'danger')
     }
-    
   }
 
 }

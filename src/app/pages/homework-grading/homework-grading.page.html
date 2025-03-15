@@ -114,6 +114,11 @@
                         Submit Grades
                       </ion-button>
                       }
+
+                      <ion-button expand="block" color="danger" (click)="deleteHomework()">
+                        <ion-icon name="trash" slot="start"></ion-icon>
+                        Delete Homework
+                      </ion-button>
                     </div>
 
                   </ion-col>
@@ -179,6 +184,7 @@
                   
                     </div>
                   </ion-col>
+              
                   
                 </ion-row>
               </ion-grid>
@@ -186,6 +192,7 @@
           </ion-card>
         }
       </ion-col>
+
     </ion-row>
   </ion-grid>
 </ion-content>
