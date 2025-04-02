@@ -62,7 +62,11 @@ is_graded = false
       return;
     }
 
-    const encodedMessage = encodeURIComponent(message);
+    let m = 'Haribol' + ' ' + ((this.selectedStudent.initiatedName &&  this.selectedStudent.initiatedName != 'undefined') ? this.selectedStudent.initiatedName : this.selectedHomework.studentName ) + ', your homework: ' + this.selectedHomework.description + ' has been graded! Click the following link to view: https://vasis-studio.web.app '
+    let ms = 'Haribol' + ' ' + ((this.selectedStudent.initiatedName &&  this.selectedStudent.initiatedName != 'undefined') ? this.selectedStudent.initiatedName : this.selectedHomework.studentName ) + ', tu tarea: ' + this.selectedHomework.des_sp + ' ya ha sido corregida, haz click en el enlace para verla: https://vasis-studio.web.app';
+    let mp = 'Haribol' + ' ' + ((this.selectedStudent.initiatedName &&  this.selectedStudent.initiatedName != 'undefined') ? this.selectedStudent.initiatedName : this.selectedHomework.studentName ) + ', seu dever de casa: ' + this.selectedHomework.des_p + ' foi avaliado! Clique no link a seguir para visualizá-lo: https://vasis-studio.web.app';
+
+    const encodedMessage = encodeURIComponent((this.selectedStudent.language == 'Spanish') ? ms : (this.selectedStudent.language == 'Portuguese') ? mp : m);
     const whatsappUrl = `https://wa.me/${cleanNumber}?text=${encodedMessage}`;
     window.open(whatsappUrl, '_blank');
   }
