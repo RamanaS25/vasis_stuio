@@ -1,0 +1,26 @@
+ion-card {
+  margin: 16px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+
+
+// Past sessions styling
+.past-session {
+  --background: #f5f5f5 !important;
+  opacity: 0.9;
+  
+  h2, p {
+    color: var(--ion-color-medium);
+  }
+}
+
+// Future sessions styling (pastel blue)
+.future-session {
+  --background: #bcd8f7 !important;
+  
+  h2 {
+    color: var(--ion-color-primary);
+  }
+}

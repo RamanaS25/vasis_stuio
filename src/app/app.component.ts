@@ -34,6 +34,7 @@ export class AppComponent {
   appPages = [
     { title: 'Home', title_es: 'Inicio', title_por: 'Inicio', url: '/home', icon: 'home',access:'public' },
     { title: 'Management', title_es: 'Gestion', title_por: 'Gestion', url: '/management-dashboard', icon: 'home',access:'admin' },
+    { title: 'Payment Schedule', title_es: 'Programa de Pagos', title_por: 'Programa de Pagos', url: '/payment-schedule', icon: 'home',access:'student' },
     { title: 'Courses', title_es: 'Cursos', title_por: 'Cursos', url: '/course-dashboard', icon: 'home',access:'student' },
     { title: 'Tutorial', title_es: 'Tutorial', title_por: 'Tutorial', url: '/tutorial', icon: 'information-circle',access:'public' },
     { title: 'Contact', title_es: 'Contacto', title_por: 'Contacto', url: '/contact', icon: 'mail',access:'public' }

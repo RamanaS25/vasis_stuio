@@ -70,9 +70,15 @@ export const routes: Routes = [
     path: 'attendance',
     loadComponent: () => import('./pages/attendance/attendance.page').then( m => m.AttendancePage),
     canActivate: [authGuard]
-  },  {
+  },
+  {
     path: 'contact',
     loadComponent: () => import('./pages/contact/contact.page').then( m => m.ContactPage)
+  },
+  {
+    path: 'payment-schedule',
+    loadComponent: () => import('./pages/payment-schedule/payment-schedule.page').then( m => m.PaymentSchedulePage),
+    canActivate: [authGuard]
   },
 
 

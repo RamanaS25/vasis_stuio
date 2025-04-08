@@ -1,0 +1,12 @@
+
+      <ion-card style="height: 90vh; overflow-y: auto;">
+        <ion-searchbar placeholder="Search" [(ngModel)]="searchTerm"></ion-searchbar>
+          @for (group of filteredGroups(); track group.id) {
+            <ion-item (click)="selectedGroup.emit(group); selectedGroupId.set(group.id)" [class.selected]="selectedGroupId() === group.id" button>
+              <ion-label>
+                {{group.name}}
+              </ion-label>
+            </ion-item>
+          }
+      </ion-card>
+

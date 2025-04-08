@@ -1,0 +1,18 @@
+<app-header title="Payment Schedule"></app-header> 
+
+<ion-content [fullscreen]="true">
+  @if(auth._user?.is_admin) {
+  <ion-grid>
+    <ion-row>
+      <ion-col size="3">
+        <app-teacher-view [groups]="groups" (selectedGroup)="selectedGroup.set($event)"></app-teacher-view>
+      </ion-col>
+      <ion-col>
+        <app-payment-sessions [group]="selectedGroup()"></app-payment-sessions>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+  } @else {
+    <app-payment-sessions [group]="auth._user?.student_groups.name"></app-payment-sessions>
+  }
+</ion-content>

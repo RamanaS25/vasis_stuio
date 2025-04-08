@@ -1,0 +1,16 @@
+<ion-card>
+   @for (session of paymentSessions(); track session.id) {
+    <ion-item lines="full">
+      <ion-label slot="start">
+         Session {{session.week_num}}
+     
+      </ion-label>
+      <ion-label slot="end">{{session.session_date | date:'mediumDate'}}</ion-label>
+      @if(session?.paid !== undefined) {
+        <ion-chip slot="end" [color]="session.paid ? 'success' : 'warning'">
+          {{session.paid ? 'Paid' : 'Unpaid'}}
+        </ion-chip>
+      }
+    </ion-item>
+   }
+</ion-card>
