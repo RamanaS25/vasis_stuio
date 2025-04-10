@@ -62,9 +62,17 @@ is_graded = false
       return;
     }
 
-    let m = 'Haribol' + ' ' + ((this.selectedStudent.initiatedName &&  this.selectedStudent.initiated_name != 'undefined') ? this.selectedStudent.initiated_name : this.selectedHomework.first_name ) + ', your homework: ' + this.selectedHomework.description + ' has been graded! Click the following link to view: https://vasis-studio.vercel.app/home '
-    let ms = 'Haribol' + ' ' + ((this.selectedStudent.initiatedName &&  this.selectedStudent.initiated_name != 'undefined') ? this.selectedStudent.initiated_name : this.selectedHomework.first_name ) + ', tu tarea: ' + this.selectedHomework.des_sp + ' ya ha sido corregida, haz click en el enlace para verla: https://vasis-studio.vercel.app/home';
-    let mp = 'Haribol' + ' ' + ((this.selectedStudent.initiatedName &&  this.selectedStudent.initiated_name != 'undefined') ? this.selectedStudent.initiated_name : this.selectedHomework.first_name ) + ', seu dever de casa: ' + this.selectedHomework.des_p + ' foi avaliado! Clique no link a seguir para visualizá-lo: https://vasis-studio.vercel.app/home';
+    console.log(this.selectedStudent)
+
+    let initiatedName = this.selectedStudent.initiated_name;
+    let displayName = (initiatedName && initiatedName !== 'undefined' && initiatedName !== null) ? initiatedName : this.selectedStudent.legal_name;
+    
+    console.log(displayName)
+    console.log(initiatedName)
+    console.log(this.selectedHomework)
+    let m = `Haribol ${displayName}, your homework: ${this.selectedHomework.syllabus_homework.title} has been graded! Click the following link to view: https://vasis-studio.vercel.app/home`;
+    let ms = `Haribol ${displayName}, tu tarea: ${this.selectedHomework.syllabus_homework.title} ya ha sido corregida, haz click en el enlace para verla: https://vasis-studio.vercel.app/home`;
+    let mp = `Haribol ${displayName}, seu dever de casa: ${this.selectedHomework.syllabus_homework.title} foi avaliado! Clique no link a seguir para visualizá-lo: https://vasis-studio.vercel.app/home`;
 
     const encodedMessage = encodeURIComponent((this.selectedStudent.language == 'Spanish') ? ms : (this.selectedStudent.language == 'Portuguese') ? mp : m);
     const whatsappUrl = `https://wa.me/${cleanNumber}?text=${encodedMessage}`;
