@@ -71,8 +71,8 @@ is_graded = false
     console.log(initiatedName)
     console.log(this.selectedHomework)
     let m = `Haribol ${displayName}, your homework: ${this.selectedHomework.syllabus_homework.title} has been graded! Click the following link to view: https://vasis-studio.vercel.app/home`;
-    let ms = `Haribol ${displayName}, tu tarea: ${this.selectedHomework.syllabus_homework.title} ya ha sido corregida, haz click en el enlace para verla: https://vasis-studio.vercel.app/home`;
-    let mp = `Haribol ${displayName}, seu dever de casa: ${this.selectedHomework.syllabus_homework.title} foi avaliado! Clique no link a seguir para visualizá-lo: https://vasis-studio.vercel.app/home`;
+    let ms = `Haribol ${displayName}, tu tarea: ${this.selectedHomework.syllabus_homework.title_s} ya ha sido corregida, haz click en el enlace para verla: https://vasis-studio.vercel.app/home`;
+    let mp = `Haribol ${displayName}, seu dever de casa: ${this.selectedHomework.syllabus_homework.title_p} foi avaliado! Clique no link a seguir para visualizá-lo: https://vasis-studio.vercel.app/home`;
 
     const encodedMessage = encodeURIComponent((this.selectedStudent.language == 'Spanish') ? ms : (this.selectedStudent.language == 'Portuguese') ? mp : m);
     const whatsappUrl = `https://wa.me/${cleanNumber}?text=${encodedMessage}`;
