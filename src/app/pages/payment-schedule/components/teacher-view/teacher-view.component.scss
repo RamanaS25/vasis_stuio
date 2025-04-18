@@ -1,3 +1,66 @@
-.selected {
-    --background: var(--ion-color-success);
+.modern-group-card {
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  background: white;
+  margin: 16px;
+
+  .card-header {
+    padding: 16px;
+    background: linear-gradient(to right, #f8e1f4 0%, #e8d3f8 100%);
+    border-radius: 16px 16px 0 0;
   }
+
+  .custom-searchbar {
+    --background: white;
+    --border-radius: 12px;
+    --box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    --color: #5a3d7a;
+    padding: 0;
+
+    .searchbar-input-container {
+      height: 48px;
+    }
+  }
+
+  .groups-list {
+    padding: 8px;
+    height: 90vh;
+    overflow-y: auto;
+  }
+
+  .group-item {
+    --border-radius: 12px;
+    --padding-start: 12px;
+    --padding-end: 12px;
+    margin-bottom: 8px;
+    transition: all 0.3s ease;
+
+    .group-icon {
+      color: #b388ff;
+      font-size: 20px;
+    }
+
+    .group-name {
+      font-weight: 500;
+      color: #5a3d7a;
+    }
+
+    .unread-badge {
+      margin-left: 8px;
+    }
+
+    &:hover {
+      --background: rgba(243, 229, 245, 0.6);
+    }
+
+    &.selected {
+      --background: rgba(179, 136, 255, 0.15);
+      border-left: 4px solid #b388ff;
+
+      .group-icon,
+      .group-name {
+        color: #7c4dff;
+      }
+    }
+  }
+}

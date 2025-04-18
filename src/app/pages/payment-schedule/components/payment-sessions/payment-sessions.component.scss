@@ -1,26 +1,94 @@
-ion-card {
+.payment-card {
   margin: 16px;
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-}
+  border-radius: 12px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  background: white;
 
+  .card-header {
+    padding: 16px;
+    background: linear-gradient(to right, #f8e1f4 0%, #e8d3f8 100%);
+    border-bottom: 1px solid #ece9ff;
 
+    h2 {
+      margin: 0;
+      color: #5e35b1; /* Глубокий фиолетовый */
+      font-weight: 500;
+      font-size: 1.1rem;
+    }
+  }
 
-// Past sessions styling
-.past-session {
-  --background: #f5f5f5 !important;
-  opacity: 0.9;
-  
-  h2, p {
-    color: var(--ion-color-medium);
+  .sessions-list {
+    padding: 8px 0;
+  }
+
+  .session-item {
+    --padding-start: 16px;
+    --padding-end: 16px;
+    --inner-padding-end: 0;
+    --min-height: 68px;
+    --background-hover: #f9f7ff;
+
+    .status-icon {
+      font-size: 22px;
+      margin-right: 12px;
+      /* Цвет задается через color в компоненте */
+    }
+
+    .session-info {
+      h3 {
+        font-size: 1rem;
+        font-weight: 500;
+        color: #2d196b; /* Темно-фиолетовый */
+        margin-bottom: 4px;
+      }
+
+      p {
+        font-size: 1rem;
+        color: #555555;
+        margin: 0;
+      }
+    }
+
+    .payment-status {
+      --padding-top: 6px;
+      --padding-bottom: 6px;
+      --padding-start: 12px;
+      --padding-end: 12px;
+      font-weight: 500;
+      font-size: 0.8rem;
+      border-radius: 10px;
+      /* Цвет задается через color в компоненте */
+    }
+  }
+
+  .past-session {
+    .session-info {
+      h3 {
+        color: #464646;
+      }
+      p {
+        color: #555555;
+      }
+    }
+
+    .status-icon {
+      color: #bdbdbd !important;
+    }
+
+    ion-badge {
+      --background: #e0e0e0;
+      --color: #757575;
+    }
   }
 }
 
-// Future sessions styling (pastel blue)
-.future-session {
-  --background: #bcd8f7 !important;
-  
-  h2 {
-    color: var(--ion-color-primary);
-  }
+/* Кастомные цвета для статусов */
+ion-badge[color="success"] {
+  --background: #4caf50; /* Зеленый */
+  --color: white;
+}
+
+ion-badge[color="warning"] {
+  --background: #ffd000; /* Оранжевый */
+  --color: white;
 }

@@ -1,16 +1,39 @@
-<ion-card>
-   @for (session of paymentSessions(); track session.id) {
-    <ion-item lines="full">
-      <ion-label slot="start">
-         Session {{session.week_num}}
-     
+<ion-card class="payment-card">
+  <div class="card-header">
+    <h2>{{ "Payment Sessions" | translate }}</h2>
+  </div>
+
+  <div class="sessions-list">
+    @for (session of paymentSessions(); track session.id) {
+    <ion-item
+      lines="none"
+      class="session-item"
+      [class.past-session]="isPastSession(session.session_date)"
+    >
+      <ion-icon
+        [name]="
+          isPastSession(session.session_date)
+            ? 'time-outline'
+            : 'calendar-outline'
+        "
+        slot="start"
+        class="status-icon"
+        [color]="isPastSession(session.session_date) ? 'dark' : 'tertiary'"
+      >
+      </ion-icon>
+
+      <ion-label class="session-info">
+        <h3>{{ "Month" | translate }} {{ session.month }}</h3>
+        <p>{{ session.session_date | date : "mediumDate" }}</p>
       </ion-label>
-      <ion-label slot="end">{{session.session_date | date:'mediumDate'}}</ion-label>
-      @if(session?.paid !== undefined) {
-        <ion-chip slot="end" [color]="session.paid ? 'success' : 'warning'">
-          {{session.paid ? 'Paid' : 'Unpaid'}}
-        </ion-chip>
-      }
+
+      <ion-badge
+        [color]="session.paid ? 'success' : 'warning'"
+        class="payment-status"
+      >
+        {{ session.paid ? ("Paid" | translate) : ("Unpaid" | translate) }}
+      </ion-badge>
     </ion-item>
-   }
+    }
+  </div>
 </ion-card>
