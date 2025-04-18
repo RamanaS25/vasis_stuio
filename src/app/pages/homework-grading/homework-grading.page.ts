@@ -23,6 +23,13 @@ import {
   IonList,
   IonBadge,
   IonToggle,
+  IonModal,
+  IonHeader,
+  IonTitle,
+  IonToolbar,
+  IonButtons,
+  IonSegment,
+  IonSegmentButton,
 } from '@ionic/angular/standalone';
 import { HomeworkmService } from 'src/app/services/homeworkm/homeworkm.service';
 import { MuxVideoPlayerComponent } from '../../components/mux-video-player/mux-video-player.component';
@@ -34,6 +41,8 @@ import {
   arrowBack,
   logoWhatsapp,
   trash,
+  closeOutline,
+  chatboxEllipsesOutline,
 } from 'ionicons/icons';
 import { AudioRecorderComponent } from '../../components/audio-recorder/audio-recorder.component';
 import { HeaderComponent } from '../../components/header/header.component';
@@ -44,6 +53,13 @@ import { HeaderComponent } from '../../components/header/header.component';
   styleUrls: ['./homework-grading.page.scss'],
   standalone: true,
   imports: [
+    IonSegmentButton,
+    IonSegment,
+    IonButtons,
+    IonToolbar,
+    IonTitle,
+    IonHeader,
+    IonModal,
     IonToggle,
     IonBadge,
     IonList,
@@ -79,6 +95,7 @@ export class HomeworkGradingPage implements OnInit {
     message: '',
     color: 'danger',
   };
+
   groups: any[] = [];
   selectedGroup: any;
   selectedStudent: any;
@@ -98,6 +115,56 @@ export class HomeworkGradingPage implements OnInit {
     graded: true,
   };
   is_graded = false;
+  isOpenFeedback = false;
+  selectedLang = 'en'; // по умолчанию
+  filteredMessages: { lang: string; message: string }[] = [];
+
+  feedbackMessages = [
+    {
+      lang: 'en',
+      message:
+        "Excellent result! You've mastered the material perfectly and applied the knowledge in practice.",
+    },
+    {
+      lang: 'es',
+      message:
+        '¡Excelente resultado! Has dominado el material perfectamente y aplicado los conocimientos en la práctica.',
+    },
+    {
+      lang: 'pt',
+      message:
+        'Resultado excelente! Você dominou perfeitamente o material e aplicou o conhecimento na prática.',
+    },
+
+    {
+      lang: 'en',
+      message: 'Good work, but there are a few points that need improvement.',
+    },
+    {
+      lang: 'es',
+      message: 'Buen trabajo, pero hay algunos puntos que necesitan mejora.',
+    },
+    {
+      lang: 'pt',
+      message:
+        'Bom trabalho, mas há alguns pontos que precisam ser melhorados.',
+    },
+
+    {
+      lang: 'en',
+      message:
+        'There are mistakes that show you need more practice on this topic.',
+    },
+    {
+      lang: 'es',
+      message:
+        'Hay errores que muestran que necesitas más práctica en este tema.',
+    },
+    {
+      lang: 'pt',
+      message: 'Há erros que mostram que você precisa praticar mais este tema.',
+    },
+  ];
   constructor() {
     addIcons({
       arrowBack,
@@ -105,12 +172,32 @@ export class HomeworkGradingPage implements OnInit {
       logoWhatsapp,
       checkmarkCircle,
       trash,
+      chatboxEllipsesOutline,
+      closeOutline,
       arrowBackOutline,
     });
   }
 
   ngOnInit() {
     this.fetchGroups(this.is_graded);
+    this.filterMessages();
+  }
+
+  chooseFeedback(message: string) {
+    this.isOpenFeedback = false;
+    this.homework_graded_object.comment = message;
+    this.isOpenFeedback = false;
+  }
+
+  chooseLanguage(event: any) {
+    this.selectedLang = event.detail.value;
+    this.filterMessages();
+  }
+
+  filterMessages() {
+    this.filteredMessages = this.feedbackMessages.filter(
+      (message: any) => message.lang === this.selectedLang
+    );
   }
 
   navigateToWhatsApp(number: string) {
