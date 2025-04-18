@@ -1,12 +1,34 @@
+<ion-card class="modern-group-card">
+  <div class="card-header">
+    <ion-searchbar
+      placeholder="Search groups..."
+      [(ngModel)]="searchTerm"
+      class="custom-searchbar"
+      animated
+      clearInput
+    ></ion-searchbar>
+  </div>
 
-      <ion-card style="height: 90vh; overflow-y: auto;">
-        <ion-searchbar placeholder="Search" [(ngModel)]="searchTerm"></ion-searchbar>
-          @for (group of filteredGroups(); track group.id) {
-            <ion-item (click)="selectedGroup.emit(group); selectedGroupId.set(group.id)" [class.selected]="selectedGroupId() === group.id" button>
-              <ion-label>
-                {{group.name}}
-              </ion-label>
-            </ion-item>
-          }
-      </ion-card>
-
+  <div class="groups-list">
+    @for (group of filteredGroups(); track group.id) {
+    <ion-item
+      (click)="selectedGroup.emit(group); selectedGroupId.set(group.id)"
+      [class.selected]="selectedGroupId() === group.id"
+      button
+      detail="false"
+      lines="none"
+      class="group-item"
+    >
+      <ion-icon
+        name="people-outline"
+        slot="start"
+        class="group-icon"
+      ></ion-icon>
+      <ion-label class="group-name">{{ group.name }}</ion-label>
+      <ion-badge *ngIf="group.unread" color="danger" class="unread-badge">
+        {{ group.unread }}
+      </ion-badge>
+    </ion-item>
+    }
+  </div>
+</ion-card>
