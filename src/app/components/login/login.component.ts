@@ -1,4 +1,12 @@
-import { Component, EventEmitter, inject, Input, OnInit, Output, output } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  inject,
+  Input,
+  OnInit,
+  Output,
+  output,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {
@@ -35,7 +43,7 @@ import { LoginService } from 'src/app/services/auth/login.service';
   ],
 })
 export class LoginComponent implements OnInit {
-  api = inject(LoginService)
+  api = inject(LoginService);
   open_toast: boolean = false;
   message: string = '';
 
@@ -59,6 +67,11 @@ export class LoginComponent implements OnInit {
   loginOutput = output<boolean>();
   constructor() {}
 
+  saveCredentials(name: string, password: string) {
+    localStorage.setItem('Name', name);
+    localStorage.setItem('Password', password);
+  }
+
   closeModal(x: boolean) {
     this.loginOutput.emit(x);
   }
@@ -68,11 +81,12 @@ export class LoginComponent implements OnInit {
     this.api.login(this.user).then((res) => {
       this.isloading = false;
       if (res.success) {
-        console.log('like',res.message)
-     
-          console.log('like', res.message);
-          this._message.emit(res.message);
-        
+        this.saveCredentials(this.user.user_name, this.user.password);
+        console.log('like', res.message);
+
+        console.log('like', res.message);
+        this._message.emit(res.message);
+
         this.closeModal(true);
       } else {
         this.open_toast = true;
@@ -80,7 +94,6 @@ export class LoginComponent implements OnInit {
       }
     });
   }
-
 
   signUp() {
     if (this.user.password !== this._password) {
@@ -109,22 +122,19 @@ export class LoginComponent implements OnInit {
     });
 
     this.api.register(this.user).then((res) => {
-      if(res.success){
+      if (res.success) {
+        this.saveCredentials(this.user.user_name, this.user.password);
         this.open_toast = true;
         this.message = 'Account created successfully';
         this.signup_open = false;
-      }else{
+      } else {
         this.open_toast = true;
         this.message = res.error || 'An unexpected error occurred';
       }
-    })
+    });
   }
 
   ngOnInit() {
-  console.log('login')
+    console.log('login');
   }
-
-
-
-  
 }

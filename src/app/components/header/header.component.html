@@ -1,30 +1,43 @@
-<ion-header [translucent]="true" class="ion-no-border" >
+<ion-header [translucent]="true" class="ion-no-border">
   <ion-toolbar>
-
-
-
     <ion-buttons slot="start">
       @if(isBackButton) {
 
-        <ion-icon  name="chevron-back-outline" (click)="goBack()" style="cursor: pointer" size="large"></ion-icon>
+      <ion-icon
+        name="chevron-back-outline"
+        (click)="goBack()"
+        style="cursor: pointer"
+        size="large"
+      ></ion-icon>
 
       }
-        <ion-menu-button></ion-menu-button>
-      
+      <ion-menu-button></ion-menu-button>
     </ion-buttons>
     @if(!isMobile()) {
-    <ion-title style="font-size: 18px; font-weight: 600; color: #ffffff;">
-      
-      {{header}} {{auth._user?.student_groups?.name ? ' | ' + auth._user?.student_groups?.name : ''}}
-   
+    <ion-title style="font-size: 18px; font-weight: 600; color: #ffffff">
+      {{ header }}
+      {{
+        auth._user?.student_groups?.name
+          ? " | " + auth._user?.student_groups?.name
+          : ""
+      }}
     </ion-title>
     }
     <ion-buttons slot="end">
       <ion-chip style="--background: rgba(255, 255, 255, 0)">
         <ion-select
           aria-label="Favorite Fruit"
-          [placeholder]="auth.user_language === 'English' ? 'ENG' : auth.user_language === 'Spanish' ? 'SPN' : 'POR'"
-          (ionChange)="changeLang($event.detail.value); changeLang_auth($event.detail.value)"
+          [placeholder]="
+            auth.user_language === 'English'
+              ? 'ENG'
+              : auth.user_language === 'Spanish'
+              ? 'SPN'
+              : 'POR'
+          "
+          (ionChange)="
+            changeLang($event.detail.value);
+            changeLang_auth($event.detail.value)
+          "
         >
           <ion-select-option value="English">ENG</ion-select-option>
           <ion-select-option value="Spanish">SPN</ion-select-option>
@@ -33,36 +46,32 @@
       </ion-chip>
 
       @if(auth._user?.is_admin) {
-        <ion-buttons slot="end">
-          <ion-chip style="--background: rgba(255, 255, 255, 0)">
-            <ion-select
-              aria-label="Favorite Fruit"
-              [placeholder]="auth._user.voice_scale"
-              (ionChange)="changeVoiceScale($event.detail.value)"
-            >
-              <ion-select-option value="W1">W1</ion-select-option>
-              <ion-select-option value="B1">B1</ion-select-option>
-              <ion-select-option value="B4">B4</ion-select-option>
-              <ion-select-option value="B5">B5</ion-select-option>
-
-            </ion-select>
-          </ion-chip>
-          </ion-buttons>
-      }
-
-      @if(!auth._logged_in) {
-      <ion-chip style="--background: white" (click)="login_open=true">
-        {{'Log In' | translate}}
+      <ion-buttons slot="end">
+        <ion-chip style="--background: rgba(255, 255, 255, 0)">
+          <ion-select
+            aria-label="Favorite Fruit"
+            [placeholder]="auth._user.voice_scale"
+            (ionChange)="changeVoiceScale($event.detail.value)"
+          >
+            <ion-select-option value="W1">W1</ion-select-option>
+            <ion-select-option value="B1">B1</ion-select-option>
+            <ion-select-option value="B4">B4</ion-select-option>
+            <ion-select-option value="B5">B5</ion-select-option>
+          </ion-select>
+        </ion-chip>
+      </ion-buttons>
+      } @if(!auth._logged_in) {
+      <ion-chip style="--background: white" (click)="login_open = true">
+        {{ "Log In" | translate }}
       </ion-chip>
       }@else {
-      <ion-chip style="--background: white" (click)="user_profile=true">
-        {{auth._user.user_name}}
+      <ion-chip style="--background: white" (click)="user_profile = true">
+        {{ auth._user.user_name }}
       </ion-chip>
       }
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
-
 
 <ion-toast
   [message]="message"
@@ -73,14 +82,11 @@
   position="top"
 ></ion-toast>
 
-
 <!-- user profile -->
 <ion-modal
   [isOpen]="user_profile"
   (didDismiss)="user_profile = false"
-  style="
-    --background: linear-gradient(to bottom, #9290ff, #ff93fa);
-  "
+  style="--background: transparent; --box-shadow: none"
 >
   <ng-template>
     <app-profile
@@ -94,12 +100,11 @@
 <ion-modal
   [isOpen]="login_open"
   (didDismiss)="login_open = false"
-  style="--background: linear-gradient(to bottom, #9290ff, #ff93fa);"
-  >
-  
+  style="--background: linear-gradient(to bottom, #9290ff, #ff93fa)"
+>
   <ng-template>
     <app-login
-      (_message)="handleNotification( $event)"
+      (_message)="handleNotification($event)"
       (loginOutput)="open($event)"
       [login_open]="login_open"
     ></app-login>

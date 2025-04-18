@@ -24,13 +24,15 @@ import {
   IonSegment,
   IonInput,
   IonToast,
-  IonText, IonFab, IonFabButton,
+  IonText,
+  IonFab,
+  IonFabButton,
   IonItemGroup,
   IonItemDivider,
   IonCardTitle,
   IonAccordionGroup,
   IonAccordion,
-  IonNote
+  IonNote,
 } from '@ionic/angular/standalone';
 import { register } from 'swiper/element/bundle';
 import { addIcons } from 'ionicons';
@@ -45,17 +47,22 @@ import {
   logoGoogle,
   closeOutline,
   createOutline,
-  personCircleOutline, add, checkmarkCircle, videocamOutline, chatboxOutline, saveOutline } from 'ionicons/icons';
+  personCircleOutline,
+  add,
+  checkmarkCircle,
+  videocamOutline,
+  chatboxOutline,
+  saveOutline,
+} from 'ionicons/icons';
 import { LoginService } from 'src/app/services/auth/login.service';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
-import { HeaderComponent } from "../../components/header/header.component";
+import { HeaderComponent } from '../../components/header/header.component';
 
 import {
   TranslateService,
   TranslatePipe,
-  TranslateDirective
-} from "@ngx-translate/core";
-
+  TranslateDirective,
+} from '@ngx-translate/core';
 
 // register Swiper custom elements
 register();
@@ -65,7 +72,9 @@ register();
   templateUrl: './home.page.html',
   styleUrls: ['./home.page.scss'],
   standalone: true,
-  imports: [IonFabButton, IonFab, 
+  imports: [
+    IonFabButton,
+    IonFab,
     IonToast,
     IonInput,
     IonLabel,
@@ -93,7 +102,7 @@ register();
     IonAccordionGroup,
     IonAccordion,
     IonNote,
-    SlicePipe
+    SlicePipe,
   ],
 })
 export class HomePage implements OnInit {
@@ -126,23 +135,38 @@ export class HomePage implements OnInit {
     data: [
       {
         type: 'videos',
-        data: []
+        data: [],
       },
       {
         type: 'messages',
-        data: []
-      }
-    ]
+        data: [],
+      },
+    ],
   };
 
   stored_images: any[] = [];
   selected_stored_image: string | null = null;
 
   constructor() {
-    addIcons({createOutline,logoInstagram,logoFacebook,logoGoogle,logoWhatsapp,close,closeOutline,checkmarkCircle,videocamOutline,chatboxOutline,saveOutline,add,personCircleOutline,pencil,});
-    
+    addIcons({
+      createOutline,
+      logoInstagram,
+      logoFacebook,
+      logoGoogle,
+      logoWhatsapp,
+      close,
+      closeOutline,
+      checkmarkCircle,
+      videocamOutline,
+      chatboxOutline,
+      saveOutline,
+      add,
+      personCircleOutline,
+      pencil,
+    });
+
     this.getHomeContent();
-    
+
     this.translate.setDefaultLang('English');
     this.translate.use(this.auth.user_language);
   }
@@ -153,11 +177,16 @@ export class HomePage implements OnInit {
       this.home_content = response.data;
 
       // Process videos
-      const videoSection = this.home_content.data.find((section: any) => section.type === 'videos');
-      this.videos = videoSection?.data.map((video: any) => ({
-        ...video,
-        safeUrl: this.sanitizeUrl('https://www.youtube-nocookie.com/embed/' + video.link)
-      })) || [];
+      const videoSection = this.home_content.data.find(
+        (section: any) => section.type === 'videos'
+      );
+      this.videos =
+        videoSection?.data.map((video: any) => ({
+          ...video,
+          safeUrl: this.sanitizeUrl(
+            'https://www.youtube-nocookie.com/embed/' + video.link
+          ),
+        })) || [];
 
       // Split videos into three groups
       this.firstTwoVideos = this.videos.slice(0, 2);
@@ -165,13 +194,14 @@ export class HomePage implements OnInit {
       this.bottomVideo = this.videos[4]; // Get the fifth video
 
       // Process messages
-      const messageSection = this.home_content.data.find((section: any) => section.type === 'messages');
+      const messageSection = this.home_content.data.find(
+        (section: any) => section.type === 'messages'
+      );
       this.messages = messageSection?.data || [];
 
       // Process images
       this.banner_images = this.home_content.images || [];
       this.banner_img = this.home_content.banner_img;
-
     } catch (error) {
       console.error('Error fetching home content:', error);
     }
@@ -236,10 +266,14 @@ export class HomePage implements OnInit {
       const updatedContent = { ...this.home_content };
 
       // Update either banner image or slider images based on selectedImageId
-      if (this.selectedImageId === 4) { // Banner image
+      if (this.selectedImageId === 4) {
+        // Banner image
         updatedContent.banner_img = this.selected_stored_image;
-      } else { // Slider images
-        const imageIndex = updatedContent.images.findIndex((img: any) => img.id === this.selectedImageId);
+      } else {
+        // Slider images
+        const imageIndex = updatedContent.images.findIndex(
+          (img: any) => img.id === this.selectedImageId
+        );
         if (imageIndex !== -1) {
           updatedContent.images[imageIndex].link = this.selected_stored_image;
         }
@@ -265,24 +299,24 @@ export class HomePage implements OnInit {
       data: [
         {
           type: 'videos',
-          data: this.videos.map(video => ({
+          data: this.videos.map((video) => ({
             link: video.link,
             title: video.title,
             title_p: video.title_p,
             title_s: video.title_s,
-            sequence: video.sequence
-          }))
+            sequence: video.sequence,
+          })),
         },
         {
           type: 'messages',
-          data: this.messages.map(msg => ({
+          data: this.messages.map((msg) => ({
             link: msg.link,
             title: msg.title,
             title_p: msg.title_p,
-            title_s: msg.title_s
-          }))
-        }
-      ]
+            title_s: msg.title_s,
+          })),
+        },
+      ],
     };
     this.edit_content_open = true;
   }
@@ -304,16 +338,17 @@ export class HomePage implements OnInit {
   }
 
   async open_edit_img() {
-    if(this.auth._user.is_admin === true) {
+    if (this.auth._user.is_admin === true) {
       try {
         const result = await this.api.getImagesFromStorage();
         if (result.success) {
-          this.stored_images = result.data?.map((file: any) => ({
-            name: file.name,
-            url: this.api.supabase.storage
-              .from('images')
-              .getPublicUrl(`home_page/${file.name}`).data.publicUrl
-          })) || [];
+          this.stored_images =
+            result.data?.map((file: any) => ({
+              name: file.name,
+              url: this.api.supabase.storage
+                .from('images')
+                .getPublicUrl(`home_page/${file.name}`).data.publicUrl,
+            })) || [];
         }
         this.edit_img_open = true;
       } catch (error) {
@@ -323,7 +358,15 @@ export class HomePage implements OnInit {
     }
   }
 
+  async getCredentials() {
+    const name = localStorage.getItem('Name');
+    const password = localStorage.getItem('Password');
+    let user = { user_name: name, password: password };
+    let x = await this.auth.login(user);
+  }
+
   ngOnInit() {
     console.log('HomePage initialized');
+    this.getCredentials();
   }
 }

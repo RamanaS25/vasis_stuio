@@ -1,29 +1,78 @@
-<ion-item>
-   <ion-icon name="close-outline" slot="end" (click)="closeModal(profile_open)" color="dark" style="cursor: pointer;"></ion-icon>
-</ion-item>
+<div class="profile-modal">
+  <ion-icon
+    name="close-outline"
+    class="close-icon"
+    (click)="closeModal(profile_open)"
+  ></ion-icon>
 
-<ion-card>
-    <ion-list>
-      <ion-item lines="none">
-        <ion-label>Name: {{auth._user.legal_name}}</ion-label>
+  @if (auth._user) {
+  <ion-card class="profile-card">
+    <div class="header-section">
+      <ion-icon
+        name="person-circle-outline"
+        class="profile-icon"
+        size="large"
+      ></ion-icon>
+      <h2 class="user-name">{{ auth._user.legal_name }}</h2>
+    </div>
+
+    <ion-list class="info-list">
+      <ion-item class="info-item">
+        <ion-icon name="mail-outline" slot="start" class="item-icon"></ion-icon>
+        <ion-label class="info-label">Email</ion-label>
+        <div class="info-value">{{ auth._user.email || "Not provided" }}</div>
       </ion-item>
-      <ion-item lines="none">
-        <ion-label>Email: {{auth._user.email}}</ion-label>
+
+      <ion-item class="info-item">
+        <ion-icon name="call-outline" slot="start" class="item-icon"></ion-icon>
+        <ion-label class="info-label">Phone</ion-label>
+        <div class="info-value">{{ auth._user.phone || "Not provided" }}</div>
       </ion-item>
-      <ion-item lines="none">
-        <ion-label>Phone Number: {{auth._user.phone}}</ion-label>
+
+      <ion-item class="info-item">
+        <ion-icon
+          name="people-outline"
+          slot="start"
+          class="item-icon"
+        ></ion-icon>
+        <ion-label class="info-label">Group</ion-label>
+        <div class="info-value">
+          {{ auth._user.student_groups?.name || "Not assigned" }}
+        </div>
       </ion-item>
-      <ion-item lines="none">
-        <ion-label>Group: {{auth._user.student_groups.name}}</ion-label>
+
+      <ion-item class="info-item">
+        <ion-icon
+          name="school-outline"
+          slot="start"
+          class="item-icon"
+        ></ion-icon>
+        <ion-label class="info-label">Grade</ion-label>
+        <div class="info-value">
+          {{ auth._user.grade || "Not specified" }}
+        </div>
       </ion-item>
-      <ion-item lines="none">
-        <ion-label>Grade: {{auth._user.grade}}</ion-label>
-      </ion-item>
-      <ion-item lines="none">
-        <ion-label>Voice Scale: {{auth._user.voice_scale}}</ion-label>
+
+      <ion-item class="info-item">
+        <ion-icon
+          name="musical-notes-outline"
+          slot="start"
+          class="item-icon"
+        ></ion-icon>
+        <ion-label class="info-label">Voice Scale</ion-label>
+        <div class="info-value">
+          {{ auth._user.voice_scale || "Not specified" }}
+        </div>
       </ion-item>
     </ion-list>
+    <ion-button
+      expand="block"
+      class="logout-btn"
+      (click)="closeModal(profile_open); logout()"
+    >
+      <ion-icon name="log-out-outline" slot="start"></ion-icon>
+      Logout
+    </ion-button>
   </ion-card>
-
-  <ion-button style="position: fixed; bottom: 0; right: 0; padding: 10px; color: white" (click)="closeModal(profile_open)">Close</ion-button>
-
+  }
+</div>
